@@ -3,6 +3,9 @@
 // ---------------------------------------------------------------- state & helpers
 let DATA = null;
 let RANGE = "all";
+let QUEUE = "all";
+const QUEUES = { 420: "Ranked Solo/Duo", 440: "Ranked Flex", 400: "Normal Draft", 430: "Normal Blind", 480: "Swiftplay", 490: "Quickplay" };
+const RANKED = new Set([420, 440]);
 let HISTORY_SHOWN = 20;
 const charts = {};
 const DD = { v: null, ids: {}, names: {} };
@@ -59,7 +62,7 @@ const spellIcon = (id) => (SPELLS[id] ? img(`spell/${SPELLS[id]}.png`, "xs") : "
 
 // ---------------------------------------------------------------- filtering & sessions
 function filtered() {
-  const all = DATA.matches; // newest first
+  const all = DATA.matches.filter((m) => QUEUE === "all" || (QUEUE === "ranked") === RANKED.has(m.queue)); // newest first
   if (RANGE === "all") return all;
   if (RANGE === "7d") return all.filter((m) => m.ts > Date.now() - 7 * 86400000);
   return all.slice(0, Number(RANGE));
@@ -84,7 +87,6 @@ function insights(g) {
   const add = (type, text) => out.push({ type, text });
   if (g.length < 5) return [{ type: "info", text: "Play at least 5 games together to unlock insights." }];
   const W = g.filter((m) => m.win), L = g.filter((m) => !m.win);
-  const [n0, n1] = DATA.players.map((p) => shortName(p.riotId));
 
   // Synergies
   const combos = groupBy(g, (m) => `${adc(m).champ}|${sup(m).champ}`).filter((c) => c.games.length >= 3);
@@ -312,7 +314,7 @@ function historySection(g) {
     const line = (p) => `<div class="row">${champIcon(p.champ, "sm")}<span class="pair">${p.spells.map(spellIcon).join("")}</span><b>${p.k}/${p.d}/${p.a}</b><span class="muted small">${p.cs} cs · ${p.vision} vs</span><span class="items">${p.items.map(itemIcon).join("")}</span></div>`;
     const e = (p) => (p ? `<div class="row">${champIcon(p.champ, "sm")}<span>${esc(champName(p.champ))}</span><span class="muted small">${p.k}/${p.d}/${p.a}</span></div>` : "");
     return `<div class="match ${m.win ? "w" : "l"}"><div class="strip"></div>
-      <div class="meta"><b class="${m.win ? "win" : "loss"}">${m.win ? "Victory" : "Defeat"}</b><span class="muted small">${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })} ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</span><br><span class="muted small">${Math.floor(m.dur / 60)}:${String(m.dur % 60).padStart(2, "0")}</span></div>
+      <div class="meta"><b class="${m.win ? "win" : "loss"}">${m.win ? "Victory" : "Defeat"}</b><span class="muted small">${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })} ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</span><br><span class="muted small">${esc(QUEUES[m.queue] || "Queue " + m.queue)} · ${Math.floor(m.dur / 60)}:${String(m.dur % 60).padStart(2, "0")}</span></div>
       <div class="side">${line(adc(m))}${line(sup(m))}</div>
       <div class="side vs"><span class="muted small">vs</span>${e(m.enemy.adc)}${e(m.enemy.sup)}</div>
       <div class="lane small"><span class="muted">Lane @15</span><br><b class="${m.lane?.gd15 > 0 ? "win" : m.lane?.gd15 < 0 ? "loss" : ""}">${signed(m.lane?.gd15)}g</b></div>
@@ -390,6 +392,11 @@ function emptyState(msg) {
 document.querySelectorAll("#range button").forEach((b) => b.addEventListener("click", () => {
   document.querySelectorAll("#range button").forEach((x) => x.classList.toggle("on", x === b));
   RANGE = b.dataset.range; HISTORY_SHOWN = 20;
+  if (DATA?.matches.length) render();
+}));
+document.querySelectorAll("#queue button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("#queue button").forEach((x) => x.classList.toggle("on", x === b));
+  QUEUE = b.dataset.queue; HISTORY_SHOWN = 20;
   if (DATA?.matches.length) render();
 }));
 
