@@ -1,0 +1,13 @@
+{
+  "challengeName": "Duo Q Challenge",
+  "startDate": "2026-11-01",
+  "players": [
+    { "riotId": "AdcPlayer#EUW", "role": "BOTTOM" },
+    { "riotId": "SuppPlayer#EUW", "role": "UTILITY" }
+  ],
+  "region": "europe",
+  "platform": "euw1",
+  "queues": [420],
+  "fetchTimeline": true,
+  "maxNewMatchesPerRun": 150
+}
