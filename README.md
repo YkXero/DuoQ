@@ -1,40 +1,39 @@
 # Duo Q Tracker
 
-A static ADC/support duo tracker, hosted on GitHub Pages. A scheduled GitHub Action pulls your games from the Riot API
-and commits them to `data/data.json`. The page reads only that file, so your API key never reaches the browser.
+An ADC + support duo tracker for League of Legends. It shows op.gg-style match history, stats benchmarked against your rank, duo synergies, trends over time, and coaching objectives.
 
-## What it shows
-- Record, win rate, streak, duo KDA, current rank and LP change for both players
-- **What to work on**: automatic insights (farm, vision, deaths in losses, lane gold at 15, tilt after losses, game length, dragons)
-- LP graph and a rolling win rate
-- **Duo synergies**: every ADC + support pair you've played, with win rate, duo KDA and lane gold at 15
-- Win rate against each enemy ADC and enemy support
-- Per-player stats split into wins vs losses, plus each player's champion pool
-- "When do you win?" breakdown: game length, lane state, first drake or tower, side, game number in the session
-- Match history with items, spells and lane gold at 15
+The site is static and hosted on GitHub Pages. A GitHub Action pulls your games from the Riot API every 30 minutes, commits them to `public/data/data.json`, and redeploys. Your API key stays in a repository secret and never reaches the browser.
+
+## Tabs
+- **Overview**: record, win-rate donut, last-20 form, current objectives, what to improve and strengths, LP graph, rolling win rate, top duos.
+- **Match history**: one row per game with both players' runes, spells, items, KDA, KP, CS, vision, MVP/ACE score, rosters and lane gold at 15. Filter by result, your ADC, your support, enemy bot laner and patch. Expand a row to see:
+  - Scoreboard with damage bars and objectives
+  - Bot lane gold/CS at 5, 10, 15 and 20 min, plus early kills and deaths
+  - Gold graph
+  - Item build and skill order
+- **Stats & progress**: about 30 stats per player and about 10 for the duo. Each one is split into wins and losses, compared with a target for your rank bracket, and given a trend (the last 10 games against the 10 before, counted only when the change is bigger than normal noise). Also has a smoothed chart for any stat, and a "When do you win?" breakdown by game length, lane state, objectives, side and session.
+- **Champions & synergy**: sortable ADC + support pair table, win rate against each enemy ADC and support, and both champion pools.
+- **Coach**: objectives with live progress, plus the history of reviews.
 
 ## Setup
-1. **Edit `config.json`**: put both Riot IDs (`Name#TAG`), your `region` (`europe`, `americas`, `asia`, `sea`) and `platform`
-   (`euw1`, `eun1`, `na1`, `kr`, `br1`, …), and the challenge `startDate`. `queues: [420]` means Ranked Solo/Duo
-   (add `440` for Flex or `400` for Normal Draft).
-2. **Get an API key** at <https://developer.riotgames.com>.
-   - The *development key* expires every 24 hours. That's fine for testing, but the Action will stop working the next day.
-   - For a tracker that keeps running, register a **Personal API Key** (Register Product → Personal). It doesn't expire.
-3. **Create a GitHub repo** and push this folder.
-4. In the repo, go to **Settings → Secrets and variables → Actions → New repository secret**, name it `RIOT_API_KEY` and paste the key.
-5. In **Settings → Pages**, choose Source: *Deploy from a branch*, Branch: `main`, folder `/ (root)`.
-6. In **Actions → Update matches → Run workflow**, run the first fetch. After that it runs every 30 minutes.
+1. Edit `config.json`. Set the Riot IDs, region (`europe`) and platform (`euw1`), and `startDate`. Queues: 420 Solo/Duo, 440 Flex, 400 Draft, 480 Swiftplay.
+2. Get an API key at <https://developer.riotgames.com>. Development keys expire every 24 hours; for something that keeps running, register a **Personal API Key**.
+3. Add it in the repo under **Settings → Secrets and variables → Actions** as `RIOT_API_KEY`.
+4. In **Settings → Pages**, set Source to **GitHub Actions**. A free account needs a public repo for Pages.
+5. Go to **Actions → Update & deploy → Run workflow**.
 
-## Local use
+To check the fetcher works without saving anything, run the workflow with `dry_since` set to a past date.
+
+## Local
 ```sh
-node scripts/demo.mjs                       # fake data to preview the UI
-RIOT_API_KEY=RGAPI-... node scripts/fetch.mjs   # real data (PowerShell: $env:RIOT_API_KEY="RGAPI-..."; node scripts/fetch.mjs)
-npx serve .                                 # or: python -m http.server
+npm install
+npm run dev        # open the printed URL; add ?demo for demo data
+npm run demo       # regenerate public/data/demo.json
+npm run report     # text coaching report
+$env:RIOT_API_KEY="RGAPI-..."; npm run fetch   # PowerShell
 ```
-The real fetch replaces demo data automatically.
 
-## Notes
-- Only games where **both** of you were on the same team are kept. Remakes are skipped.
-- Each new game costs 2 requests (match and timeline). The timeline gives the gold and CS diffs at 10 and 15 minutes.
-  You can turn it off with `"fetchTimeline": false`.
-- Requests are spaced 1.25 s apart to stay under the default rate limit (100 requests per 2 minutes).
+## Adding a stat
+Add an entry to `src/lib/metrics.ts` with its formula, direction, benchmarks and minimum sample size. The stats table, trend chart, goals, insights and report all pick it up automatically. If it needs new raw data, add a field to `shared/types.ts`, fill it in `scripts/lib/transform.ts`, and bump `DATA_VERSION` (the fetcher then refetches everything).
+
+Duo Q Tracker isn't endorsed by Riot Games.

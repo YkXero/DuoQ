@@ -1,38 +1,80 @@
-name: Update matches
+name: Update & deploy
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes (GitHub may delay scheduled runs)
-  workflow_dispatch:          # "Run workflow" button in the Actions tab
+    - cron: "*/30 * * * *" # fetch new games every 30 min (GitHub may delay scheduled runs)
+  workflow_dispatch: # "Run workflow" button in the Actions tab
+    inputs:
+      dry_since:
+        description: "Test only: validate a few games since this date (YYYY-MM-DD) without saving"
+        required: false
+        default: ""
+  push:
+    branches: [main]
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: update-data
+  group: update-and-deploy
   cancel-in-progress: false
 
 jobs:
-  update:
+  fetch:
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
       - name: Fetch games from Riot API
-        run: node scripts/fetch.mjs
+        run: |
+          if [ -n "$DRY_SINCE" ]; then npm run fetch -- --dry --since "$DRY_SINCE" --limit 4; else npm run fetch; fi
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+          DRY_SINCE: ${{ inputs.dry_since }}
       - name: Commit data
+        id: commit
         run: |
-          if [ -n "$(git status --porcelain data)" ]; then
+          if [ -n "$(git status --porcelain public/data)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data
+            git add public/data
             git commit -m "Update match data"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No new data."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
+
+  deploy:
+    needs: fetch
+    # Deploy on code pushes, and after a fetch that found new games.
+    if: always() && (github.event_name == 'push' || needs.fetch.outputs.changed == 'true' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Fetch favicon if missing
+        run: |
+          [ -f public/assets/lol-icon.png ] || curl -sf --retry 3 --max-time 60 -o public/assets/lol-icon.png \
+            https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/lol_icon.png || true
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
+      - id: pages
+        uses: actions/deploy-pages@v4

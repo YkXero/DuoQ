@@ -1,42 +1,18 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Duo Q Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-</head>
-<body>
-  <header class="top">
-    <div class="wrap top-row">
-      <div>
-        <h1 id="title">Duo Q Tracker</h1>
-        <p id="subtitle" class="muted"></p>
-      </div>
-      <div class="range" id="queue">
-        <button data-queue="all" class="on">All games</button>
-        <button data-queue="ranked">Ranked</button>
-        <button data-queue="normal">Normals</button>
-      </div>
-      <div class="range" id="range">
-        <button data-range="all" class="on">All</button>
-        <button data-range="50">Last 50</button>
-        <button data-range="20">Last 20</button>
-        <button data-range="7d">7 days</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap" id="app">
-    <p class="muted">Loading…</p>
-  </main>
-
-  <footer class="wrap muted small">
-    Not endorsed by Riot Games. Data from the Riot API, refreshed by GitHub Actions.
-  </footer>
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#16161a" />
+    <title>Duo Q Tracker</title>
+    <link rel="icon" type="image/png" href="./assets/lol-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

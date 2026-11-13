@@ -7,7 +7,7 @@
   ],
   "region": "europe",
   "platform": "euw1",
-  "queues": [420, 440, 400, 480, 490],
+  "queues": [420, 440, 400, 480],
   "fetchTimeline": true,
   "maxNewMatchesPerRun": 150
 }
