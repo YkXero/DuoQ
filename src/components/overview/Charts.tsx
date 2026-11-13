@@ -26,8 +26,11 @@ export function LpChart() {
   if (rows.length < 2) return <p className="muted small">The LP graph fills in as the tracker records rank changes.</p>;
   const vals = rows.flatMap((r) => [r.p0, r.p1]).filter((v): v is number => v != null);
   const lo = Math.floor((Math.min(...vals) - 20) / 100) * 100, hi = Math.ceil((Math.max(...vals) + 20) / 100) * 100;
+  const delta = (i: 0 | 1) => { const a = rows.find((r) => r[`p${i}`] != null)?.[`p${i}`], b = [...rows].reverse().find((r) => r[`p${i}`] != null)?.[`p${i}`]; return a != null && b != null ? b - a : null; };
+  const d = [delta(0), delta(1)];
   return (
     <>
+      <p className="chart-cap">{d.map((x, i) => x == null ? null : <span key={i}><b className={`p${i}`}>{names[i]}</b> {x >= 0 ? <b className="good-c">+{x} LP</b> : <b className="bad-c">{x} LP</b>}{i === 0 ? " · " : ""}</span>)} since the challenge started.</p>
       <Legend items={[{ label: names[0], color: "var(--p0)" }, { label: names[1], color: "var(--p1)" }]} />
       <div style={{ height: 220, marginTop: 8 }}>
         <ResponsiveContainer>
@@ -56,8 +59,11 @@ export function RollingWinRate({ games }: { games: Match[] }) {
     const w = games.slice(Math.max(0, i - 9), i + 1);
     return { i: i + 1, wr: Math.round((w.filter((x) => x.win).length / w.length) * 100), m };
   });
+  const last = rows.at(-1)!.wr;
   return (
-    <div style={{ height: 240 }}>
+    <>
+    <p className="chart-cap">Right now you win <b>{last}%</b> of your last 10 games. Each dot is a game (blue win, red loss); above the dashed line means winning more than losing.</p>
+    <div style={{ height: 220 }}>
       <ResponsiveContainer>
         <LineChart data={rows} margin={{ top: 6, right: 8, left: -18, bottom: 0 }}>
           {GRID}
@@ -76,6 +82,7 @@ export function RollingWinRate({ games }: { games: Match[] }) {
         </LineChart>
       </ResponsiveContainer>
     </div>
+    </>
   );
 }
 
@@ -88,6 +95,8 @@ export function GoldGraph({ m }: { m: Match }) {
   const zero = max <= 0 ? 0 : min >= 0 ? 1 : max / (max - min);
   const gid = `gg-${m.id}`;
   return (
+    <>
+    <p className="chart-cap">Blue means your team had more gold, red means the enemy did. The dashed line is 15 minutes, roughly when laning ends.</p>
     <div style={{ height: 200 }}>
       <ResponsiveContainer>
         <AreaChart data={rows} margin={{ top: 6, right: 8, left: -6, bottom: 0 }}>
@@ -116,5 +125,6 @@ export function GoldGraph({ m }: { m: Match }) {
         </AreaChart>
       </ResponsiveContainer>
     </div>
+    </>
   );
 }

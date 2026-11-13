@@ -81,7 +81,7 @@ export const PLAYER_METRICS: PlayerMetric[] = [
     get: (v) => (v.m.tl ? killsBefore(v.m, 840).filter((k) => k[2] === v.idx).length : null), bench: { BOTTOM: [1.8, 1.4, 1.1, 0.9], UTILITY: [2.0, 1.6, 1.3, 1.1] } },
   { scope: "player", id: "laneDom", label: "Lane domination", category: "Laning", format: "pct", better: "higher", minN: 15, rate: true, info: "Games where you ended laning (14:00) with a 20%+ gold and XP lead over your opponent.",
     get: ({ me }) => me.laneDom },
-  { scope: "player", id: "plates", label: "Turret plates", category: "Objectives", format: "dec1", better: "higher", minN: 15, info: "Plates taken (250 gold each). Converting lane leads into gold.",
+  { scope: "player", id: "plates", label: "Turret plates", category: "Objectives", format: "dec1", better: "higher", minN: 15, info: "Turret plates taken before they fall at 14:00. Converting lane leads into gold.",
     get: ({ me }) => me.plates, bench: { BOTTOM: [0.7, 1.0, 1.2, 1.4], UTILITY: [0.5, 0.7, 0.9, 1.1] } },
   { scope: "player", id: "firstBlood", label: "First blood involvement", category: "Laning", format: "pct", better: "higher", minN: 20, rate: true, info: "Got or assisted first blood.",
     get: ({ me }) => (me.firstBlood ? 1 : 0), bench: { BOTTOM: [0.2, 0.2, 0.2, 0.2], UTILITY: [0.2, 0.2, 0.2, 0.2] } },

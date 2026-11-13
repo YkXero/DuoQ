@@ -6,7 +6,8 @@ import { champName } from "../../lib/ddragon.ts";
 import { duration, timeAgo } from "../../lib/format.ts";
 import { spring } from "../../lib/motion.ts";
 import { mean } from "../../lib/stats.ts";
-import { adcIdx, enemyIdx, snapDiff, supIdx } from "../../lib/views.ts";
+import { adcIdx, enemyIdx, supIdx } from "../../lib/views.ts";
+import { matchTags } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
 import { Card, Segmented, Select } from "../ui/Controls.tsx";
 import { Champ, Item, Kda, Rune, Spell } from "../ui/Icons.tsx";
@@ -50,10 +51,6 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
 
 function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => void }) {
   const q = QUEUES[m.queue]?.name ?? `Queue ${m.queue}`;
-  const lane = (() => {
-    const a = snapDiff(m, "15", adcIdx(m), enemyIdx(m, "BOTTOM"), 0), s = snapDiff(m, "15", supIdx(m), enemyIdx(m, "UTILITY"), 0);
-    return a == null || s == null ? null : a + s;
-  })();
   return (
     <motion.div layout="position" className={`match ${m.win ? "w" : "l"}`} transition={spring.smooth}>
       <div className="match-row" onClick={toggle} role="button" aria-expanded={open} tabIndex={0} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}>
@@ -62,7 +59,7 @@ function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => 
           <div className="small muted" title={new Date(m.ts).toLocaleString()}>{timeAgo(m.ts)}</div>
           <div className="res">{m.win ? "Victory" : "Defeat"}</div>
           <div className="small muted">{duration(m.dur)}</div>
-          {lane != null && <div className={`lane-chip ${lane >= 0 ? "win-c" : "loss-c"}`} title="Bot lane gold difference at 15 min">Lane {lane >= 0 ? "+" : ""}{lane}</div>}
+          <div className="mtags">{matchTags(m).map((t) => <span key={t.text} className={`mtag ${t.tone}`} title={t.title}>{t.text}</span>)}</div>
         </div>
         <PlayerBlock m={m} idx={m.duo[0]} slot={0} />
         <PlayerBlock m={m} idx={m.duo[1]} slot={1} />

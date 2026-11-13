@@ -12,6 +12,9 @@ import { useApp } from "../../state.tsx";
 import { Legend } from "../overview/Charts.tsx";
 import { Card, Segmented, Select } from "../ui/Controls.tsx";
 import { WinRate } from "../ui/Icons.tsx";
+import { GradeBadge, Meter, TrendWord } from "../ui/Meter.tsx";
+import { CATEGORY_NAME, reportCard } from "../../lib/insights.ts";
+import { fill, plain } from "../../lib/plain.ts";
 
 function BenchBar({ r }: { r: StatRow }) {
   if (r.vsBench == null) return <span className="muted small">–</span>;
@@ -65,6 +68,39 @@ function StatTable({ rows }: { rows: StatRow[] }) {
   );
 }
 
+function MeterList({ rows, name }: { rows: StatRow[]; name: string }) {
+  const cells = reportCard(rows);
+  const extra = rows.filter((r) => r.vsBench == null && r.avg != null);
+  return (
+    <div className="stack" style={{ gap: 22 }}>
+      {cells.filter((c) => c.rows.length).map((c) => (
+        <div key={c.category}>
+          <div className="row" style={{ gap: 10, marginBottom: 8 }}><GradeBadge grade={c.grade} size={30} /><h3 className="cat-title">{CATEGORY_NAME[c.category]}</h3></div>
+          <div className="meter-list">
+            {c.rows.map((r) => {
+              const good = (r.vsBench ?? 0) >= 0;
+              const p = plain(r.metric.id);
+              return (
+                <div key={r.metric.id} className="meter-row" title={p.why}>
+                  <div style={{ minWidth: 0 }}>
+                    <div className="meter-name">{p.name}</div>
+                    <div className={`small ${good ? "good-c" : "bad-c"}`}>{fill(good ? p.good : p.bad, name)}</div>
+                  </div>
+                  <Meter row={r} />
+                  <TrendWord v={trendVerdict(r)} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      {extra.length > 0 && (
+        <p className="small muted">Also tracked without a rank target: {extra.map((r) => `${plain(r.metric.id).name} ${formatValue(r.metric.format, r.avg)}`).join(" · ")}</p>
+      )}
+    </div>
+  );
+}
+
 /** Pick any metric and see it game by game (EWMA) or per week, for both players. */
 function TrendExplorer() {
   const { games, names, bracket } = useApp();
@@ -82,13 +118,13 @@ function TrendExplorer() {
   const bench0 = benchFor(metric, metric.scope === "player" ? (metric.roles?.[0] ?? "BOTTOM") : "BOTTOM", bracket);
   const fmt = (v: number) => formatValue(metric.format, v);
   return (
-    <Card title="Progress over time" hint="smoothed average, game by game">
+    <Card title="Are you improving?" hint="pick a stat; the line is smoothed so one bad game doesn't hide the trend">
       <div className="row wrap-row" style={{ marginBottom: 10 }}>
         <Select label="Metric" value={id} onChange={setId} options={ALL_METRICS.filter((m) => m.id !== "winrate").map((m) => ({ value: m.id, label: `${m.category} · ${m.label}` }))} />
         {metric.scope === "player" ? <Legend items={[{ label: names[0], color: "var(--p0)" }, { label: names[1], color: "var(--p1)" }]} /> : <Legend items={[{ label: "Duo", color: "var(--gold)" }]} />}
         {bench0 != null && <span className="small muted">Dashed line: {BRACKETS[bracket]} target ({fmt(bench0)})</span>}
       </div>
-      <div className="small muted" style={{ marginBottom: 6 }}>{metric.info}</div>
+      <div className="small muted" style={{ marginBottom: 6 }}>{metric.info} <b className="text-2">{metric.better === "higher" ? "Higher is better." : "Lower is better."}</b></div>
       <div style={{ height: 240 }}>
         <ResponsiveContainer>
           <LineChart data={rows} margin={{ top: 6, right: 8, left: -10, bottom: 0 }}>
@@ -112,6 +148,16 @@ function TrendExplorer() {
   );
 }
 
+/** Win-rate bar with a 50% mark: blue past the mark = winning more than losing. */
+function WrBar({ wr }: { wr: number }) {
+  return (
+    <div className="wrbar">
+      <motion.i className={wr >= 0.5 ? "w" : "l"} initial={{ width: 0 }} animate={{ width: `${wr * 100}%` }} transition={{ type: "spring", stiffness: 200, damping: 26 }} />
+      <span className="half" />
+    </div>
+  );
+}
+
 function Breakdown() {
   const { games, session } = useApp();
   const lane = (m: Match) => { const a = snapDiff(m, "15", adcIdx(m), enemyIdx(m, "BOTTOM"), 0), s = snapDiff(m, "15", supIdx(m), enemyIdx(m, "UTILITY"), 0); return a == null || s == null ? null : a + s; };
@@ -123,12 +169,12 @@ function Breakdown() {
     ["Session", [["1st game", games.filter((m) => session.get(m.id)?.game === 1)], ["2nd–3rd game", games.filter((m) => [2, 3].includes(session.get(m.id)?.game ?? 0))], ["4th+ game", games.filter((m) => (session.get(m.id)?.game ?? 0) >= 4)], ["After a win", games.filter((m) => session.get(m.id)?.prev === true)], ["After a loss", games.filter((m) => session.get(m.id)?.prev === false)]]],
   ];
   return (
-    <Card title="When do you win?">
+    <Card title="When do you win?" hint="the line in each bar is 50%">
       <div className="grid g2" style={{ gap: "4px 24px" }}>
         {groups.map(([title, rows]) => (
           <table key={title}>
-            <thead><tr><th>{title}</th><th className="num">Games</th><th className="num">Record</th><th className="num">WR</th></tr></thead>
-            <tbody>{rows.filter(([, g]) => g.length).map(([label, g]) => { const r = record(g); return <tr key={label}><td>{label}</td><td className="num">{r.n}</td><td className="num small muted">{r.w}W {r.l}L</td><td className="num"><WinRate wr={r.wr} n={r.n} /></td></tr>; })}</tbody>
+            <thead><tr><th>{title}</th><th className="num">Record</th><th /><th className="num">Win rate</th></tr></thead>
+            <tbody>{rows.filter(([, g]) => g.length).map(([label, g]) => { const r = record(g); return <tr key={label}><td>{label}</td><td className="num small muted">{r.w}W {r.l}L</td><td style={{ width: "40%" }}><WrBar wr={r.wr ?? 0} /></td><td className="num"><WinRate wr={r.wr} n={r.n} /></td></tr>; })}</tbody>
           </table>
         ))}
       </div>
@@ -139,15 +185,19 @@ function Breakdown() {
 export function Stats() {
   const { games, names, bracket } = useApp();
   const [who, setWho] = useState<"0" | "1" | "duo">("0");
+  const [raw, setRaw] = useState(false);
   const rows = useMemo(() => (who === "duo" ? duoStats(games, bracket) : playerStats(games, Number(who) as 0 | 1, bracket)), [games, who, bracket]);
   return (
     <div className="stack">
-      <Card title="Average stats" hint={`targets for ${BRACKETS[bracket]}`}>
-        <div style={{ marginBottom: 10 }}>
-          <Segmented value={who} onChange={setWho} options={[{ value: "0", label: names[0] }, { value: "1", label: names[1] }, { value: "duo", label: "Duo / bot lane" }]} />
+      <Card title="How you compare" hint={`against ${BRACKETS[bracket]} players`}>
+        <div className="row wrap-row" style={{ marginBottom: 16, justifyContent: "space-between" }}>
+          <Segmented value={who} onChange={setWho} options={[{ value: "0", label: names[0] }, { value: "1", label: names[1] }, { value: "duo", label: "Bot lane together" }]} />
+          <Segmented value={raw ? "raw" : "simple"} onChange={(v) => setRaw(v === "raw")} options={[{ value: "simple", label: "Simple" }, { value: "raw", label: "Exact numbers" }]} />
         </div>
-        <StatTable rows={rows} />
-        <p className="small muted" style={{ marginTop: 12 }}>
+        {raw ? <StatTable rows={rows} /> : <MeterList rows={rows} name={who === "duo" ? "You" : names[Number(who)]} />}
+        <p className="small muted" style={{ marginTop: 16 }}>
+          The dot is you, the line is the target for your rank, and the green area is where you want to be.
+          
           A trend only counts as better or worse when the last 10 games differ from the 10 before by more than normal game-to-game noise.
           Targets come from coaching benchmarks and are a rough guide.
         </p>

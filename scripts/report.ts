@@ -64,7 +64,7 @@ for (const slot of [0, 1] as const) {
 }
 
 h("Automatic insights");
-for (const i of insights(games, names, bracket)) console.log(`- [${i.severity}] ${i.who}: ${i.title} — ${i.detail}`);
+for (const i of insights(games, names, bracket)) console.log(`- [${i.severity}] ${i.title} — ${i.detail}${i.trend && i.trend !== "na" ? ` (${i.trend})` : ""}`);
 
 h("Goals");
 if (!goals.goals.length) console.log("No goals yet.");
