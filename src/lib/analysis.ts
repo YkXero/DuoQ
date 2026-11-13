@@ -147,16 +147,33 @@ export function sessions(all: Match[]): Map<string, SessionInfo> {
  * with role-aware weights. MVP = best on winning team, ACE = best on losing team.
  */
 export function gameScores(m: Match): { score: number[]; rank: number[] } {
-  const teamTotal = (t: number, f: (i: number) => number) => m.parts.reduce((s, p, i) => (p.team === t ? s + f(i) : s), 0);
+  const teamTotal = (t: number, f: (p: Match["parts"][number]) => number) => m.parts.reduce((s, p) => (p.team === t ? s + f(p) : s), 0);
+  // Raw components per player
+  const comp = m.parts.map((p) => {
+    const tk = Math.max(1, teamTotal(p.team, (q) => q.k));
+    const share = (f: (q: Match["parts"][number]) => number) => f(p) / Math.max(1, teamTotal(p.team, f));
+    return {
+      kda: Math.min(12, (p.k + p.a) / Math.max(1, p.d)),
+      kp: Math.min(1, (p.k + p.a) / tk),
+      dmg: share((q) => q.dmg),
+      gold: share((q) => q.gold),
+      vis: share((q) => q.vision),
+      deaths: -p.d,
+    };
+  });
+  // Normalise each component to 0..1 across the 10 players, so no single stat dominates.
+  const keys = ["kda", "kp", "dmg", "gold", "vis", "deaths"] as const;
+  const norm = Object.fromEntries(keys.map((k) => {
+    const xs = comp.map((c) => c[k]), lo = Math.min(...xs), hi = Math.max(...xs);
+    return [k, xs.map((x) => (hi - lo < 1e-9 ? 0.5 : (x - lo) / (hi - lo)))];
+  })) as Record<(typeof keys)[number], number[]>;
   const raw = m.parts.map((p, i) => {
-    const tk = Math.max(1, teamTotal(p.team, (j) => m.parts[j].k));
-    const share = (f: (j: number) => number) => f(i) / Math.max(1, teamTotal(p.team, f));
-    const kda = Math.min(10, (p.k + p.a) / Math.max(1, p.d)) / 10;
-    const kp = (p.k + p.a) / tk;
-    const dmg = share((j) => m.parts[j].dmg), gold = share((j) => m.parts[j].gold), vis = share((j) => m.parts[j].vision), cs = share((j) => m.parts[j].cs);
-    const sup = p.pos === "UTILITY";
-    const v = sup ? 0.3 * kda + 0.3 * kp + 0.1 * dmg + 0.3 * vis * 1.5 : 0.3 * kda + 0.2 * kp + 0.25 * dmg * 1.5 + 0.1 * gold + 0.05 * vis + 0.1 * cs;
-    return v + (p.team === m.team ? (m.win ? 0.05 : 0) : m.win ? 0 : 0.05);
+    const n = (k: (typeof keys)[number]) => norm[k][i];
+    const won = p.team === m.team ? m.win : !m.win;
+    const base = p.pos === "UTILITY"
+      ? 0.3 * n("kda") + 0.3 * n("kp") + 0.15 * n("vis") + 0.1 * n("dmg") + 0.15 * n("deaths")
+      : 0.25 * n("kda") + 0.2 * n("kp") + 0.25 * n("dmg") + 0.1 * n("gold") + 0.05 * n("vis") + 0.15 * n("deaths");
+    return base + (won ? 0.08 : 0);
   });
   const max = Math.max(...raw), min = Math.min(...raw);
   const score = raw.map((r) => Math.round((3 + 7 * ((r - min) / Math.max(1e-6, max - min))) * 10) / 10);

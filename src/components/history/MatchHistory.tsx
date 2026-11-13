@@ -28,7 +28,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
         <Champ name={p.champ} size={46} level={p.lvl} />
         <div className="col"><Spell id={p.spells[0]} /><Spell id={p.spells[1]} /></div>
         <div className="col"><Rune id={p.runes[0]} /><Rune id={p.runes[2]} dim /></div>
-        <div style={{ marginLeft: 6, minWidth: 0 }}>
+        <div className="kda-block">
           <div className="kda">{p.k} / <span className="d">{p.d}</span> / {p.a}</div>
           <div className="ratio"><Kda k={p.k} d={p.d} a={p.a} /></div>
           <div className="row" style={{ gap: 4, marginTop: 2 }}>
@@ -38,7 +38,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           </div>
         </div>
         <div className="side-stats">
-          <span>P/Kill {tk ? Math.round(((p.k + p.a) / tk) * 100) : 0}%</span>
+          <span>P/Kill {tk ? Math.min(100, Math.round(((p.k + p.a) / tk) * 100)) : 0}%</span>
           <span>CS {p.cs} ({(p.cs / (m.dur / 60)).toFixed(1)})</span>
           <span>Vision {p.vision}</span>
           <span className="muted">Score {scores.score[idx].toFixed(1)}</span>

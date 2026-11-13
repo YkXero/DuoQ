@@ -49,7 +49,7 @@ function Scoreboard({ m }: { m: Match }) {
                           </div>
                         </td>
                         <td className="num">{scores.score[i].toFixed(1)} {b ? <span className={`tagpill ${b === "MVP" ? "mvp" : "ace"}`}>{b}</span> : <span className="muted small">#{scores.rank[i]}</span>}</td>
-                        <td><div>{p.k}/<span className="loss-c">{p.d}</span>/{p.a} <span className="small muted">({teamKills ? Math.round(((p.k + p.a) / teamKills) * 100) : 0}%)</span></div><div className="small"><Kda k={p.k} d={p.d} a={p.a} /></div></td>
+                        <td><div>{p.k}/<span className="loss-c">{p.d}</span>/{p.a} <span className="small muted">({teamKills ? Math.min(100, Math.round(((p.k + p.a) / teamKills) * 100)) : 0}%)</span></div><div className="small"><Kda k={p.k} d={p.d} a={p.a} /></div></td>
                         <td>
                           <div className="dmg-bars" title={`Dealt ${p.dmg.toLocaleString()} · Taken ${p.taken.toLocaleString()}`}>
                             <div className="row small" style={{ gap: 6 }}><span style={{ width: 40 }}>{(p.dmg / 1000).toFixed(1)}k</span><div style={{ flex: 1 }}><Bar value={p.dmg / maxDmg} color="var(--loss)" /></div></div>

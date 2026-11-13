@@ -4,9 +4,9 @@ import { chrono, duoStats, playerStats, record, synergies } from "../../lib/anal
 import { champName } from "../../lib/ddragon.ts";
 import { formatValue } from "../../lib/formatValue.ts";
 import { goalProgress } from "../../lib/goals.ts";
-import { CATEGORY_NAME, coaching, reportCard, winLossSwings, type Insight, type Who } from "../../lib/insights.ts";
+import { CATEGORY_NAME, coaching, reportCard, verdict, winLossSwings, type Insight, type Who } from "../../lib/insights.ts";
 import { stagger } from "../../lib/motion.ts";
-import { fill, plain } from "../../lib/plain.ts";
+import { plain } from "../../lib/plain.ts";
 import { useApp } from "../../state.tsx";
 import { GoalCard } from "../coach/Coach.tsx";
 import { Card, Donut, Segmented } from "../ui/Controls.tsx";
@@ -59,14 +59,13 @@ function ReportCard() {
       </div>
       <div className="report">
         {cells.map((c, i) => {
-          const w = c.worst!;
-          const ok = (w.vsBench ?? 0) >= -0.05;
+          const v = verdict(c.worst!, name);
           return (
             <motion.div key={c.category} className="report-cell" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={stagger(i, 0.04)}>
               <GradeBadge grade={c.grade} />
               <div style={{ minWidth: 0 }}>
                 <div className="report-name">{CATEGORY_NAME[c.category]}</div>
-                <div className="small text-2">{ok ? fill(plain(w.metric.id).good, name) : fill(plain(w.metric.id).bad, name)}</div>
+                <div className="small text-2">{v.text}</div>
               </div>
             </motion.div>
           );
@@ -88,6 +87,11 @@ function FixCard({ i, n }: { i: Insight; n: number }) {
       </div>
       <h3 className="fix-title">{i.title}</h3>
       {i.row && <Meter row={i.row} />}
+      {i.champs && (
+        <div className="fix-champs">
+          {i.champs.map((c, k) => <span key={c} className="row" style={{ gap: 6 }}>{k > 0 && <span className="plus">+</span>}<Champ name={c} size={44} /></span>)}
+        </div>
+      )}
       <p className="fix-detail">{i.detail}</p>
       {i.why && <p className="fix-why">{i.why}</p>}
       {i.tip && <p className="fix-tip"><b>Try this:</b> {i.tip}</p>}
@@ -109,7 +113,7 @@ function Strength({ i, n }: { i: Insight; n: number }) {
 
 function WinsVsLosses() {
   const { games, names, bracket } = useApp();
-  const swings = useMemo(() => winLossSwings(games, names, bracket), [games, names, bracket]);
+  const swings = useMemo(() => winLossSwings(games, names, bracket, 4), [games, names, bracket]);
   if (!swings.length) return null;
   return (
     <Card title="What changes when you lose" hint="the biggest differences between your wins and losses">
@@ -183,13 +187,11 @@ export function Overview() {
           </details>
         )}
       </section>
-      <div className="grid g2">
-        <Card title="What's working">
-          <div className="stack" style={{ gap: 10 }}>{c.strengths.slice(0, 5).map((i, n) => <Strength key={i.title} i={i} n={n} />)}</div>
-          {!c.strengths.length && <p className="muted small">Nothing clearly above target yet.</p>}
-        </Card>
-        <ReportCard />
-      </div>
+      <ReportCard />
+      <Card title="What's working">
+        <div className="strengths">{c.strengths.slice(0, 6).map((i, n) => <Strength key={i.title} i={i} n={n} />)}</div>
+        {!c.strengths.length && <p className="muted small">Nothing clearly above target yet.</p>}
+      </Card>
       <WinsVsLosses />
       <div className="grid g2">
         <Card title="Are you climbing?"><LpChart /></Card>

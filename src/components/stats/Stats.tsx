@@ -13,8 +13,8 @@ import { Legend } from "../overview/Charts.tsx";
 import { Card, Segmented, Select } from "../ui/Controls.tsx";
 import { WinRate } from "../ui/Icons.tsx";
 import { GradeBadge, Meter, TrendWord } from "../ui/Meter.tsx";
-import { CATEGORY_NAME, reportCard } from "../../lib/insights.ts";
-import { fill, plain } from "../../lib/plain.ts";
+import { CATEGORY_NAME, reportCard, verdict } from "../../lib/insights.ts";
+import { plain } from "../../lib/plain.ts";
 
 function BenchBar({ r }: { r: StatRow }) {
   if (r.vsBench == null) return <span className="muted small">–</span>;
@@ -78,13 +78,12 @@ function MeterList({ rows, name }: { rows: StatRow[]; name: string }) {
           <div className="row" style={{ gap: 10, marginBottom: 8 }}><GradeBadge grade={c.grade} size={30} /><h3 className="cat-title">{CATEGORY_NAME[c.category]}</h3></div>
           <div className="meter-list">
             {c.rows.map((r) => {
-              const good = (r.vsBench ?? 0) >= 0;
-              const p = plain(r.metric.id);
+              const p = plain(r.metric.id), v = verdict(r, name);
               return (
                 <div key={r.metric.id} className="meter-row" title={p.why}>
                   <div style={{ minWidth: 0 }}>
                     <div className="meter-name">{p.name}</div>
-                    <div className={`small ${good ? "good-c" : "bad-c"}`}>{fill(good ? p.good : p.bad, name)}</div>
+                    <div className={`small ${v.tone === "good" ? "good-c" : v.tone === "bad" ? "bad-c" : "muted"}`}>{v.text}</div>
                   </div>
                   <Meter row={r} />
                   <TrendWord v={trendVerdict(r)} />
@@ -139,8 +138,8 @@ function TrendExplorer() {
                 {r.a != null && <div><b className={metric.scope === "duo" ? "" : "p0"}>{metric.scope === "duo" ? "Duo" : names[0]}</b> {fmt(r.a)}</div>}
                 {r.b != null && <div><b className="p1">{names[1]}</b> {fmt(r.b)}</div>}</div>;
             }} />
-            <Line dataKey="a" stroke={metric.scope === "duo" ? "var(--gold)" : "var(--p0)"} strokeWidth={2} dot={false} connectNulls type="monotone" animationDuration={600} />
-            {metric.scope === "player" && <Line dataKey="b" stroke="var(--p1)" strokeWidth={2} dot={false} connectNulls type="monotone" animationDuration={600} />}
+            <Line dataKey="a" stroke={metric.scope === "duo" ? "var(--gold)" : "var(--p0)"} strokeWidth={2} dot={false} connectNulls type="monotone" isAnimationActive={false} />
+            {metric.scope === "player" && <Line dataKey="b" stroke="var(--p1)" strokeWidth={2} dot={false} connectNulls type="monotone" isAnimationActive={false} />}
           </LineChart>
         </ResponsiveContainer>
       </div>

@@ -41,7 +41,7 @@ export function Kda({ k, d, a }: { k: number; d: number; a: number }) {
 }
 
 export function WinRate({ wr, n }: { wr: number | null; n?: number }) {
-  if (wr == null) return <span className="wr lo">–</span>;
-  const cls = n != null && n < 3 ? "lo" : wr >= 0.6 ? "hi" : wr >= 0.45 ? "ok" : "lo";
+  if (wr == null) return <span className="wr na">–</span>;
+  const cls = n != null && n < 3 ? "na" : wr >= 0.55 ? "hi" : wr >= 0.45 ? "ok" : "lo";
   return <span className={`wr ${cls}`}>{Math.round(wr * 100)}%</span>;
 }

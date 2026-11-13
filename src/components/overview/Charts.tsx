@@ -44,8 +44,8 @@ export function LpChart() {
               return <div className="chart-tip"><div className="h">{new Date(r.ts).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</div>
                 {[r.r0, r.r1].map((x, i) => <div key={i}><b className={`p${i}`}>{names[i]}</b> {rankText(x)}{x ? ` · ${x.lp} LP` : ""}</div>)}</div>;
             }} />
-            <Line dataKey="p0" stroke="var(--p0)" strokeWidth={2} dot={false} type="monotone" connectNulls isAnimationActive animationDuration={700} />
-            <Line dataKey="p1" stroke="var(--p1)" strokeWidth={2} dot={false} type="monotone" connectNulls isAnimationActive animationDuration={700} />
+            <Line dataKey="p0" stroke="var(--p0)" strokeWidth={2} dot={false} type="monotone" connectNulls isAnimationActive={false} />
+            <Line dataKey="p1" stroke="var(--p1)" strokeWidth={2} dot={false} type="monotone" connectNulls isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -55,10 +55,11 @@ export function LpChart() {
 
 export function RollingWinRate({ games }: { games: Match[] }) {
   if (games.length < 3) return <p className="muted small">Needs a few more games.</p>;
+  // Start once there are 5 games, so the first point isn't a meaningless 0% or 100%.
   const rows = games.map((m, i) => {
     const w = games.slice(Math.max(0, i - 9), i + 1);
     return { i: i + 1, wr: Math.round((w.filter((x) => x.win).length / w.length) * 100), m };
-  });
+  }).filter((r) => r.i >= Math.min(5, games.length));
   const last = rows.at(-1)!.wr;
   return (
     <>
@@ -77,7 +78,7 @@ export function RollingWinRate({ games }: { games: Match[] }) {
             return <div className="chart-tip"><div className="h">Game {r.i} · {new Date(r.m.ts).toLocaleDateString()}</div>
               <div><b className={r.m.win ? "win-c" : "loss-c"}>{r.m.win ? "Victory" : "Defeat"}</b> · {a} + {s}</div><div>Last 10: <b>{r.wr}%</b></div></div>;
           }} />
-          <Line dataKey="wr" stroke="var(--gold)" strokeWidth={2} type="monotone" isAnimationActive animationDuration={700}
+          <Line dataKey="wr" stroke="var(--gold)" strokeWidth={2} type="monotone" isAnimationActive={false}
             dot={(props) => { const { cx, cy, payload, index } = props as { cx: number; cy: number; payload: (typeof rows)[number]; index: number }; return <circle key={index} cx={cx} cy={cy} r={3.5} fill={payload.m.win ? "var(--win)" : "var(--loss)"} stroke="var(--panel)" strokeWidth={1.5} />; }} />
         </LineChart>
       </ResponsiveContainer>
@@ -121,7 +122,7 @@ export function GoldGraph({ m }: { m: Match }) {
             const r = payload[0].payload as (typeof rows)[number];
             return <div className="chart-tip"><div className="h">{r.min}:00</div><b className={r.g >= 0 ? "win-c" : "loss-c"}>{r.g >= 0 ? "+" : ""}{r.g.toLocaleString()} gold</b> for your team</div>;
           }} />
-          <Area dataKey="g" type="monotone" stroke={`url(#${gid}-s)`} strokeWidth={2} fill={`url(#${gid})`} isAnimationActive animationDuration={600} />
+          <Area dataKey="g" type="monotone" stroke={`url(#${gid}-s)`} strokeWidth={2} fill={`url(#${gid})`} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>

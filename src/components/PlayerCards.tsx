@@ -40,11 +40,11 @@ export function PlayerCards() {
                 <span className="role-chip"><PosIcon pos={p.role} />{p.role === "BOTTOM" ? "ADC" : "Support"}</span>
               </div>
               <div className="rank-line">
-                {solo && <Emblem tier={solo.tier} />}
+                {solo && <Emblem tier={solo.tier} size={48} />}
                 <div>
                   <div className="tier">{rankText(solo)}{solo && <span className="muted"> · {solo.lp} LP</span>}</div>
                   <div className="small muted">
-                    {solo ? `${solo.wins}W ${solo.losses}L · ${Math.round((solo.wins / Math.max(1, solo.wins + solo.losses)) * 100)}% season` : "Solo/Duo"}
+                    {solo && solo.wins + solo.losses > 0 ? `${solo.wins}W ${solo.losses}L this season · ${Math.round((solo.wins / (solo.wins + solo.losses)) * 100)}%` : "Solo/Duo"}
                     {delta ? <span className={delta > 0 ? "win-c" : "loss-c"}> · {delta > 0 ? "+" : ""}{delta} LP in challenge</span> : null}
                   </div>
                 </div>

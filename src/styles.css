@@ -86,7 +86,7 @@ img { display: block; }
 .player-name { font-size: 17px; font-weight: 700; }
 .player-name .tag { color: var(--muted); font-weight: 400; }
 .rank-line { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-.rank-line img { width: 40px; height: 40px; object-fit: contain; margin: -6px 0; }
+.rank-line img { width: 48px; height: 48px; object-fit: contain; }
 .tier { font-weight: 700; }
 .role-chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px 1px 4px; border-radius: 99px; background: var(--panel-3); font-size: 11px; color: var(--text-2); }
 .role-chip img { width: 14px; height: 14px; }
@@ -130,9 +130,10 @@ tbody tr:last-child td { border-bottom: 0; }
 
 /* winrate pill */
 .wr { display: inline-block; min-width: 44px; text-align: right; font-weight: 600; }
-.wr.hi { color: var(--loss-text); } /* op.gg: hot win rates are red */
+.wr.hi { color: var(--good); }
 .wr.ok { color: var(--text); }
-.wr.lo { color: var(--muted); }
+.wr.lo { color: var(--loss-text); }
+.wr.na { color: var(--muted); }
 .kda-0 { color: var(--text-2); }
 .kda-3 { color: var(--good); }
 .kda-4 { color: var(--great); }

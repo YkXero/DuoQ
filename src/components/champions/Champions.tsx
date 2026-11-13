@@ -12,6 +12,14 @@ function SortTh({ k, sort, setSort, children }: { k: SortKey; sort: SortKey; set
   return <th className={`num sort${sort === k ? " text-2" : ""}`} onClick={() => setSort(k)}>{children}{sort === k ? " ▾" : ""}</th>;
 }
 
+/** Plain verdict that accounts for sample size (shrunk win rate pulls small samples toward 50%). */
+function PairVerdict({ n, shrunk }: { n: number; shrunk: number }) {
+  if (n < 3) return <span className="mtag">Too few games</span>;
+  if (shrunk >= 0.56) return <span className="mtag good">Play more</span>;
+  if (shrunk <= 0.44) return <span className="mtag bad">Avoid</span>;
+  return <span className="mtag">Fine</span>;
+}
+
 function Synergies() {
   const { games } = useApp();
   const [sort, setSort] = useState<SortKey>("games");
@@ -21,18 +29,19 @@ function Synergies() {
     return [...r].sort((a, b) => by[sort](b) - by[sort](a));
   }, [games, sort]);
   return (
-    <Card title="Duo synergies" hint="win rate sorting is adjusted for small samples">
+    <Card title="Which duos work?" hint="the verdict accounts for how many games you've played">
       <div className="scroll-x">
         <table>
-          <thead><tr><th>ADC + Support</th><SortTh k="games" sort={sort} setSort={setSort}>Games</SortTh><th className="num">Record</th><SortTh k="wr" sort={sort} setSort={setSort}>Win rate</SortTh><th style={{ width: 90 }} /><SortTh k="kda" sort={sort} setSort={setSort}>Duo KDA</SortTh><SortTh k="gd15" sort={sort} setSort={setSort}>Lane GD@15</SortTh></tr></thead>
+          <thead><tr><th>ADC + Support</th><SortTh k="games" sort={sort} setSort={setSort}>Games</SortTh><th>Verdict</th><th className="num">Record</th><SortTh k="wr" sort={sort} setSort={setSort}>Win rate</SortTh><th style={{ width: 90 }} /><SortTh k="kda" sort={sort} setSort={setSort}>Duo KDA</SortTh><SortTh k="gd15" sort={sort} setSort={setSort}>Lane GD@15</SortTh></tr></thead>
           <tbody>
             {rows.map((p) => (
               <tr key={p.adc + p.sup}>
                 <td><div className="cell-champ"><Champ name={p.adc} /><span className="muted">+</span><Champ name={p.sup} /><span>{champName(p.adc)} + {champName(p.sup)}</span></div></td>
                 <td className="num">{p.rec.n}</td>
+                <td><PairVerdict n={p.rec.n} shrunk={p.rec.shrunk} /></td>
                 <td className="num small muted">{p.rec.w}W {p.rec.l}L</td>
                 <td className="num"><WinRate wr={p.rec.wr} n={p.rec.n} /></td>
-                <td><Bar value={p.rec.wr ?? 0} /></td>
+                <td><Bar value={p.rec.wr ?? 0} color={(p.rec.wr ?? 0) >= 0.5 ? "var(--win)" : "var(--loss)"} /></td>
                 <td className="num">{formatValue("dec2", p.kda)}</td>
                 <td className={`num ${(p.gd15 ?? 0) >= 0 ? "win-c" : "loss-c"}`}>{formatValue("signed", p.gd15)}</td>
               </tr>
@@ -99,7 +108,7 @@ export function Champions() {
   return (
     <div className="stack">
       <Synergies />
-      <div className="grid g2"><Matchups pos="BOTTOM" title="vs enemy ADC" /><Matchups pos="UTILITY" title="vs enemy support" /></div>
+      <div className="grid g2"><Matchups pos="BOTTOM" title="Against enemy ADCs" /><Matchups pos="UTILITY" title="Against enemy supports" /></div>
       <div className="grid g2"><Pool slot={0} /><Pool slot={1} /></div>
     </div>
   );
