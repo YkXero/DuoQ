@@ -10,20 +10,20 @@ export function Champ({ name, size = 28, level, round }: { name: string; size?: 
 }
 
 export function Item({ id, size = 22, empty = "slot-empty" }: { id: number; size?: number; empty?: string }) {
-  if (!id) return <span className={`ic empty ${empty}`} style={{ width: size, height: size }} />;
+  if (!id) return <span className={`ic ic-empty ${empty}`} style={{ width: size, height: size }} />;
   return <img className="ic" src={itemIcon(id)} width={size} height={size} alt="" title={itemName(id)} loading="lazy" onError={hide} />;
 }
 
 export function Spell({ id, size = 22 }: { id: number; size?: number }) {
   const src = spellIcon(id);
-  return src ? <img className="ic" src={src} width={size} height={size} alt="" loading="lazy" onError={hide} /> : <span className="ic empty" style={{ width: size, height: size }} />;
+  return src ? <img className="ic" src={src} width={size} height={size} alt="" loading="lazy" onError={hide} /> : <span className="ic ic-empty" style={{ width: size, height: size }} />;
 }
 
 export function Rune({ id, size = 22, dim }: { id: number; size?: number; dim?: boolean }) {
   const src = runeIcon(id);
   return src
     ? <img className="ic round" style={{ background: "#000", padding: dim ? 3 : 1, opacity: dim ? 0.85 : 1 }} src={src} width={size} height={size} alt="" title={runeName(id)} loading="lazy" onError={hide} />
-    : <span className="ic round empty" style={{ width: size, height: size }} />;
+    : <span className="ic round ic-empty" style={{ width: size, height: size }} />;
 }
 
 export const Emblem = ({ tier, size = 40 }: { tier: string; size?: number }) => (
