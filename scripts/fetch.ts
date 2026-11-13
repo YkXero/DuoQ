@@ -61,11 +61,14 @@ for (const queue of config.queues) {
     if (page.length < 100) break;
   }
 }
-const todo = [...ids].sort().slice(0, Number(arg("limit") ?? config.maxNewMatchesPerRun ?? 150)); // ids are sequential per region: oldest first
+// Normal runs: oldest first, capped per run. Dry runs: newest first until `limit` duo games are found.
+const todo = DRY ? [...ids].sort().reverse() : [...ids].sort().slice(0, config.maxNewMatchesPerRun ?? 150);
+const dryLimit = Number(arg("limit") ?? 4); // ids are sequential per region: oldest first
 console.log(`${ids.size} unseen matches, processing ${todo.length}`);
 
 let added = 0;
 for (const id of todo) {
+  if (DRY && added >= dryLimit) break;
   const raw = await riot.match(id);
   if (!raw) { data.skipped.push(id); continue; }
   const quick = transform(raw, null, players.map((p) => p.puuid));
