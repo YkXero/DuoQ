@@ -1,13 +1,25 @@
 {
   "challengeName": "Duo Q Challenge",
   "startDate": "2026-11-14",
+  "goal": null,
   "players": [
-    { "riotId": "Imsomnia#KOI", "role": "BOTTOM" },
-    { "riotId": "Sokai#KOI", "role": "UTILITY" }
+    {
+      "riotId": "Imsomnia#KOI",
+      "role": "BOTTOM"
+    },
+    {
+      "riotId": "Sokai#KOI",
+      "role": "UTILITY"
+    }
   ],
   "region": "europe",
   "platform": "euw1",
-  "queues": [420, 440, 400, 480],
+  "queues": [
+    420,
+    440,
+    400,
+    480
+  ],
   "fetchTimeline": true,
   "maxNewMatchesPerRun": 150
 }

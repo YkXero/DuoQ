@@ -38,7 +38,7 @@ function Shell({ demo, setDemo }: { demo: boolean; setDemo: (v: boolean) => void
       <div style={{ marginTop: 12 }}><Tabs value={tab} onChange={setTab} options={TABS} /></div>
       {games.length === 0 ? <div className="card empty muted">No games for these filters.</div> : (
         <AnimatePresence mode="wait">
-          <motion.div key={tab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring.smooth}>
+          <motion.div key={tab} initial={{ y: 8 }} animate={{ y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring.smooth}>
             {tab === "overview" && <Overview />}
             {tab === "history" && <MatchHistory />}
             {tab === "stats" && <Stats />}
@@ -53,7 +53,7 @@ function Shell({ demo, setDemo }: { demo: boolean; setDemo: (v: boolean) => void
 
 export function App() {
   const [demo, setDemo] = useState(() => new URLSearchParams(location.search).has("demo"));
-  const state = useLoader(demo);
+  const { state, retry } = useLoader(demo);
   const setDemoUrl = (v: boolean) => {
     const u = new URL(location.href);
     if (v) u.searchParams.set("demo", ""); else u.searchParams.delete("demo");
@@ -75,11 +75,20 @@ export function App() {
       )}
       {state.status === "empty" && (
         <main className="wrap">
-          <motion.div className="card empty" style={{ marginTop: 40 }} initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={spring.gentle}>
+          <motion.div className="card empty" style={{ marginTop: 40 }} initial={{ scale: 0.97 }} animate={{ scale: 1 }} transition={spring.gentle}>
             <h2 style={{ marginTop: 0 }}>No games yet</h2>
-            <p className="muted">{state.reason} The tracker checks for new games every 30 minutes.</p>
+            <p className="muted">{state.reason} New games show up here within about 30 minutes of finishing.</p>
             <button className="btn primary" onClick={() => setDemoUrl(true)}>Preview with demo data</button>
           </motion.div>
+        </main>
+      )}
+      {state.status === "error" && (
+        <main className="wrap">
+          <div className="card empty" style={{ marginTop: 40 }}>
+            <h2 style={{ marginTop: 0 }}>Couldn't load your games</h2>
+            <p className="muted">The page couldn't read the match data ({state.reason}). Check your connection and try again.</p>
+            <button className="btn primary" onClick={retry}>Try again</button>
+          </div>
         </main>
       )}
       {state.status === "ready" && (

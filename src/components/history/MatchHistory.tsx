@@ -7,7 +7,7 @@ import { duration, timeAgo } from "../../lib/format.ts";
 import { spring } from "../../lib/motion.ts";
 import { mean } from "../../lib/stats.ts";
 import { adcIdx, enemyIdx, supIdx } from "../../lib/views.ts";
-import { matchTags } from "../../lib/tags.ts";
+import { gameStory } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
 import { Card, Segmented, Select } from "../ui/Controls.tsx";
 import { Champ, Item, Kda, Rune, Spell } from "../ui/Icons.tsx";
@@ -49,30 +49,37 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
   );
 }
 
+function BotLane({ m }: { m: Match }) {
+  const ours = [adcIdx(m), supIdx(m)], theirs = [enemyIdx(m, "BOTTOM"), enemyIdx(m, "UTILITY")];
+  return (
+    <div className="botlane" aria-label="Bot lane matchup">
+      <div className="bl-side">{ours.map((i) => <Champ key={i} name={m.parts[i].champ} size={28} />)}</div>
+      <span className="bl-vs">vs</span>
+      <div className="bl-side">{theirs.map((i, k) => (i >= 0 ? <Champ key={k} name={m.parts[i].champ} size={28} /> : null))}</div>
+    </div>
+  );
+}
+
 function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => void }) {
   const q = QUEUES[m.queue]?.name ?? `Queue ${m.queue}`;
+  const story = gameStory(m);
   return (
     <motion.div layout="position" className={`match ${m.win ? "w" : "l"}`} transition={spring.smooth}>
-      <div className="match-row" onClick={toggle} role="button" aria-expanded={open} tabIndex={0} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}>
+      <div className="match-row" onClick={toggle}>
         <div className="meta">
           <div className="q">{q}</div>
           <div className="small muted" title={new Date(m.ts).toLocaleString()}>{timeAgo(m.ts)}</div>
           <div className="res">{m.win ? "Victory" : "Defeat"}</div>
           <div className="small muted">{duration(m.dur)}</div>
-          <div className="mtags">{matchTags(m).map((t) => <span key={t.text} className={`mtag ${t.tone}`} title={t.title}>{t.text}</span>)}</div>
         </div>
         <PlayerBlock m={m} idx={m.duo[0]} slot={0} />
         <PlayerBlock m={m} idx={m.duo[1]} slot={1} />
-        <div className="rosters">
-          {[0, 1, 2, 3, 4].map((i) => [i, i + 5]).flat().map((i) => {
-            const p = m.parts[i];
-            return <div key={i} className={`r${m.duo.includes(i) ? " duo" : ""}`} title={p.name}><Champ name={p.champ} size={16} /><span>{p.name.split("#")[0]}</span></div>;
-          })}
-        </div>
-        <button className="expand" aria-label={open ? "Collapse" : "Expand"} onClick={(e) => { e.stopPropagation(); toggle(); }}>
-          <motion.svg width="12" height="12" viewBox="0 0 12 12" animate={{ rotate: open ? 180 : 0 }} transition={spring.snappy}><path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.8" fill="none" /></motion.svg>
+        <BotLane m={m} />
+        <button className="expand" aria-expanded={open} aria-label={open ? "Hide game details" : "Show game details"} onClick={(e) => { e.stopPropagation(); toggle(); }}>
+          <motion.svg width="12" height="12" viewBox="0 0 12 12" animate={{ rotate: open ? 180 : 0 }} transition={spring.snappy} aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.8" fill="none" /></motion.svg>
         </button>
       </div>
+      <p className={`story ${story.tone}`} onClick={toggle}>{story.text}</p>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div className="detail" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={spring.smooth}>

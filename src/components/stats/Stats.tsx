@@ -51,7 +51,7 @@ function StatTable({ rows }: { rows: StatRow[] }) {
           {cats.map((c) => [
             <tr key={c}><td colSpan={7} className="small muted" style={{ paddingTop: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>{c}</td></tr>,
             ...rows.filter((r) => r.metric.category === c).map((r, i) => (
-              <motion.tr key={r.metric.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={stagger(i, 0.02)}>
+              <motion.tr key={r.metric.id} transition={stagger(i, 0.02)}>
                 <td title={r.metric.info}>{r.metric.label} {r.n < r.metric.minN && <span className="small muted" title={`Only ${r.n} games: needs ${r.metric.minN} to be reliable`}>(n={r.n})</span>}</td>
                 <td className="num"><b>{formatValue(r.metric.format, r.avg)}</b></td>
                 <td className="num win-c">{formatValue(r.metric.format, r.inWins)}</td>
@@ -68,34 +68,48 @@ function StatTable({ rows }: { rows: StatRow[] }) {
   );
 }
 
-function MeterList({ rows, name }: { rows: StatRow[]; name: string }) {
-  const cells = reportCard(rows);
-  const extra = rows.filter((r) => r.vsBench == null && r.avg != null);
+function MeterRows({ rows, name }: { rows: StatRow[]; name: string }) {
   return (
-    <div className="stack" style={{ gap: 22 }}>
-      {cells.filter((c) => c.rows.length).map((c) => (
-        <div key={c.category}>
-          <div className="row" style={{ gap: 10, marginBottom: 8 }}><GradeBadge grade={c.grade} size={30} /><h3 className="cat-title">{CATEGORY_NAME[c.category]}</h3></div>
-          <div className="meter-list">
-            {c.rows.map((r) => {
-              const p = plain(r.metric.id), v = verdict(r, name);
-              return (
-                <div key={r.metric.id} className="meter-row" title={p.why}>
-                  <div style={{ minWidth: 0 }}>
-                    <div className="meter-name">{p.name}</div>
-                    <div className={`small ${v.tone === "good" ? "good-c" : v.tone === "bad" ? "bad-c" : "muted"}`}>{v.text}</div>
-                  </div>
-                  <Meter row={r} />
-                  <TrendWord v={trendVerdict(r)} />
-                </div>
-              );
-            })}
+    <div className="meter-list">
+      {rows.map((r) => {
+        const p = plain(r.metric.id), v = verdict(r, name);
+        return (
+          <div key={r.metric.id} className="meter-row" title={p.why}>
+            <div style={{ minWidth: 0 }}>
+              <div className="meter-name">{p.name}</div>
+              <div className={`small ${v.tone === "good" ? "good-c" : v.tone === "bad" ? "bad-c" : "text-2"}`}>{v.text}</div>
+            </div>
+            <Meter row={r} />
+            <TrendWord v={trendVerdict(r)} />
           </div>
-        </div>
-      ))}
-      {extra.length > 0 && (
-        <p className="small muted">Also tracked without a rank target: {extra.map((r) => `${plain(r.metric.id).name} ${formatValue(r.metric.format, r.avg)}`).join(" · ")}</p>
-      )}
+        );
+      })}
+    </div>
+  );
+}
+
+function MeterList({ rows, name }: { rows: StatRow[]; name: string }) {
+  const cells = reportCard(rows).filter((c) => c.rows.length);
+  return (
+    <div className="stack" style={{ gap: 14 }}>
+      <div className="meter-head small">
+        <span>The dot is you. The line is the usual number at your rank; green is where you want to be.</span>
+        <span className="meter-head-cols"><span>vs your rank</span><span>vs your previous 10 games</span></span>
+      </div>
+      {cells.map((c) => {
+        const head = <><GradeBadge grade={c.grade} size={30} /><h3 className="cat-title">{CATEGORY_NAME[c.category]}</h3><span className="small text-2">{c.grade === "A" || c.grade === "B" ? "going well" : c.grade === "C" ? "about normal" : "needs work"}</span></>;
+        return c.grade === "A" || c.grade === "B" ? (
+          <details key={c.category} className="cat">
+            <summary className="row" style={{ gap: 10 }}>{head}<span className="cat-toggle small muted">show</span></summary>
+            <div style={{ marginTop: 8 }}><MeterRows rows={c.rows} name={name} /></div>
+          </details>
+        ) : (
+          <section key={c.category} className="cat open">
+            <div className="row" style={{ gap: 10, marginBottom: 8 }}>{head}</div>
+            <MeterRows rows={c.rows} name={name} />
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -195,7 +209,6 @@ export function Stats() {
         </div>
         {raw ? <StatTable rows={rows} /> : <MeterList rows={rows} name={who === "duo" ? "You" : names[Number(who)]} />}
         <p className="small muted" style={{ marginTop: 16 }}>
-          The dot is you, the line is the target for your rank, and the green area is where you want to be.
           
           A trend only counts as better or worse when the last 10 games differ from the 10 before by more than normal game-to-game noise.
           Targets come from coaching benchmarks and are a rough guide.

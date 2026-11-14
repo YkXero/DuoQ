@@ -12,7 +12,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA_FILE = join(ROOT, "public", "data", "data.json");
 
 interface Config {
-  challengeName: string; startDate: string; region: string; platform: string; queues: number[];
+  challengeName: string; startDate: string; goal?: { tier: string; div: string } | null; region: string; platform: string; queues: number[];
   players: { riotId: string; role: "BOTTOM" | "UTILITY" }[]; fetchTimeline?: boolean; maxNewMatchesPerRun?: number;
 }
 
@@ -37,7 +37,7 @@ if (existsSync(DATA_FILE)) {
 // Drop matches from before the (possibly changed) start date.
 const startMs = new Date((arg("since") ?? config.startDate) + "T00:00:00").getTime();
 data.matches = data.matches.filter((m) => m.ts >= startMs);
-const before = JSON.stringify([data.matches.length, data.skipped.length, data.rankHistory.at(-1), data.players]);
+const before = JSON.stringify([data.matches.length, data.skipped.length, data.rankHistory.at(-1), data.players, data.goal ?? null, data.challengeName]);
 const known = new Set([...data.matches.map((m) => m.id), ...data.skipped]);
 
 // ---- resolve players (PUUIDs are per Riot app, so resolve each run)
@@ -108,9 +108,10 @@ data.matches.sort((x, y) => y.ts - x.ts);
 data.players = players.map(({ puuid: _puuid, ...rest }) => rest);
 data.challengeName = config.challengeName;
 data.startDate = config.startDate;
+data.goal = config.goal ?? null;
 data.version = DATA_VERSION;
 delete data.demo;
-const after = JSON.stringify([data.matches.length, data.skipped.length, data.rankHistory.at(-1), data.players]);
+const after = JSON.stringify([data.matches.length, data.skipped.length, data.rankHistory.at(-1), data.players, data.goal ?? null, data.challengeName]);
 if (after !== before || !existsSync(DATA_FILE)) {
   data.updated = Date.now();
   await mkdir(dirname(DATA_FILE), { recursive: true });

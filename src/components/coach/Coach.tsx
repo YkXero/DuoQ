@@ -1,4 +1,8 @@
 import { motion } from "motion/react";
+import { useMemo } from "react";
+import type { Goal } from "../../../shared/goals.ts";
+import { coaching } from "../../lib/insights.ts";
+import { plain } from "../../lib/plain.ts";
 import { formatValue } from "../../lib/formatValue.ts";
 import { goalProgress, type GoalProgress } from "../../lib/goals.ts";
 import { metricById } from "../../lib/metrics.ts";
@@ -12,7 +16,7 @@ export function GoalCard({ p, i = 0 }: { p: GoalProgress; i?: number }) {
   const g = p.goal;
   const val = g.mode === "perGame" ? `${p.hits}/${p.n} games hit` : `now ${formatValue(m?.format ?? "dec1", p.value)}`;
   return (
-    <motion.div className="goal" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={stagger(i)}>
+    <motion.div className="goal" initial={{ y: 8 }} animate={{ y: 0 }} transition={stagger(i)}>
       <Ring value={p.progress} color={p.met ? "var(--good)" : "var(--gold)"} />
       <div>
         <div className="row wrap-row">
@@ -30,16 +34,45 @@ export function GoalCard({ p, i = 0 }: { p: GoalProgress; i?: number }) {
   );
 }
 
+/** Turn the top problems into temporary objectives: reach the rank target over the last 10 games. */
+function useStarterGoals(): Goal[] {
+  const { games, names, bracket, data } = useApp();
+  return useMemo(() => coaching(games, names, bracket).improve
+    .filter((i) => i.row && i.row.bench != null)
+    .slice(0, 2)
+    .map((i) => {
+      const r = i.row!;
+      return {
+        id: `starter-${r.metric.id}-${String(i.who)}`,
+        title: `${plain(r.metric.id).name}: get to ${formatValue(r.metric.format, r.bench)}`,
+        why: i.title + ".",
+        metric: r.metric.id,
+        slot: i.who === "duo" ? undefined : i.who,
+        target: r.bench!,
+        mode: "average" as const,
+        window: 10,
+        createdAt: data.startDate,
+        status: "active" as const,
+        review: "",
+      };
+    }), [games, names, bracket, data.startDate]);
+}
+
 export function Coach() {
   const { goals, data } = useApp();
+  const starters = useStarterGoals();
   const active = goals.goals.filter((g) => g.status === "active");
   const past = goals.goals.filter((g) => g.status !== "active");
   const reviews = [...goals.reviews].reverse();
   return (
     <div className="stack">
-      <Card title="Objectives" hint="set during reviews, progress updates after every game">
+      <Card title="Objectives" hint="progress updates after every game">
         {active.length ? active.map((g, i) => <GoalCard key={g.id} p={goalProgress(g, data.matches)} i={i} />) : (
-          <p className="muted">No objectives yet. Ask Claude for a review once you have 10–15 games, and it will set them here.</p>
+          <>
+            <p className="text-2" style={{ marginTop: 0 }}>Your coach reviews your games every few days and sets objectives here. Until the first review, these starter objectives come from your two biggest problems.</p>
+            {starters.map((g, i) => <GoalCard key={g.id} p={goalProgress(g, data.matches)} i={i} />)}
+            {!starters.length && <p className="muted">Play a few more games together to get your first objectives.</p>}
+          </>
         )}
       </Card>
       {reviews.map((r, i) => (

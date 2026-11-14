@@ -60,12 +60,22 @@ function fromRows(rows: StatRow[], names: string[], who: Who): Insight[] {
 }
 
 /** One plain sentence + tone for a stat row (used by the meter list and report card). */
-export function verdict(r: StatRow, name: string): { text: string; tone: "good" | "bad" | "neutral" } {
-  const c = plain(r.metric.id), v = r.vsBench ?? 0;
-  if (Math.abs(v) < 0.05) return { text: `${name} ${name === "You" ? "are" : "is"} about normal for your rank`, tone: "neutral" };
-  if (v > 0) return { text: fill(c.good, name), tone: "good" };
+export type Tone = "good" | "bad" | "neutral";
+
+/** Three levels, used everywhere a stat is coloured: within ~8% of the target counts as normal. */
+export function toneOf(r: StatRow): Tone {
+  const v = r.vsBench ?? 0;
+  if (Math.abs(v) < 0.08) return "neutral";
+  if (v > 0) return "good";
   const softer = r.metric.format === "signed" && (r.avg ?? 0) >= 0 && r.metric.better === "higher";
-  return softer ? { text: `${fill(c.good, name)}, but only by a little`, tone: "neutral" } : { text: fill(c.bad, name), tone: "bad" };
+  return softer ? "neutral" : "bad";
+}
+
+export function verdict(r: StatRow, name: string): { text: string; tone: Tone } {
+  const c = plain(r.metric.id), tone = toneOf(r), v = r.vsBench ?? 0;
+  if (tone === "neutral")
+    return { text: v < 0 && r.metric.format === "signed" && (r.avg ?? 0) >= 0 ? `${fill(c.good, name)}, but only by a little` : `${name} ${name === "You" ? "are" : "is"} about normal for your rank`, tone };
+  return { text: fill(tone === "good" ? c.good : c.bad, name), tone };
 }
 
 /** Keep one insight per sentence (e.g. CS diff @10 and @15 both say "out-farmed"). */

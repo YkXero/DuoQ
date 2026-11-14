@@ -3,6 +3,7 @@ import type { Match, TeamId } from "../../../shared/types.ts";
 import { badge, gameScores } from "../../lib/analysis.ts";
 import { itemName } from "../../lib/ddragon.ts";
 import { adcIdx, enemyIdx, snapVal, supIdx } from "../../lib/views.ts";
+import { gameStory } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
 import { GoldGraph } from "../overview/Charts.tsx";
 import { Bar, Tabs } from "../ui/Controls.tsx";
@@ -33,7 +34,7 @@ function Scoreboard({ m }: { m: Match }) {
               <table>
                 <thead><tr>
                   <th><span className={won ? "win-c" : "loss-c"}>{won ? "Victory" : "Defeat"}</span> <span className="muted">({team === 100 ? "Blue" : "Red"} side{team === m.team ? ", your team" : ""})</span></th>
-                  <th className="num">Score</th><th>KDA</th><th>Damage</th><th className="num">Wards</th><th className="num">CS</th><th>Items</th>
+                  <th className="num" title="Our 0–10 rating of each player, compared with the other 9 in this game (KDA, kill participation, damage, gold, vision and deaths)">Score</th><th>KDA</th><th>Damage dealt / taken</th><th className="num" title="Control wards bought / wards placed / enemy wards cleared">Wards</th><th className="num">CS</th><th>Items</th>
                 </tr></thead>
                 <tbody>
                   {idxs.map((i) => {
@@ -76,15 +77,17 @@ function Scoreboard({ m }: { m: Match }) {
 function Lane({ m }: { m: Match }) {
   const { names } = useApp();
   const rows = [["Our ADC", adcIdx(m), "Their ADC", enemyIdx(m, "BOTTOM")], ["Our support", supIdx(m), "Their support", enemyIdx(m, "UTILITY")]] as const;
-  if (!m.tl) return <p className="muted small">No timeline for this game.</p>;
+  if (!m.tl) return <p className="muted small">No minute-by-minute data for this game.</p>;
   const cols = ["5", "10", "15", "20"] as const;
   const kills = m.tl.kills.filter((k) => k[0] < 840);
   const bot = [adcIdx(m), supIdx(m)], ebot = [enemyIdx(m, "BOTTOM"), enemyIdx(m, "UTILITY")];
+  const story = gameStory(m);
   return (
     <div className="stack" style={{ gap: 12 }}>
+      <p className={`lane-headline ${story.tone}`}>{story.text}</p>
       <div className="scroll-x">
         <table>
-          <thead><tr><th>Matchup</th>{cols.map((c) => <th key={c} className="num">Gold @{c}</th>)}{cols.slice(0, 3).map((c) => <th key={c} className="num">CS @{c}</th>)}</tr></thead>
+          <thead><tr><th>Matchup</th>{cols.map((c) => <th key={c} className="num">Gold lead {c} min</th>)}{cols.slice(0, 3).map((c) => <th key={c} className="num">CS {c} min</th>)}</tr></thead>
           <tbody>
             {rows.map(([l1, a, l2, b]) => (
               <tr key={l1}>
@@ -119,7 +122,7 @@ function Lane({ m }: { m: Match }) {
 
 function Build({ m }: { m: Match }) {
   const { names } = useApp();
-  if (!m.tl) return <p className="muted small">No timeline for this game.</p>;
+  if (!m.tl) return <p className="muted small">No minute-by-minute data for this game.</p>;
   return (
     <div className="stack" style={{ gap: 16 }}>
       {([0, 1] as const).map((slot) => {
@@ -153,10 +156,10 @@ function Build({ m }: { m: Match }) {
 }
 
 export function MatchDetail({ m }: { m: Match }) {
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<Tab>("lane");
   return (
     <div className="detail-inner">
-      <Tabs value={tab} onChange={setTab} options={[{ value: "overview", label: "Scoreboard" }, { value: "lane", label: "Bot lane" }, { value: "gold", label: "Gold graph" }, { value: "build", label: "Build" }]} />
+      <Tabs value={tab} onChange={setTab} options={[{ value: "lane", label: "Bot lane" }, { value: "overview", label: "Scoreboard" }, { value: "gold", label: "Gold graph" }, { value: "build", label: "Builds" }]} />
       {tab === "overview" && <Scoreboard m={m} />}
       {tab === "lane" && <Lane m={m} />}
       {tab === "gold" && <GoldGraph m={m} />}

@@ -25,32 +25,37 @@ export const useApp = () => {
   return v;
 };
 
-type Load = { status: "loading" } | { status: "empty"; reason: string } | { status: "ready"; data: DataFile; goals: GoalsFile };
+type Load = { status: "loading" } | { status: "empty"; reason: string } | { status: "error"; reason: string } | { status: "ready"; data: DataFile; goals: GoalsFile };
 
 const base = import.meta.env.BASE_URL;
+/** null = file doesn't exist yet; throws on network or parse errors. */
 async function getJson<T>(path: string): Promise<T | null> {
-  try {
-    const r = await fetch(`${base}${path}?t=${Date.now()}`);
-    return r.ok ? ((await r.json()) as T) : null;
-  } catch { return null; }
+  const r = await fetch(`${base}${path}?t=${Date.now()}`);
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+  return (await r.json()) as T;
 }
 
 export function useLoader(demo: boolean) {
   const [state, setState] = useState<Load>({ status: "loading" });
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     setState({ status: "loading" });
     (async () => {
-      const [data, goals] = await Promise.all([
-        getJson<DataFile>(demo ? "data/demo.json" : "data/data.json"),
-        getJson<GoalsFile>("data/goals.json"),
-        loadDDragon(),
-      ]);
-      if (!data) return setState({ status: "empty", reason: "data.json wasn't found." });
-      if (!data.matches?.length) return setState({ status: "empty", reason: "No duo games since the challenge start date yet." });
-      setState({ status: "ready", data, goals: goals ?? { reviews: [], goals: [] } });
+      try {
+        const [data, goals] = await Promise.all([
+          getJson<DataFile>(demo ? "data/demo.json" : "data/data.json"),
+          getJson<GoalsFile>("data/goals.json").catch(() => null),
+          loadDDragon(),
+        ]);
+        if (!data || !data.matches?.length) return setState({ status: "empty", reason: "You haven't played a game together since the challenge started." });
+        setState({ status: "ready", data, goals: goals ?? { reviews: [], goals: [] } });
+      } catch (e) {
+        setState({ status: "error", reason: e instanceof Error ? e.message : String(e) });
+      }
     })();
-  }, [demo]);
-  return state;
+  }, [demo, attempt]);
+  return { state, retry: () => setAttempt((a) => a + 1) };
 }
 
 export function AppProvider({ data, goals, children }: { data: DataFile; goals: GoalsFile; children: ReactNode }) {

@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/styles.css"
+        ],
+        "createdAt": "2026-11-14T00:01:48.399Z",
+        "reason": "Claude + both critique assessments: op.gg-style win/loss strip on match history rows (.match) carries the game result; user asked for an op.gg-like match history"
+      }
+    ]
+  }
+}

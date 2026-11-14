@@ -1,20 +1,15 @@
 // All charts (Recharts). Recessive axes, 2px lines, a legend for 2+ series, hover tooltips.
 import { Area, AreaChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { Match, RankEntry } from "../../../shared/types.ts";
+import type { Match } from "../../../shared/types.ts";
 import { champName } from "../../lib/ddragon.ts";
-import { TIERS } from "../../lib/metrics.ts";
+import { ladder, ladderLabel } from "../../lib/rank.ts";
 import { useApp } from "../../state.tsx";
 import { rankText } from "../PlayerCards.tsx";
 
 const AXIS = { stroke: "#4a4a5a", tick: { fill: "#8a899c", fontSize: 11 }, tickLine: false, axisLine: false } as const;
 const GRID = <CartesianGrid stroke="#2e2e38" vertical={false} />;
 
-const ladder = (r: RankEntry | null | undefined) => {
-  if (!r) return null;
-  const t = TIERS.indexOf(r.tier);
-  return t >= 7 ? 2800 + r.lp : t * 400 + ({ IV: 0, III: 1, II: 2, I: 3 }[r.div] ?? 0) * 100 + r.lp;
-};
-const tierTick = (v: number) => (v >= 2800 ? "Master+" : `${TIERS[Math.floor(v / 400)]?.[0] ?? ""}${4 - Math.floor((v % 400) / 100)}`);
+const tierTick = (v: number) => ladderLabel(v);
 
 export function Legend({ items }: { items: { label: string; color: string }[] }) {
   return <div className="legend">{items.map((i) => <span key={i.label}><i style={{ background: i.color }} />{i.label}</span>)}</div>;
@@ -37,7 +32,7 @@ export function LpChart() {
           <LineChart data={rows} margin={{ top: 6, right: 8, left: -12, bottom: 0 }}>
             {GRID}
             <XAxis dataKey="ts" {...AXIS} type="number" domain={["dataMin", "dataMax"]} scale="time" tickFormatter={(t) => new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short" })} minTickGap={40} />
-            <YAxis {...AXIS} domain={[lo, hi]} ticks={Array.from({ length: (hi - lo) / 100 + 1 }, (_, i) => lo + i * 100)} tickFormatter={tierTick} width={48} />
+            <YAxis {...AXIS} domain={[lo, hi]} ticks={Array.from({ length: (hi - lo) / 100 + 1 }, (_, i) => lo + i * 100)} tickFormatter={tierTick} width={58} />
             <Tooltip cursor={{ stroke: "#4a4a5a" }} content={({ active, payload }) => {
               if (!active || !payload?.length) return null;
               const r = payload[0].payload as (typeof rows)[number];

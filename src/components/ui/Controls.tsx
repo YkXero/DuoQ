@@ -42,7 +42,7 @@ export function Select<T extends string>({ value, onChange, options, label }: { 
 /** Card that springs in when it mounts. */
 export function Card({ title, hint, children, delay = 0, className = "" }: { title?: string; hint?: string; children: React.ReactNode; delay?: number; className?: string }) {
   return (
-    <motion.section className={`card ${className}`} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.gentle, delay }}>
+    <motion.section className={`card ${className}`} initial={{ y: 14 }} animate={{ y: 0 }} transition={{ ...spring.gentle, delay }}>
       {title && <h2 className="card-title">{title}{hint && <span className="hint">{hint}</span>}</h2>}
       {children}
     </motion.section>

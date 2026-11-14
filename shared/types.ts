@@ -11,6 +11,8 @@ export interface DataFile {
   updated: number;
   challengeName: string;
   startDate: string;
+  /** Rank the duo is aiming for, e.g. { tier: "EMERALD", div: "IV" }. Null = no goal set. */
+  goal?: { tier: string; div: string } | null;
   players: PlayerInfo[]; // same order as config.json
   matches: Match[]; // newest first
   skipped: string[]; // match ids that aren't duo games (not refetched)

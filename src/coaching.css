@@ -28,8 +28,8 @@ details.more[open] summary::before { content: "−"; }
 
 /* who chips */
 .who-chip { font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
-.who-chip.w0 { background: color-mix(in srgb, var(--p0) 20%, transparent); color: var(--p0); }
-.who-chip.w1 { background: color-mix(in srgb, var(--p1) 22%, transparent); color: var(--p1); }
+.who-chip.w0 { background: color-mix(in srgb, var(--p0) 18%, transparent); color: var(--p0-text); }
+.who-chip.w1 { background: color-mix(in srgb, var(--p1) 18%, transparent); color: var(--p1-text); }
 .who-chip.duo { background: rgba(200, 170, 110, 0.16); color: var(--gold); }
 
 /* meter: you vs target */
@@ -41,6 +41,7 @@ details.more[open] summary::before { content: "−"; }
 .meter-dot { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2px solid var(--panel); }
 .meter-dot.good { background: var(--good); }
 .meter-dot.bad { background: var(--loss); }
+.meter-dot.neutral { background: var(--text-2); }
 .meter-labels { position: absolute; inset: 0; pointer-events: none; font-size: 11px; }
 .meter-you { position: absolute; top: 0; transform: translateX(-50%); font-weight: 700; white-space: nowrap; }
 .meter-tlabel { position: absolute; bottom: 0; transform: translateX(-50%); color: var(--muted); white-space: nowrap; }
@@ -92,9 +93,9 @@ details.more[open] summary::before { content: "−"; }
 
 /* match tags */
 .mtags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
-.mtag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); color: var(--text-2); white-space: nowrap; }
+.mtag { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); color: var(--text-2); white-space: nowrap; }
 .mtag.good { background: rgba(0, 187, 163, 0.16); color: #5fe0cc; }
-.mtag.bad { background: rgba(232, 64, 87, 0.18); color: var(--loss-text); }
+.mtag.bad { background: rgba(232, 64, 87, 0.18); color: #ff8fa0; }
 
 .chart-cap { margin: 0 0 10px; color: var(--text-2); font-size: 12.5px; }
 .goal .t, .player-name, .big { font-family: var(--display); }
@@ -106,3 +107,50 @@ details.more[open] summary::before { content: "−"; }
 .kda-block { margin-left: 6px; width: 118px; flex: none; }
 .kda-block .row { flex-wrap: wrap; }
 .pblock .side-stats { margin-left: 0; white-space: nowrap; }
+
+/* match row: bot lane matchup + one-line story */
+.botlane { display: flex; align-items: center; gap: 8px; justify-content: center; }
+.bl-side { display: flex; gap: 3px; }
+.bl-vs { font-size: 11px; color: var(--text-2); font-weight: 600; }
+.story { margin: 0; padding: 0 14px 10px 12px; font-size: 13px; color: var(--text); cursor: pointer; }
+.story::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; background: var(--text-2); }
+.story.good::before { background: var(--good); }
+.story.bad::before { background: var(--loss-text); }
+.lane-headline { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 600; }
+.lane-headline.good { color: #5fe0cc; }
+.lane-headline.bad { color: #ff8fa0; }
+
+/* champion shortlists */
+.short-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.short-item:last-child { border-bottom: 0; }
+.short-champs { display: flex; gap: 4px; }
+.short-champs .ic { border-radius: 10px; }
+.short-name { font-weight: 600; }
+.th-sort { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+.th-sort:hover, .th-sort.on { color: var(--text); }
+
+/* stats meter list */
+.meter-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--text-2); padding: 0 10px 6px; border-bottom: 1px solid var(--border); }
+.meter-head-cols { display: inline-flex; gap: 18px; color: var(--muted); }
+.cat { border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+details.cat summary { cursor: pointer; list-style: none; padding: 4px 0; }
+details.cat summary::-webkit-details-marker { display: none; }
+details.cat[open] .cat-toggle { visibility: hidden; }
+.cat-toggle { margin-left: auto; }
+@media (max-width: 700px) { .meter-head-cols { display: none; } }
+
+/* challenge card */
+.challenge { display: flex; flex-direction: column; gap: 10px; }
+.challenge-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.challenge-title { font-family: var(--display); font-size: 18px; margin: 0; }
+.goal-bars { display: grid; gap: 8px; }
+.gb-track { height: 8px; border-radius: 4px; background: var(--panel-3); overflow: hidden; margin-top: 4px; }
+.gb-fill { display: block; height: 100%; border-radius: 4px; }
+.gb-fill.f0 { background: var(--p0); }
+.gb-fill.f1 { background: var(--p1); }
+.focus { margin: 0; padding-top: 10px; border-top: 1px solid var(--border); font-weight: 600; font-size: 13px; }
+.focus-label { display: block; font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 2px; }
+code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-radius: 4px; }
+.cheer { display: inline-block; margin-bottom: 6px; padding: 2px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; background: rgba(0, 187, 163, 0.16); color: #5fe0cc; }
+.only-narrow { display: none; }
+@media (max-width: 700px) { .only-wide { display: none; } .only-narrow { display: inline-block; } }

@@ -130,7 +130,7 @@ for (let g = 0; g < 80; g++) {
 
 matches.sort((a, b) => b.ts - a.ts);
 const data: DataFile = {
-  version: DATA_VERSION, demo: true, updated: Date.now(), challengeName: config.challengeName, startDate: config.startDate,
+  version: DATA_VERSION, demo: true, updated: Date.now(), challengeName: config.challengeName, startDate: new Date(matches.at(-1)!.ts).toISOString().slice(0, 10), goal: { tier: "EMERALD", div: "IV" },
   players: config.players.map((p: { riotId: string; role: "BOTTOM" | "UTILITY" }, i: number) => ({ ...p, profileIcon: [4568, 5367][i], level: [312, 287][i] })),
   matches, skipped: [], rankHistory,
 };

@@ -11,8 +11,8 @@ export const spring = {
 };
 
 export const fadeUp = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0 },
+  initial: { y: 12 },
+  animate: { y: 0 },
   transition: spring.gentle,
 };
 
