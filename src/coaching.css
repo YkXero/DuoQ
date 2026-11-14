@@ -188,7 +188,8 @@ a.player-card:hover { background: var(--panel-3); }
 .build-col { min-width: 0; background: var(--panel); border-radius: var(--radius); padding: 12px 14px; }
 .build-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .build-label { font-size: 12px; font-weight: 500; color: var(--text-2); margin: 14px 0 6px; }
-.rune-page { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; }
+.rune-page { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 24px; align-items: start; }
+.rune-col { display: grid; gap: 14px; justify-items: center; }
 .rune-tree { display: grid; gap: 8px; justify-items: center; }
 .rune-tree-head { display: flex; align-items: center; gap: 6px; font-size: 12px; }
 .rune-slot { display: flex; gap: 6px; justify-content: center; }
@@ -236,7 +237,7 @@ a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }
 .role-slot .ic { box-shadow: 0 0 0 1px var(--gold); border-radius: 4px; }
 
 /* ---------- stat shards ---------- */
-.rune-shards { display: grid; gap: 6px; align-self: flex-start; padding-top: 28px; }
+.rune-shards { display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); }
 .shard { background: #000; }
 
 /* ---------- champion picker ---------- */
@@ -255,3 +256,7 @@ a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }
 .picker-item.unplayed .ic { opacity: 0.55; }
 .picker-name { font-size: 11px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .picker-count { position: absolute; top: 3px; right: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--brand); border-radius: 99px; padding: 0 5px; line-height: 16px; }
+
+/* skill order grid fits its column: fluid cells, no scrollbar */
+.build-col .skill-grid { grid-template-columns: 16px repeat(18, minmax(0, 1fr)); gap: 2px; }
+.build-col .skill-grid div { height: 20px; font-size: 10px; min-width: 0; }

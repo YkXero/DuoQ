@@ -142,55 +142,6 @@ export function sessions(all: Match[]): Map<string, SessionInfo> {
   return out;
 }
 
-// ---------------------------------------------------------------- performance score (our own, op.gg-style)
-/**
- * "Duo Score" 0–10 for every participant, relative to the other 9 in the same game.
- * Weighted mix of KDA, kill participation, damage share, gold share, vision share and CS share,
- * with role-aware weights. MVP = best on winning team, ACE = best on losing team.
- */
-export function gameScores(m: Match): { score: number[]; rank: number[] } {
-  const teamTotal = (t: number, f: (p: Match["parts"][number]) => number) => m.parts.reduce((s, p) => (p.team === t ? s + f(p) : s), 0);
-  // Raw components per player
-  const comp = m.parts.map((p) => {
-    const tk = Math.max(1, teamTotal(p.team, (q) => q.k));
-    const share = (f: (q: Match["parts"][number]) => number) => f(p) / Math.max(1, teamTotal(p.team, f));
-    return {
-      kda: Math.min(12, (p.k + p.a) / Math.max(1, p.d)),
-      kp: Math.min(1, (p.k + p.a) / tk),
-      dmg: share((q) => q.dmg),
-      gold: share((q) => q.gold),
-      vis: share((q) => q.vision),
-      deaths: -p.d,
-    };
-  });
-  // Normalise each component to 0..1 across the 10 players, so no single stat dominates.
-  const keys = ["kda", "kp", "dmg", "gold", "vis", "deaths"] as const;
-  const norm = Object.fromEntries(keys.map((k) => {
-    const xs = comp.map((c) => c[k]), lo = Math.min(...xs), hi = Math.max(...xs);
-    return [k, xs.map((x) => (hi - lo < 1e-9 ? 0.5 : (x - lo) / (hi - lo)))];
-  })) as Record<(typeof keys)[number], number[]>;
-  const raw = m.parts.map((p, i) => {
-    const n = (k: (typeof keys)[number]) => norm[k][i];
-    const won = p.team === m.team ? m.win : !m.win;
-    const base = p.pos === "UTILITY"
-      ? 0.3 * n("kda") + 0.3 * n("kp") + 0.15 * n("vis") + 0.1 * n("dmg") + 0.15 * n("deaths")
-      : 0.25 * n("kda") + 0.2 * n("kp") + 0.25 * n("dmg") + 0.1 * n("gold") + 0.05 * n("vis") + 0.15 * n("deaths");
-    return base + (won ? 0.08 : 0);
-  });
-  const max = Math.max(...raw), min = Math.min(...raw);
-  const score = raw.map((r) => Math.round((3 + 7 * ((r - min) / Math.max(1e-6, max - min))) * 10) / 10);
-  const order = [...score.keys()].sort((a, b) => score[b] - score[a]);
-  const rank = Array(10).fill(0);
-  order.forEach((i, r) => (rank[i] = r + 1));
-  return { score, rank };
-}
-export function badge(m: Match, i: number, scores = gameScores(m)): "MVP" | "ACE" | null {
-  const p = m.parts[i];
-  const won = p.team === m.team ? m.win : !m.win;
-  const best = m.parts.map((_, j) => j).filter((j) => m.parts[j].team === p.team).sort((a, b) => scores.score[b] - scores.score[a])[0];
-  return best === i ? (won ? "MVP" : "ACE") : null;
-}
-
 // ---------------------------------------------------------------- misc
 export const patches = (d: DataFile) => [...new Set(d.matches.map((m) => m.patch))].sort().reverse();
 export const champsPlayed = (g: Match[], pick: (m: Match) => number) => [...new Set(g.map((m) => m.parts[pick(m)].champ))].sort();

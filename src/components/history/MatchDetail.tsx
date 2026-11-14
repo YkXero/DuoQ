@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { Match, TeamId } from "../../../shared/types.ts";
-import { badge, gameScores } from "../../lib/analysis.ts";
 import { champName, itemName, runeTree, SHARD_ROWS, shardIcon, shardName } from "../../lib/ddragon.ts";
 import { adcIdx, enemyIdx, snapVal, supIdx } from "../../lib/views.ts";
 import { gameStory } from "../../lib/tags.ts";
@@ -19,7 +18,6 @@ function Objectives({ m, team }: { m: Match; team: TeamId }) {
 }
 
 function Scoreboard({ m }: { m: Match }) {
-  const scores = useMemo(() => gameScores(m), [m]);
   const maxDmg = Math.max(...m.parts.map((p) => p.dmg)), maxTaken = Math.max(...m.parts.map((p) => p.taken));
   const min = m.dur / 60;
   return (
@@ -34,11 +32,11 @@ function Scoreboard({ m }: { m: Match }) {
               <table>
                 <thead><tr>
                   <th><span className={won ? "win-c" : "loss-c"}>{won ? "Victory" : "Defeat"}</span> <span className="muted">({team === 100 ? "Blue" : "Red"} side{team === m.team ? ", your team" : ""})</span></th>
-                  <th className="num" title="Our 0–10 rating of each player, compared with the other 9 in this game (KDA, kill participation, damage, gold, vision and deaths)">Score</th><th>KDA</th><th>Damage dealt / taken</th><th className="num" title="Control wards bought / wards placed / enemy wards cleared">Wards</th><th className="num">CS</th><th>Items</th>
+                  <th>KDA</th><th>Damage dealt / taken</th><th className="num" title="Control wards bought / wards placed / enemy wards cleared">Wards</th><th className="num">CS</th><th>Items</th>
                 </tr></thead>
                 <tbody>
                   {idxs.map((i) => {
-                    const p = m.parts[i], b = badge(m, i, scores);
+                    const p = m.parts[i];
                     return (
                       <tr key={i} className={m.duo.includes(i) ? "me" : ""}>
                         <td>
@@ -49,7 +47,6 @@ function Scoreboard({ m }: { m: Match }) {
                             <span style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", fontWeight: m.duo.includes(i) ? 700 : 400 }}>{p.name.split("#")[0]}</span>
                           </div>
                         </td>
-                        <td className="num">{scores.score[i].toFixed(1)} {b ? <span className={`tagpill ${b === "MVP" ? "mvp" : "ace"}`}>{b}</span> : <span className="muted small">#{scores.rank[i]}</span>}</td>
                         <td><div>{p.k}/<span className="loss-c">{p.d}</span>/{p.a} <span className="small muted">({teamKills ? Math.min(100, Math.round(((p.k + p.a) / teamKills) * 100)) : 0}%)</span></div><div className="small"><Kda k={p.k} d={p.d} a={p.a} /></div></td>
                         <td>
                           <div className="dmg-bars" title={`Dealt ${p.dmg.toLocaleString()} · Taken ${p.taken.toLocaleString()}`}>
@@ -141,6 +138,7 @@ function RunePage({ perks, primary, sub, shards }: { perks: number[]; primary: n
   return (
     <div className="rune-page">
       {tree(primary, false)}
+      <div className="rune-col">
       {tree(sub, true)}
       {shards.length > 0 && (
         <div className="rune-shards">
@@ -151,6 +149,7 @@ function RunePage({ perks, primary, sub, shards }: { perks: number[]; primary: n
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -178,7 +177,7 @@ function Build({ m }: { m: Match }) {
             {skills && (
               <>
                 <h4 className="build-label">Skill order</h4>
-                <div className="scroll-x">
+                <div>
                   <div className="skill-grid">
                     {(["Q", "W", "E", "R"] as const).map((k) => [
                       <div key={k} className="k">{k}</div>,

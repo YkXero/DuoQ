@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { QUEUES, type Match } from "../../../shared/types.ts";
-import { applyFilters, badge, DEFAULT_FILTERS, gameScores, record, type Filters } from "../../lib/analysis.ts";
+import { applyFilters, DEFAULT_FILTERS, record, type Filters } from "../../lib/analysis.ts";
 import { duration, timeAgo } from "../../lib/format.ts";
 import { spring } from "../../lib/motion.ts";
 import { mean } from "../../lib/stats.ts";
@@ -14,13 +14,10 @@ import { Champ, Item, Kda, RoleSlot, Rune, Spell } from "../ui/Icons.tsx";
 import { MatchDetail } from "./MatchDetail.tsx";
 
 const PAGE = 20;
-const ordinal = (n: number) => `${n}${n === 1 ? "st" : n === 2 ? "nd" : n === 3 ? "rd" : "th"}`;
 const MULTI = ["", "", "Double", "Triple", "Quadra", "Penta"];
 
 function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
   const p = m.parts[idx];
-  const scores = useMemo(() => gameScores(m), [m]);
-  const b = badge(m, idx, scores);
   const tk = m.teams[m.team].kills;
   return (
     <div className={`pblock${slot === 1 ? " p2" : ""}`}>
@@ -33,7 +30,6 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           <div className="ratio"><Kda k={p.k} d={p.d} a={p.a} /></div>
           <div className="row" style={{ gap: 4, marginTop: 2 }}>
             <span className="pname">{p.name.split("#")[0]}</span>
-            {b && <span className={`tagpill ${b === "MVP" ? "mvp" : "ace"}`}>{b}</span>}
             {p.multi >= 2 && <span className="tagpill multi">{MULTI[p.multi]}</span>}
           </div>
         </div>
@@ -41,7 +37,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           <span>P/Kill {tk ? Math.min(100, Math.round(((p.k + p.a) / tk) * 100)) : 0}%</span>
           <span>CS {p.cs} ({(p.cs / (m.dur / 60)).toFixed(1)})</span>
           <span>Vision {p.vision}</span>
-          <span className="muted" title="Our 0–10 game rating vs the other 9 players">Score {scores.score[idx].toFixed(1)} · {ordinal(scores.rank[idx])}</span>
+          <span>Dmg {(p.dmg / 1000).toFixed(1)}k</span>
         </div>
       </div>
       <div className="items">{p.items.map((it, i) => <Item key={i} id={it} />)}<RoleSlot id={p.roleItem} /></div>
