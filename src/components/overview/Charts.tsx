@@ -141,7 +141,7 @@ export function GoldGraph({ m }: { m: Match }) {
           <ReferenceLine y={0} stroke="#6d6d80" />
           {marks.map((o, i) => (
             <ReferenceLine key={i} x={Math.round(o[0] / 60)} stroke={o[2] === m.team ? "var(--win)" : "var(--loss)"} strokeOpacity={0.5} strokeDasharray="2 3"
-              label={{ value: o[1] === "BARON" ? "Baron" : "Drake", position: "top", fill: o[2] === m.team ? "var(--win-text)" : "var(--loss-text)", fontSize: 10 }} />
+              label={{ value: o[1] === "BARON" ? "Baron" : "Drake", position: "top", fill: o[2] === m.team ? "var(--win-text)" : "var(--loss-text)", fontSize: 11 }} />
           ))}
           <Tooltip cursor={{ stroke: "#515163" }} content={({ active, payload }) => {
             if (!active || !payload?.length) return null;
