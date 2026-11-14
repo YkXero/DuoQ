@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T12:00:00Z",
+  "title": "Design System: Duo Q Tracker",
+  "extensions": {
+    "colorMeta": {
+      "brand-nav": { "role": "primary", "displayName": "Nav Blue", "canonical": "#4171d6", "tonalRamp": ["#182135", "#23365d", "#2a4888", "#2d5fc7", "#5f84d3", "#96acd9", "#c7d1e6", "#eef1f6"] },
+      "win": { "role": "primary", "displayName": "Victory Blue", "canonical": "#5383e8", "tonalRamp": ["#152037", "#1e3462", "#214591", "#1f5ad6", "#5481de", "#8fa9e0", "#c4d0e9", "#eef1f7"] },
+      "win-text": { "role": "primary", "displayName": "Victory Blue Text", "canonical": "#81acff" },
+      "win-bg": { "role": "primary", "displayName": "Victory Slate", "canonical": "#28344e" },
+      "win-bg-2": { "role": "primary", "displayName": "Victory Slate Deep", "canonical": "#2f436e" },
+      "accent-text": { "role": "primary", "displayName": "Link Blue", "canonical": "#7aa2ff", "tonalRamp": ["#101d3c", "#132e6c", "#103ca2", "#034bf2", "#3f75f3", "#83a3ec", "#becdee", "#ecf0f8"] },
+      "loss": { "role": "secondary", "displayName": "Defeat Red", "canonical": "#e84057", "tonalRamp": ["#38151a", "#631d26", "#932030", "#d81d36", "#df5366", "#e18e9a", "#e9c3c8", "#f7eeef"] },
+      "loss-text": { "role": "secondary", "displayName": "Defeat Red Text", "canonical": "#ff8a9a" },
+      "loss-bg": { "role": "secondary", "displayName": "Defeat Wine", "canonical": "#59343b" },
+      "loss-bg-2": { "role": "secondary", "displayName": "Defeat Wine Deep", "canonical": "#703c47" },
+      "bad-text": { "role": "secondary", "displayName": "Warning Red Text", "canonical": "#ff5f74" },
+      "good": { "role": "tertiary", "displayName": "Good Teal", "canonical": "#00bba3", "tonalRamp": ["#103c37", "#136c61", "#10a290", "#03f2d3", "#3ff3dc", "#83ecdf", "#beeee8", "#ecf8f7"] },
+      "great": { "role": "tertiary", "displayName": "Great Blue", "canonical": "#0093ff", "tonalRamp": ["#102a3c", "#13476c", "#1064a2", "#038df2", "#3fa7f3", "#83c0ec", "#bedaee", "#ecf3f8"] },
+      "elite": { "role": "tertiary", "displayName": "Elite Orange", "canonical": "#ff8200", "tonalRamp": ["#3c2710", "#6c4113", "#a25b10", "#f27d03", "#f39b3f", "#ecb983", "#eed7be", "#f8f2ec"] },
+      "mvp": { "role": "tertiary", "displayName": "MVP Amber", "canonical": "#eb9c00", "tonalRamp": ["#3c2e10", "#6c4e13", "#a27110", "#f2a203", "#f3b63f", "#ecc983", "#eedebe", "#f8f4ec"] },
+      "ace": { "role": "tertiary", "displayName": "ACE Violet", "canonical": "#7d59ea", "tonalRamp": ["#1e1537", "#2e1d62", "#3d2192", "#4c1ed7", "#7653df", "#a38fe0", "#cdc3e9", "#f0eef7"] },
+      "gold": { "role": "tertiary", "displayName": "Gold", "canonical": "#e0b84e" },
+      "player-0": { "role": "tertiary", "displayName": "ADC Lavender", "canonical": "#9085e9", "tonalRamp": ["#1a1736", "#28215f", "#32268c", "#3a27cd", "#685bd7", "#9b93dc", "#c9c5e7", "#efeef6"] },
+      "player-0-text": { "role": "tertiary", "displayName": "ADC Lavender Text", "canonical": "#b9b2ff" },
+      "player-1": { "role": "tertiary", "displayName": "Support Ochre", "canonical": "#c98500", "tonalRamp": ["#3c2d10", "#6c4e13", "#a27110", "#f2a103", "#f3b63f", "#ecc983", "#eedebe", "#f8f4ec"] },
+      "player-1-text": { "role": "tertiary", "displayName": "Support Ochre Text", "canonical": "#f2b544" },
+      "page": { "role": "neutral", "displayName": "Page Black", "canonical": "#1c1c1f", "tonalRamp": ["#252527", "#3d3d42", "#56565d", "#747480", "#94949e", "#b5b5ba", "#d5d5d7", "#f2f2f3"] },
+      "panel": { "role": "neutral", "displayName": "Slate Panel", "canonical": "#31313c", "tonalRamp": ["#242428", "#3b3b44", "#525261", "#6e6e86", "#9090a2", "#b2b2bd", "#d4d4d9", "#f2f2f3"] },
+      "panel-inset": { "role": "neutral", "displayName": "Inset Slate", "canonical": "#282830", "tonalRamp": ["#242428", "#3c3c44", "#535360", "#707085", "#9191a1", "#b3b3bc", "#d4d4d8", "#f2f2f3"] },
+      "panel-raised": { "role": "neutral", "displayName": "Raised Slate", "canonical": "#424254", "tonalRamp": ["#242429", "#3a3a45", "#505062", "#6c6c89", "#8e8ea4", "#b1b1be", "#d3d3d9", "#f2f2f3"] },
+      "border": { "role": "neutral", "displayName": "Border", "canonical": "#424254" },
+      "border-strong": { "role": "neutral", "displayName": "Strong Border", "canonical": "#515163" },
+      "line": { "role": "neutral", "displayName": "Divider Line", "canonical": "#26262d" },
+      "detail-well": { "role": "neutral", "displayName": "Detail Well", "canonical": "#1b1b21" },
+      "text": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
+      "text-2": { "role": "neutral", "displayName": "Secondary Text", "canonical": "#b7b7c9", "tonalRamp": ["#232329", "#393946", "#4f4f64", "#69698b", "#8c8ca6", "#b0b0bf", "#d3d3da", "#f1f1f3"] },
+      "muted": { "role": "neutral", "displayName": "Muted Text", "canonical": "#a7a7ba" },
+      "faint": { "role": "neutral", "displayName": "Faint Text", "canonical": "#9e9eb1" },
+      "chart-grid": { "role": "neutral", "displayName": "Chart Grid", "canonical": "#2e2e38" },
+      "chart-axis": { "role": "neutral", "displayName": "Chart Axis", "canonical": "#4a4a5a" },
+      "chart-tick": { "role": "neutral", "displayName": "Chart Tick", "canonical": "#8a899c" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Headline numbers: recent KDA ratio, big summary values." },
+      "headline": { "displayName": "Headline", "purpose": "Player names in the profile band; brand wordmark." },
+      "title": { "displayName": "Title", "purpose": "Sentence-case panel title strips and section titles." },
+      "stat": { "displayName": "Stat", "purpose": "KDA lines in match rows and rank tier names, tabular figures." },
+      "body": { "displayName": "Body", "purpose": "13px base text; 12px for table headers and controls." },
+      "label": { "displayName": "Label", "purpose": "Chips, pills, roster names, meter labels, footnotes." }
+    },
+    "shadows": [
+      { "name": "tooltip", "value": "0 6px 20px rgba(0, 0, 0, 0.4)", "purpose": "Chart tooltips, the only floating surface." },
+      { "name": "icon-cutout", "value": "0 0 0 2px var(--panel)", "purpose": "Separates overlapping champion icons in duo stacks." },
+      { "name": "duo-ring", "value": "0 0 0 2px var(--accent-text)", "purpose": "Marks the duo's champions in compact match-row rosters." }
+    ],
+    "motion": [
+      { "name": "spring-smooth", "value": "spring(stiffness 380, damping 34, mass 0.9)", "purpose": "Tab ink, layout shifts." },
+      { "name": "spring-snappy", "value": "spring(stiffness 600, damping 32)", "purpose": "Segmented thumb, toggles, quick feedback." },
+      { "name": "spring-gentle", "value": "spring(stiffness 180, damping 24)", "purpose": "Panel entrances (14px rise, no opacity change), bar fills, donut and ring sweeps, meter dots." },
+      { "name": "stagger", "value": "35ms per item, capped at 400ms", "purpose": "Sequenced entrances of list items and panels." },
+      { "name": "hover-tint", "value": "background 0.15s", "purpose": "Row hover tints on tables and match rows." },
+      { "name": "reduced-motion", "value": "animation: none; transition: none", "purpose": "All motion removed under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "aside-collapse", "value": "1000px" },
+      { "name": "cards-stack", "value": "900px" },
+      { "name": "fix-row-stack", "value": "760px" },
+      { "name": "narrow", "value": "700px" },
+      { "name": "match-row-compact (container)", "value": "1060px" },
+      { "name": "match-row-minimal (container)", "value": "640px" }
+    ],
+    "exceptions": [
+      { "name": "match-row-result-strip", "value": "border-left: 6px solid var(--win | --loss)", "purpose": "op.gg win/loss strip on match rows; detector side-tab rule ignored for src/styles.css in .impeccable/config.json. Scoped to match rows only." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Panel with title strip",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Every content block: flat slate panel opened by a bold sentence-case title strip.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-panel-title\">Duo report<span class=\"ds-hint\">graded against players at your rank</span></h2><p class=\"ds-body\">You're winning more than you lose. Best: <b class=\"ds-good\">You rarely both die</b>.</p></section>",
+      "css": ".ds-panel { background: #31313c; color: #fff; border-radius: 6px; padding: 16px; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 420px; } .ds-panel-title { display: flex; align-items: baseline; gap: 8px; margin: -16px -16px 14px; padding: 12px 16px; border-bottom: 1px solid #26262d; font-size: 14px; font-weight: 700; } .ds-hint { font-weight: 400; font-size: 12px; color: #a7a7ba; } .ds-body { margin: 0; font-size: 15px; } .ds-good { color: #00bba3; }"
+    },
+    {
+      "name": "Underline tabs",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Page sub-navigation with a sliding 2px blue ink.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab ds-on\" role=\"tab\" aria-selected=\"true\">Overview<span class=\"ds-ink\"></span></button><button class=\"ds-tab\" role=\"tab\">Match history</button><button class=\"ds-tab\" role=\"tab\">Stats &amp; progress</button></div>",
+      "css": ".ds-tabs { display: flex; gap: 2px; border-bottom: 1px solid #424254; background: #282830; font: 13px Roboto, system-ui, sans-serif; } .ds-tab { position: relative; background: none; border: 0; padding: 12px 16px; color: #a7a7ba; font: inherit; font-weight: 600; cursor: pointer; } .ds-tab:hover { color: #b7b7c9; } .ds-tab.ds-on { color: #fff; } .ds-ink { position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px; background: #5383e8; } .ds-tab:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; border-radius: 4px; }"
+    },
+    {
+      "name": "Segmented control",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Queue and period filters; raised thumb slides with the snappy spring.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button class=\"ds-on\" role=\"radio\" aria-checked=\"true\">All queues</button><button role=\"radio\">Ranked</button><button role=\"radio\">Flex</button></div>",
+      "css": ".ds-seg { display: inline-flex; padding: 3px; gap: 2px; background: #282830; border-radius: 6px; font: 12px Roboto, system-ui, sans-serif; } .ds-seg button { background: none; border: 0; padding: 5px 11px; border-radius: 4px; color: #a7a7ba; font: inherit; font-weight: 500; cursor: pointer; transition: background 0.15s, color 0.15s; } .ds-seg button:hover { color: #b7b7c9; } .ds-seg button.ds-on { background: #424254; color: #fff; } .ds-seg button:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Buttons",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Neutral raised button and the blue primary.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-btn\">Back to real data</button><button class=\"ds-btn ds-primary\">Refresh</button></div>",
+      "css": ".ds-btn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 600 13px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-btn:hover { background: #3e3e4b; } .ds-btn.ds-primary { background: #5383e8; border-color: #5383e8; } .ds-btn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Native select on inset slate with a drawn caret.",
+      "html": "<select class=\"ds-select\" aria-label=\"Player\"><option>Both players</option><option>Imsomnia</option></select>",
+      "css": ".ds-select { appearance: none; background: #282830 url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a899c'/%3E%3C/svg%3E\") no-repeat right 10px center; border: 1px solid #424254; border-radius: 8px; padding: 6px 28px 6px 10px; color: #fff; font: 12px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-select:hover { border-color: #515163; } .ds-select:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Chips and pills",
+      "kind": "chip",
+      "refersTo": "who-chip-p0",
+      "description": "Player who-chips, neutral duo chip, MVP and ACE pills.",
+      "html": "<div style=\"display:flex;gap:6px;align-items:center\"><span class=\"ds-who ds-p0\">Imsomnia</span><span class=\"ds-who ds-p1\">Sokai</span><span class=\"ds-who ds-duo\">Duo</span><span class=\"ds-pill ds-mvp\">MVP</span><span class=\"ds-pill ds-ace\">ACE</span></div>",
+      "css": ".ds-who { font: 500 11px Roboto, system-ui, sans-serif; padding: 1px 6px; border-radius: 4px; } .ds-p0 { background: rgba(144, 133, 233, 0.18); color: #b9b2ff; } .ds-p1 { background: rgba(201, 133, 0, 0.18); color: #f2b544; } .ds-duo { background: #424254; color: #b7b7c9; } .ds-pill { display: inline-block; padding: 0 7px; border-radius: 99px; font: 700 11px/17px Roboto, system-ui, sans-serif; } .ds-mvp { background: #eb9c00; color: #1b1300; } .ds-ace { background: #6a45d9; color: #fff; }"
+    },
+    {
+      "name": "Match row",
+      "kind": "custom",
+      "refersTo": "match-row-win",
+      "description": "op.gg match-row anatomy: result-tinted block, 6px left result strip, meta column, player blocks, expand column.",
+      "html": "<div class=\"ds-match ds-w\"><div class=\"ds-mrow\"><div class=\"ds-meta\"><div class=\"ds-q\">Ranked Solo/Duo</div><div class=\"ds-age\">6d ago</div><div class=\"ds-res\">Victory</div><div class=\"ds-age\">36:40</div></div><div class=\"ds-kda\">11 / <span class=\"ds-d\">1</span> / 4<div class=\"ds-ratio\">15.00:1</div></div><button class=\"ds-expand\" aria-label=\"Show game details\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\"><path d=\"M3 4.5l3 3 3-3\" fill=\"none\" stroke=\"#81acff\" stroke-width=\"1.6\"/></svg></button></div><p class=\"ds-story\">Won bot lane by 1,225 gold at 15 min.</p></div>",
+      "css": ".ds-match { border-radius: 8px; overflow: hidden; background: #59343b; border-left: 6px solid #e84057; color: #fff; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 520px; } .ds-match.ds-w { background: #28344e; border-left-color: #5383e8; } .ds-mrow { display: grid; grid-template-columns: 104px 1fr 36px; gap: 14px; align-items: center; padding: 10px 0 10px 12px; cursor: pointer; transition: background 0.15s; } .ds-mrow:hover { background: rgba(255,255,255,0.025); } .ds-q { font-weight: 700; font-size: 12px; color: #ff8a9a; } .ds-w .ds-q { color: #81acff; } .ds-age { font-size: 12px; color: #b7b7c9; } .ds-res { font-weight: 700; font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08); width: 48px; } .ds-kda { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; } .ds-d { color: #ff8a9a; } .ds-ratio { font-size: 11px; font-weight: 400; color: #ff8200; } .ds-expand { align-self: stretch; display: grid; place-items: end center; padding-bottom: 10px; background: #703c47; border: 0; cursor: pointer; } .ds-w .ds-expand { background: #2f436e; } .ds-expand:focus-visible { outline: 2px solid #7aa2ff; outline-offset: -2px; } .ds-story { margin: 0; padding: 0 14px 10px 12px; } .ds-story::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; background: #00bba3; }"
+    },
+    {
+      "name": "Grade cell",
+      "kind": "custom",
+      "refersTo": "grade-badge",
+      "description": "Letter grade badge inside an inset cell with a one-line explanation.",
+      "html": "<div class=\"ds-gcell\"><span class=\"ds-grade ds-gA\">A</span><div><div class=\"ds-gname\">Staying alive</div><div class=\"ds-gsub\">Imsomnia dies little</div></div></div>",
+      "css": ".ds-gcell { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 6px; background: #282830; color: #fff; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 260px; } .ds-grade { display: inline-grid; place-items: center; width: 36px; height: 36px; font-size: 18px; border-radius: 6px; font-weight: 700; } .ds-gA { background: rgba(0,187,163,0.2); color: #4be0c8; } .ds-gname { font-weight: 700; } .ds-gsub { font-size: 12px; color: #b7b7c9; }"
+    },
+    {
+      "name": "Meter (you vs target)",
+      "kind": "custom",
+      "refersTo": "meter-track",
+      "description": "Track with a teal good zone from the target, a target tick and a toned dot.",
+      "html": "<div class=\"ds-meter\"><div class=\"ds-track\"><span class=\"ds-zone\"></span><span class=\"ds-target\"></span><span class=\"ds-dot\"></span></div><div class=\"ds-mlabels\"><span>-2</span><span class=\"ds-t\">target +10</span></div></div>",
+      "css": ".ds-meter { width: 220px; font: 11px Roboto, system-ui, sans-serif; } .ds-track { position: relative; height: 6px; border-radius: 3px; background: #424254; } .ds-zone { position: absolute; top: 0; bottom: 0; left: 78%; right: 0; background: rgba(0,187,163,0.3); border-radius: 3px; } .ds-target { position: absolute; top: -4px; bottom: -4px; left: 78%; width: 2px; margin-left: -1px; background: #b7b7c9; border-radius: 1px; } .ds-dot { position: absolute; top: 50%; left: 45%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid #31313c; background: #e84057; transition: left 0.4s; } .ds-meter:hover .ds-dot { left: 50%; } .ds-mlabels { display: flex; justify-content: space-between; margin-top: 6px; color: #ff5f74; font-weight: 700; } .ds-t { color: #a7a7ba; font-weight: 400; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Duo's Own op.gg",
+    "overview": "The system is the League stats-site standard played straight: op.gg's dark slate palette and match-row anatomy, dpm.lol's polish, and deeplol/mobalytics-style coaching panels, executed carefully rather than reinvented. League players should read every surface instantly because it looks like the sites they already use. The difference is the subject: two players, framed together, compared against their own past.\n\nDensity is high and glance-first. Flat slate panels sit 8px apart on a near-black page, each opened by a bold sentence-case title strip. Colour is a result channel before it is decoration: blue means won, red means lost, teal/blue/orange grade a KDA, and two fixed player hues tell the duo apart everywhere. Official League art (champions, items, runes, rank emblems) carries the imagery; there is no invented illustration.\n\nRejected: themed gimmicks (no \"gamer\" neon, no fantasy chrome) and the generic AI dashboard of uppercase-labelled rounded cards.",
+    "keyCharacteristics": [
+      "Dark slate tonal layering, no shadows on panels.",
+      "Saturated brand-blue top navigation bar; everything below is neutral slate until a result colours it.",
+      "Panels opened by 14px bold sentence-case title strips divided by a 1px line.",
+      "Win/loss tinted match rows with a 6px result strip on the left edge.",
+      "Roboto everywhere at a 13px base; numbers in tabular figures.",
+      "Spring motion that never hides content: entrances move, they do not fade in from nothing."
+    ],
+    "rules": [
+      { "name": "The Result Colour Rule", "body": "Blue and red mean won and lost, nothing else. Never use win or loss hues for brand, navigation or decoration (the nav bar uses its own Nav Blue).", "section": "colors" },
+      { "name": "The Two Players Rule", "body": "Lavender is always the ADC and ochre is always the support, on every surface. A third person colour is never introduced; \"both of you\" uses the neutral Raised Slate chip.", "section": "colors" },
+      { "name": "The Hollow Loss Rule", "body": "Win/loss marks must read without colour: wins are filled, losses are hollow outlines.", "section": "colors" },
+      { "name": "The Sentence Case Rule", "body": "Titles and labels are sentence case at normal tracking. No uppercase letter-spaced labels above content.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Any numeric column or stat uses tabular figures and right alignment in tables.", "section": "typography" },
+      { "name": "The Flat Panel Rule", "body": "Panels never take a drop shadow. Only floating overlays (tooltips) may.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do open every panel with a 14px 700 sentence-case title strip and a 1px Divider Line, with an optional muted hint on the same baseline.",
+      "Do keep 8px between panels and 16px inside them.",
+      "Do colour results only with the win/loss pair, and keep losses hollow where a mark must read without colour.",
+      "Do keep the ADC lavender and the support ochre on every new surface.",
+      "Do use official League art for champions, items, runes and ranks; round only runes and spells.",
+      "Do animate with the shared springs and leave content visible at frame one.",
+      "Do let match rows adapt to their container with container queries."
+    ],
+    "donts": [
+      "Don't add drop shadows to panels; depth is tonal.",
+      "Don't put uppercase letter-spaced labels or eyebrows above content.",
+      "Don't use win blue for navigation or decoration; the nav bar has its own Nav Blue.",
+      "Don't introduce themed \"gamer\" styling, neon glows or a second typeface.",
+      "Don't fade entrances in from zero opacity."
+    ]
+  }
+}

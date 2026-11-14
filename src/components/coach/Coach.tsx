@@ -22,7 +22,7 @@ export function GoalCard({ p, i = 0 }: { p: GoalProgress; i?: number }) {
         <div className="row wrap-row">
           <span className="t">{g.title}</span>
           {g.slot != null && <span className={`tagpill who${g.slot}`}>{names[g.slot]}</span>}
-          {g.status === "achieved" || p.met ? <span className="tagpill" style={{ background: "var(--good)", color: "#062" }}>On track</span> : null}
+          {g.status === "achieved" || p.met ? <span className="tagpill" style={{ background: "var(--good)", color: "#032b26" }}>On track</span> : null}
         </div>
         <div className="why">{g.why}</div>
         <div className="small muted" style={{ marginTop: 4 }}>

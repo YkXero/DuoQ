@@ -30,7 +30,8 @@
   --great: #0093ff;
   --elite: #ff8200;
   --mvp: #eb9c00;
-  --ace: #7d59ea;
+  --ace: #6a45d9; /* white text 6:1 */
+  --multi: #c62c44; /* white text 5.5:1 */
 
   --p0: #9085e9;
   --p1: #c98500;
@@ -93,7 +94,7 @@ img { display: block; }
 .tab .ink { position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px; background: var(--win); }
 
 .seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--panel-2); border-radius: var(--radius); position: relative; }
-.seg button { position: relative; z-index: 1; background: none; border: 0; padding: 5px 11px; border-radius: 6px; color: var(--muted); cursor: pointer; white-space: nowrap; font-size: 12px; font-weight: 500; }
+.seg button { position: relative; z-index: 1; background: none; border: 0; padding: 5px 11px; border-radius: var(--radius-sm); color: var(--muted); cursor: pointer; white-space: nowrap; font-size: 12px; font-weight: 500; }
 .seg button.on { color: var(--text); }
 .seg .thumb { position: absolute; inset: 0; border-radius: var(--radius-sm); background: var(--panel-3); z-index: 0; }
 
@@ -143,11 +144,6 @@ tbody tr:last-child td { border-bottom: 0; }
 .bench .track { position: absolute; inset: 0; border-radius: 4px; background: var(--panel-3); }
 .bench .fill { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
 
-/* trend */
-.trend { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 99px; }
-.trend.better { color: var(--good); background: rgba(0, 187, 163, 0.12); }
-.trend.worse { color: var(--loss-text); background: rgba(232, 64, 87, 0.12); }
-.trend.stable { color: var(--muted); background: var(--panel-3); }
 
 /* ---------- summary ---------- */
 .summary { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; }
@@ -183,8 +179,8 @@ tbody tr:last-child td { border-bottom: 0; }
 .match.w .slot-empty { background: var(--win-bg-2); }
 .tagpill { display: inline-block; padding: 0 7px; border-radius: 99px; font-size: 11px; font-weight: 700; line-height: 17px; }
 .tagpill.mvp { background: var(--mvp); color: #1b1300; }
-.tagpill.ace { background: #6a45d9; color: #fff; }
-.tagpill.multi { background: #c62c44; color: #fff; }
+.tagpill.ace { background: var(--ace); color: #fff; }
+.tagpill.multi { background: var(--multi); color: #fff; }
 .tagpill.who0 { background: color-mix(in srgb, var(--p0) 18%, transparent); color: var(--p0-text); }
 .tagpill.who1 { background: color-mix(in srgb, var(--p1) 18%, transparent); color: var(--p1-text); }
 .rosters { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; font-size: 11px; }

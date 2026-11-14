@@ -42,7 +42,7 @@ function StatTable({ rows }: { rows: StatRow[] }) {
         <thead><tr><th>Stat</th><th className="num">Avg</th><th className="num">Wins</th><th className="num">Losses</th><th className="num">Target</th><th>vs target</th><th>Trend (last 10)</th></tr></thead>
         <tbody>
           {cats.map((c) => [
-            <tr key={c}><td colSpan={7} className="small muted" style={{ paddingTop: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>{c}</td></tr>,
+            <tr key={c}><td colSpan={7} className="small muted" style={{ paddingTop: 14, fontWeight: 700, color: "var(--text)" }}>{c}</td></tr>,
             ...rows.filter((r) => r.metric.category === c).map((r, i) => (
               <motion.tr key={r.metric.id} transition={stagger(i, 0.02)}>
                 <td title={r.metric.info}>{r.metric.label} {r.n < r.metric.minN && <span className="small muted" title={`Only ${r.n} games: needs ${r.metric.minN} to be reliable`}>(n={r.n})</span>}</td>
