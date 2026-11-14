@@ -77,7 +77,7 @@ export function Coach() {
       </Card>
       {reviews.map((r, i) => (
         <Card key={r.date} title={`Review · ${r.date}`} hint={`${r.games} games analysed`} delay={i * 0.04}>
-          <p style={{ marginTop: 0, fontWeight: 600 }}>{r.headline}</p>
+          <p style={{ marginTop: 0, fontWeight: 700 }}>{r.headline}</p>
           <div className="grid g2">
             <div><div className="small good-c" style={{ fontWeight: 700, marginBottom: 4 }}>DOING WELL</div><ul style={{ margin: 0, paddingLeft: 18 }}>{r.best.map((b) => <li key={b}>{b}</li>)}</ul></div>
             <div><div className="small bad-c" style={{ fontWeight: 700, marginBottom: 4 }}>NEEDS WORK</div><ul style={{ margin: 0, paddingLeft: 18 }}>{r.worst.map((b) => <li key={b}>{b}</li>)}</ul></div>

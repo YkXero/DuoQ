@@ -1,77 +1,598 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T12:00:00Z",
+  "generatedAt": "2026-11-14T00:57:21.994Z",
   "title": "Design System: Duo Q Tracker",
   "extensions": {
     "colorMeta": {
-      "brand-nav": { "role": "primary", "displayName": "Nav Blue", "canonical": "#4171d6", "tonalRamp": ["#182135", "#23365d", "#2a4888", "#2d5fc7", "#5f84d3", "#96acd9", "#c7d1e6", "#eef1f6"] },
-      "win": { "role": "primary", "displayName": "Victory Blue", "canonical": "#5383e8", "tonalRamp": ["#152037", "#1e3462", "#214591", "#1f5ad6", "#5481de", "#8fa9e0", "#c4d0e9", "#eef1f7"] },
-      "win-text": { "role": "primary", "displayName": "Victory Blue Text", "canonical": "#81acff" },
-      "win-bg": { "role": "primary", "displayName": "Victory Slate", "canonical": "#28344e" },
-      "win-bg-2": { "role": "primary", "displayName": "Victory Slate Deep", "canonical": "#2f436e" },
-      "accent-text": { "role": "primary", "displayName": "Link Blue", "canonical": "#7aa2ff", "tonalRamp": ["#101d3c", "#132e6c", "#103ca2", "#034bf2", "#3f75f3", "#83a3ec", "#becdee", "#ecf0f8"] },
-      "loss": { "role": "secondary", "displayName": "Defeat Red", "canonical": "#e84057", "tonalRamp": ["#38151a", "#631d26", "#932030", "#d81d36", "#df5366", "#e18e9a", "#e9c3c8", "#f7eeef"] },
-      "loss-text": { "role": "secondary", "displayName": "Defeat Red Text", "canonical": "#ff8a9a" },
-      "loss-bg": { "role": "secondary", "displayName": "Defeat Wine", "canonical": "#59343b" },
-      "loss-bg-2": { "role": "secondary", "displayName": "Defeat Wine Deep", "canonical": "#703c47" },
-      "bad-text": { "role": "secondary", "displayName": "Warning Red Text", "canonical": "#ff5f74" },
-      "good": { "role": "tertiary", "displayName": "Good Teal", "canonical": "#00bba3", "tonalRamp": ["#103c37", "#136c61", "#10a290", "#03f2d3", "#3ff3dc", "#83ecdf", "#beeee8", "#ecf8f7"] },
-      "great": { "role": "tertiary", "displayName": "Great Blue", "canonical": "#0093ff", "tonalRamp": ["#102a3c", "#13476c", "#1064a2", "#038df2", "#3fa7f3", "#83c0ec", "#bedaee", "#ecf3f8"] },
-      "elite": { "role": "tertiary", "displayName": "Elite Orange", "canonical": "#ff8200", "tonalRamp": ["#3c2710", "#6c4113", "#a25b10", "#f27d03", "#f39b3f", "#ecb983", "#eed7be", "#f8f2ec"] },
-      "mvp": { "role": "tertiary", "displayName": "MVP Amber", "canonical": "#eb9c00", "tonalRamp": ["#3c2e10", "#6c4e13", "#a27110", "#f2a203", "#f3b63f", "#ecc983", "#eedebe", "#f8f4ec"] },
-      "ace": { "role": "tertiary", "displayName": "ACE Violet", "canonical": "#7d59ea", "tonalRamp": ["#1e1537", "#2e1d62", "#3d2192", "#4c1ed7", "#7653df", "#a38fe0", "#cdc3e9", "#f0eef7"] },
-      "gold": { "role": "tertiary", "displayName": "Gold", "canonical": "#e0b84e" },
-      "player-0": { "role": "tertiary", "displayName": "ADC Lavender", "canonical": "#9085e9", "tonalRamp": ["#1a1736", "#28215f", "#32268c", "#3a27cd", "#685bd7", "#9b93dc", "#c9c5e7", "#efeef6"] },
-      "player-0-text": { "role": "tertiary", "displayName": "ADC Lavender Text", "canonical": "#b9b2ff" },
-      "player-1": { "role": "tertiary", "displayName": "Support Ochre", "canonical": "#c98500", "tonalRamp": ["#3c2d10", "#6c4e13", "#a27110", "#f2a103", "#f3b63f", "#ecc983", "#eedebe", "#f8f4ec"] },
-      "player-1-text": { "role": "tertiary", "displayName": "Support Ochre Text", "canonical": "#f2b544" },
-      "page": { "role": "neutral", "displayName": "Page Black", "canonical": "#1c1c1f", "tonalRamp": ["#252527", "#3d3d42", "#56565d", "#747480", "#94949e", "#b5b5ba", "#d5d5d7", "#f2f2f3"] },
-      "panel": { "role": "neutral", "displayName": "Slate Panel", "canonical": "#31313c", "tonalRamp": ["#242428", "#3b3b44", "#525261", "#6e6e86", "#9090a2", "#b2b2bd", "#d4d4d9", "#f2f2f3"] },
-      "panel-inset": { "role": "neutral", "displayName": "Inset Slate", "canonical": "#282830", "tonalRamp": ["#242428", "#3c3c44", "#535360", "#707085", "#9191a1", "#b3b3bc", "#d4d4d8", "#f2f2f3"] },
-      "panel-raised": { "role": "neutral", "displayName": "Raised Slate", "canonical": "#424254", "tonalRamp": ["#242429", "#3a3a45", "#505062", "#6c6c89", "#8e8ea4", "#b1b1be", "#d3d3d9", "#f2f2f3"] },
-      "border": { "role": "neutral", "displayName": "Border", "canonical": "#424254" },
-      "border-strong": { "role": "neutral", "displayName": "Strong Border", "canonical": "#515163" },
-      "line": { "role": "neutral", "displayName": "Divider Line", "canonical": "#26262d" },
-      "detail-well": { "role": "neutral", "displayName": "Detail Well", "canonical": "#1b1b21" },
-      "text": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
-      "text-2": { "role": "neutral", "displayName": "Secondary Text", "canonical": "#b7b7c9", "tonalRamp": ["#232329", "#393946", "#4f4f64", "#69698b", "#8c8ca6", "#b0b0bf", "#d3d3da", "#f1f1f3"] },
-      "muted": { "role": "neutral", "displayName": "Muted Text", "canonical": "#a7a7ba" },
-      "faint": { "role": "neutral", "displayName": "Faint Text", "canonical": "#9e9eb1" },
-      "chart-grid": { "role": "neutral", "displayName": "Chart Grid", "canonical": "#2e2e38" },
-      "chart-axis": { "role": "neutral", "displayName": "Chart Axis", "canonical": "#4a4a5a" },
-      "chart-tick": { "role": "neutral", "displayName": "Chart Tick", "canonical": "#8a899c" }
+      "brand-nav": {
+        "role": "primary",
+        "displayName": "Nav Blue",
+        "canonical": "#4171d6",
+        "tonalRamp": [
+          "#182135",
+          "#23365d",
+          "#2a4888",
+          "#2d5fc7",
+          "#5f84d3",
+          "#96acd9",
+          "#c7d1e6",
+          "#eef1f6"
+        ]
+      },
+      "win": {
+        "role": "primary",
+        "displayName": "Victory Blue",
+        "canonical": "#5383e8",
+        "tonalRamp": [
+          "#152037",
+          "#1e3462",
+          "#214591",
+          "#1f5ad6",
+          "#5481de",
+          "#8fa9e0",
+          "#c4d0e9",
+          "#eef1f7"
+        ]
+      },
+      "win-text": {
+        "role": "primary",
+        "displayName": "Victory Blue Text",
+        "canonical": "#81acff"
+      },
+      "win-bg": {
+        "role": "primary",
+        "displayName": "Victory Slate",
+        "canonical": "#28344e"
+      },
+      "win-bg-2": {
+        "role": "primary",
+        "displayName": "Victory Slate Deep",
+        "canonical": "#2f436e"
+      },
+      "loss": {
+        "role": "secondary",
+        "displayName": "Defeat Red",
+        "canonical": "#e84057",
+        "tonalRamp": [
+          "#38151a",
+          "#631d26",
+          "#932030",
+          "#d81d36",
+          "#df5366",
+          "#e18e9a",
+          "#e9c3c8",
+          "#f7eeef"
+        ]
+      },
+      "loss-text": {
+        "role": "secondary",
+        "displayName": "Defeat Red Text",
+        "canonical": "#ff8a9a"
+      },
+      "loss-bg": {
+        "role": "secondary",
+        "displayName": "Defeat Wine",
+        "canonical": "#59343b"
+      },
+      "loss-bg-2": {
+        "role": "secondary",
+        "displayName": "Defeat Wine Deep",
+        "canonical": "#703c47"
+      },
+      "accent-text": {
+        "role": "primary",
+        "displayName": "Link Blue",
+        "canonical": "#7aa2ff",
+        "tonalRamp": [
+          "#101d3c",
+          "#132e6c",
+          "#103ca2",
+          "#034bf2",
+          "#3f75f3",
+          "#83a3ec",
+          "#becdee",
+          "#ecf0f8"
+        ]
+      },
+      "bad-text": {
+        "role": "secondary",
+        "displayName": "Warning Red Text",
+        "canonical": "#ff5f74"
+      },
+      "good": {
+        "role": "tertiary",
+        "displayName": "Good Teal",
+        "canonical": "#00bba3",
+        "tonalRamp": [
+          "#103c37",
+          "#136c61",
+          "#10a290",
+          "#03f2d3",
+          "#3ff3dc",
+          "#83ecdf",
+          "#beeee8",
+          "#ecf8f7"
+        ]
+      },
+      "good-text": {
+        "role": "tertiary",
+        "displayName": "Light Teal",
+        "canonical": "#5fe0cc"
+      },
+      "good-ink": {
+        "role": "tertiary",
+        "displayName": "Deep Teal Ink",
+        "canonical": "#032b26"
+      },
+      "great": {
+        "role": "tertiary",
+        "displayName": "Great Blue",
+        "canonical": "#0093ff",
+        "tonalRamp": [
+          "#102a3c",
+          "#13476c",
+          "#1064a2",
+          "#038df2",
+          "#3fa7f3",
+          "#83c0ec",
+          "#bedaee",
+          "#ecf3f8"
+        ]
+      },
+      "elite": {
+        "role": "tertiary",
+        "displayName": "Elite Orange",
+        "canonical": "#ff8200",
+        "tonalRamp": [
+          "#3c2710",
+          "#6c4113",
+          "#a25b10",
+          "#f27d03",
+          "#f39b3f",
+          "#ecb983",
+          "#eed7be",
+          "#f8f2ec"
+        ]
+      },
+      "mvp": {
+        "role": "tertiary",
+        "displayName": "MVP Amber",
+        "canonical": "#eb9c00",
+        "tonalRamp": [
+          "#3c2e10",
+          "#6c4e13",
+          "#a27110",
+          "#f2a203",
+          "#f3b63f",
+          "#ecc983",
+          "#eedebe",
+          "#f8f4ec"
+        ]
+      },
+      "mvp-ink": {
+        "role": "tertiary",
+        "displayName": "Amber Ink",
+        "canonical": "#1b1300"
+      },
+      "ace": {
+        "role": "tertiary",
+        "displayName": "ACE Violet",
+        "canonical": "#6a45d9",
+        "tonalRamp": [
+          "#1c1436",
+          "#2b1c60",
+          "#3a228e",
+          "#4a26cc",
+          "#6a45d9",
+          "#9d88e0",
+          "#cbc2ea",
+          "#f0eef7"
+        ]
+      },
+      "multi": {
+        "role": "tertiary",
+        "displayName": "Multikill Red",
+        "canonical": "#c62c44"
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Gold",
+        "canonical": "#e0b84e"
+      },
+      "grade-a-text": {
+        "role": "tertiary",
+        "displayName": "Grade A Teal",
+        "canonical": "#4be0c8"
+      },
+      "grade-b-text": {
+        "role": "tertiary",
+        "displayName": "Grade B Blue",
+        "canonical": "#6cbcff"
+      },
+      "grade-d-text": {
+        "role": "tertiary",
+        "displayName": "Grade D Orange",
+        "canonical": "#ffa24d"
+      },
+      "player-0": {
+        "role": "tertiary",
+        "displayName": "ADC Lavender",
+        "canonical": "#9085e9",
+        "tonalRamp": [
+          "#1a1736",
+          "#28215f",
+          "#32268c",
+          "#3a27cd",
+          "#685bd7",
+          "#9b93dc",
+          "#c9c5e7",
+          "#efeef6"
+        ]
+      },
+      "player-0-text": {
+        "role": "tertiary",
+        "displayName": "ADC Lavender Text",
+        "canonical": "#b9b2ff"
+      },
+      "player-1": {
+        "role": "tertiary",
+        "displayName": "Support Ochre",
+        "canonical": "#c98500",
+        "tonalRamp": [
+          "#3c2d10",
+          "#6c4e13",
+          "#a27110",
+          "#f2a103",
+          "#f3b63f",
+          "#ecc983",
+          "#eedebe",
+          "#f8f4ec"
+        ]
+      },
+      "player-1-text": {
+        "role": "tertiary",
+        "displayName": "Support Ochre Text",
+        "canonical": "#f2b544"
+      },
+      "tier-iron": {
+        "role": "tertiary",
+        "displayName": "Iron",
+        "canonical": "#a7a097"
+      },
+      "tier-bronze": {
+        "role": "tertiary",
+        "displayName": "Bronze",
+        "canonical": "#c0aa9b"
+      },
+      "tier-silver": {
+        "role": "tertiary",
+        "displayName": "Silver",
+        "canonical": "#b7bbcb"
+      },
+      "tier-gold": {
+        "role": "tertiary",
+        "displayName": "Gold Tier",
+        "canonical": "#dbc798"
+      },
+      "tier-platinum": {
+        "role": "tertiary",
+        "displayName": "Platinum",
+        "canonical": "#97cbc4"
+      },
+      "tier-emerald": {
+        "role": "tertiary",
+        "displayName": "Emerald",
+        "canonical": "#7fd6a7"
+      },
+      "tier-diamond": {
+        "role": "tertiary",
+        "displayName": "Diamond",
+        "canonical": "#a7cdf2"
+      },
+      "tier-master": {
+        "role": "tertiary",
+        "displayName": "Master",
+        "canonical": "#d3b3ea"
+      },
+      "tier-grandmaster": {
+        "role": "tertiary",
+        "displayName": "Grandmaster",
+        "canonical": "#ebb4c4"
+      },
+      "tier-challenger": {
+        "role": "tertiary",
+        "displayName": "Challenger",
+        "canonical": "#fdc06b"
+      },
+      "banner-bg": {
+        "role": "neutral",
+        "displayName": "Banner Amber Ground",
+        "canonical": "#2a2312"
+      },
+      "banner-border": {
+        "role": "neutral",
+        "displayName": "Banner Amber Border",
+        "canonical": "#5a4a22"
+      },
+      "banner-text": {
+        "role": "neutral",
+        "displayName": "Banner Amber Text",
+        "canonical": "#f0d999"
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Page Black",
+        "canonical": "#1c1c1f",
+        "tonalRamp": [
+          "#252527",
+          "#3d3d42",
+          "#56565d",
+          "#747480",
+          "#94949e",
+          "#b5b5ba",
+          "#d5d5d7",
+          "#f2f2f3"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Slate Panel",
+        "canonical": "#31313c",
+        "tonalRamp": [
+          "#242428",
+          "#3b3b44",
+          "#525261",
+          "#6e6e86",
+          "#9090a2",
+          "#b2b2bd",
+          "#d4d4d9",
+          "#f2f2f3"
+        ]
+      },
+      "panel-inset": {
+        "role": "neutral",
+        "displayName": "Inset Slate",
+        "canonical": "#282830",
+        "tonalRamp": [
+          "#242428",
+          "#3c3c44",
+          "#535360",
+          "#707085",
+          "#9191a1",
+          "#b3b3bc",
+          "#d4d4d8",
+          "#f2f2f3"
+        ]
+      },
+      "panel-raised": {
+        "role": "neutral",
+        "displayName": "Raised Slate",
+        "canonical": "#424254",
+        "tonalRamp": [
+          "#242429",
+          "#3a3a45",
+          "#505062",
+          "#6c6c89",
+          "#8e8ea4",
+          "#b1b1be",
+          "#d3d3d9",
+          "#f2f2f3"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "canonical": "#424254"
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Strong Border",
+        "canonical": "#515163"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Divider Line",
+        "canonical": "#26262d"
+      },
+      "detail-well": {
+        "role": "neutral",
+        "displayName": "Detail Well",
+        "canonical": "#1b1b21"
+      },
+      "tooltip-bg": {
+        "role": "neutral",
+        "displayName": "Tooltip Black",
+        "canonical": "#111116"
+      },
+      "level-badge": {
+        "role": "neutral",
+        "displayName": "Level Badge Black",
+        "canonical": "#111111"
+      },
+      "icon-backing": {
+        "role": "neutral",
+        "displayName": "Icon Backing",
+        "canonical": "#000000"
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff"
+      },
+      "text-2": {
+        "role": "neutral",
+        "displayName": "Secondary Text",
+        "canonical": "#b7b7c9",
+        "tonalRamp": [
+          "#232329",
+          "#393946",
+          "#4f4f64",
+          "#69698b",
+          "#8c8ca6",
+          "#b0b0bf",
+          "#d3d3da",
+          "#f1f1f3"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Text",
+        "canonical": "#a7a7ba"
+      },
+      "faint": {
+        "role": "neutral",
+        "displayName": "Faint Text",
+        "canonical": "#9e9eb1"
+      },
+      "neutral-mark": {
+        "role": "neutral",
+        "displayName": "Neutral Mark",
+        "canonical": "#8a899c"
+      },
+      "chart-grid": {
+        "role": "neutral",
+        "displayName": "Chart Grid",
+        "canonical": "#2c2c35"
+      },
+      "chart-zero": {
+        "role": "neutral",
+        "displayName": "Chart Zero",
+        "canonical": "#6d6d80"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Headline numbers: recent KDA ratio, big summary values." },
-      "headline": { "displayName": "Headline", "purpose": "Player names in the profile band; brand wordmark." },
-      "title": { "displayName": "Title", "purpose": "Sentence-case panel title strips and section titles." },
-      "stat": { "displayName": "Stat", "purpose": "KDA lines in match rows and rank tier names, tabular figures." },
-      "body": { "displayName": "Body", "purpose": "13px base text; 12px for table headers and controls." },
-      "label": { "displayName": "Label", "purpose": "Chips, pills, roster names, meter labels, footnotes." }
+      "hero-number": {
+        "displayName": "Hero number",
+        "purpose": "The headline number above a chart (current Net wins), coloured by result."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Headline numbers: recent KDA ratio, stat tile values, big summary values."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Player names in the profile band; brand wordmark."
+      },
+      "stat": {
+        "displayName": "Stat",
+        "purpose": "KDA lines in match rows, rank tier names, lane headlines; tabular figures."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sentence-case panel title strips and section titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "13px base text, story lines, links."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Table headers, controls, title hints, tile labels, trend words, legends, tooltips."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Chips, pills, roster names, meter labels, chart ticks and end labels, footnotes."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Tier-band and objective labels inside charts; skill-grid cells."
+      }
     },
     "shadows": [
-      { "name": "tooltip", "value": "0 6px 20px rgba(0, 0, 0, 0.4)", "purpose": "Chart tooltips, the only floating surface." },
-      { "name": "icon-cutout", "value": "0 0 0 2px var(--panel)", "purpose": "Separates overlapping champion icons in duo stacks." },
-      { "name": "duo-ring", "value": "0 0 0 2px var(--accent-text)", "purpose": "Marks the duo's champions in compact match-row rosters." }
+      {
+        "name": "tooltip",
+        "value": "0 6px 20px rgba(0, 0, 0, 0.4)",
+        "purpose": "Chart tooltips, the only floating surface."
+      },
+      {
+        "name": "icon-cutout",
+        "value": "0 0 0 2px var(--panel)",
+        "purpose": "Separates overlapping champion icons in duo stacks."
+      },
+      {
+        "name": "duo-ring",
+        "value": "0 0 0 1px var(--text-2)",
+        "purpose": "Marks the duo's champions in compact match-row rosters (3px radius)."
+      },
+      {
+        "name": "rune-chosen",
+        "value": "0 0 0 2px var(--gold)",
+        "purpose": "Rings the runes a player took on the rune page."
+      }
     ],
     "motion": [
-      { "name": "spring-smooth", "value": "spring(stiffness 380, damping 34, mass 0.9)", "purpose": "Tab ink, layout shifts." },
-      { "name": "spring-snappy", "value": "spring(stiffness 600, damping 32)", "purpose": "Segmented thumb, toggles, quick feedback." },
-      { "name": "spring-gentle", "value": "spring(stiffness 180, damping 24)", "purpose": "Panel entrances (14px rise, no opacity change), bar fills, donut and ring sweeps, meter dots." },
-      { "name": "stagger", "value": "35ms per item, capped at 400ms", "purpose": "Sequenced entrances of list items and panels." },
-      { "name": "hover-tint", "value": "background 0.15s", "purpose": "Row hover tints on tables and match rows." },
-      { "name": "reduced-motion", "value": "animation: none; transition: none", "purpose": "All motion removed under prefers-reduced-motion." }
+      {
+        "name": "spring-smooth",
+        "value": "spring(stiffness 380, damping 34, mass 0.9)",
+        "purpose": "Tab ink, layout shifts."
+      },
+      {
+        "name": "spring-snappy",
+        "value": "spring(stiffness 600, damping 32)",
+        "purpose": "Segmented thumb, toggles, quick feedback."
+      },
+      {
+        "name": "spring-gentle",
+        "value": "spring(stiffness 180, damping 24)",
+        "purpose": "Panel entrances (14px rise, no opacity change), bar fills, donut and ring sweeps, meter dots."
+      },
+      {
+        "name": "stagger",
+        "value": "35ms per item, capped at 400ms",
+        "purpose": "Sequenced entrances of list items and panels."
+      },
+      {
+        "name": "charts",
+        "value": "isAnimationActive: false",
+        "purpose": "Recharts series draw without animation."
+      },
+      {
+        "name": "hover-tint",
+        "value": "background 0.15s",
+        "purpose": "Row hover tints on tables and match rows."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none",
+        "purpose": "All motion removed under prefers-reduced-motion."
+      }
     ],
     "breakpoints": [
-      { "name": "aside-collapse", "value": "1000px" },
-      { "name": "cards-stack", "value": "900px" },
-      { "name": "fix-row-stack", "value": "760px" },
-      { "name": "narrow", "value": "700px" },
-      { "name": "match-row-compact (container)", "value": "1060px" },
-      { "name": "match-row-minimal (container)", "value": "640px" }
+      {
+        "name": "aside-collapse / tiles-3",
+        "value": "1000px"
+      },
+      {
+        "name": "cards-stack / builds-stack",
+        "value": "900px"
+      },
+      {
+        "name": "fix-row-stack",
+        "value": "760px"
+      },
+      {
+        "name": "narrow",
+        "value": "700px"
+      },
+      {
+        "name": "tiles-2",
+        "value": "560px"
+      },
+      {
+        "name": "match-row-compact (container)",
+        "value": "1060px"
+      },
+      {
+        "name": "match-row-minimal (container)",
+        "value": "640px"
+      }
     ],
     "exceptions": [
-      { "name": "match-row-result-strip", "value": "border-left: 6px solid var(--win | --loss)", "purpose": "op.gg win/loss strip on match rows; detector side-tab rule ignored for src/styles.css in .impeccable/config.json. Scoped to match rows only." }
+      {
+        "name": "match-row-result-strip",
+        "value": "border-left: 6px solid var(--win | --loss)",
+        "purpose": "op.gg win/loss strip on match rows; detector side-tab rule ignored for src/styles.css in .impeccable/config.json. Scoped to match rows only."
+      }
     ]
   },
   "components": [
@@ -119,9 +640,9 @@
       "name": "Chips and pills",
       "kind": "chip",
       "refersTo": "who-chip-p0",
-      "description": "Player who-chips, neutral duo chip, MVP and ACE pills.",
-      "html": "<div style=\"display:flex;gap:6px;align-items:center\"><span class=\"ds-who ds-p0\">Imsomnia</span><span class=\"ds-who ds-p1\">Sokai</span><span class=\"ds-who ds-duo\">Duo</span><span class=\"ds-pill ds-mvp\">MVP</span><span class=\"ds-pill ds-ace\">ACE</span></div>",
-      "css": ".ds-who { font: 500 11px Roboto, system-ui, sans-serif; padding: 1px 6px; border-radius: 4px; } .ds-p0 { background: rgba(144, 133, 233, 0.18); color: #b9b2ff; } .ds-p1 { background: rgba(201, 133, 0, 0.18); color: #f2b544; } .ds-duo { background: #424254; color: #b7b7c9; } .ds-pill { display: inline-block; padding: 0 7px; border-radius: 99px; font: 700 11px/17px Roboto, system-ui, sans-serif; } .ds-mvp { background: #eb9c00; color: #1b1300; } .ds-ace { background: #6a45d9; color: #fff; }"
+      "description": "Player who-chips, neutral duo chip, MVP, ACE, multikill and On-track pills.",
+      "html": "<div style=\"display:flex;gap:6px;align-items:center;flex-wrap:wrap\"><span class=\"ds-who ds-p0\">Imsomnia</span><span class=\"ds-who ds-p1\">Sokai</span><span class=\"ds-who ds-duo\">Duo</span><span class=\"ds-pill ds-mvp\">MVP</span><span class=\"ds-pill ds-ace\">ACE</span><span class=\"ds-pill ds-multi\">Triple</span><span class=\"ds-pill ds-ok\">On track</span></div>",
+      "css": ".ds-who { font: 500 11px Roboto, system-ui, sans-serif; padding: 1px 6px; border-radius: 4px; } .ds-p0 { background: rgba(144, 133, 233, 0.18); color: #b9b2ff; } .ds-p1 { background: rgba(201, 133, 0, 0.18); color: #f2b544; } .ds-duo { background: #424254; color: #b7b7c9; } .ds-pill { display: inline-block; padding: 0 7px; border-radius: 99px; font: 700 11px/17px Roboto, system-ui, sans-serif; } .ds-mvp { background: #eb9c00; color: #1b1300; } .ds-ace { background: #6a45d9; color: #fff; } .ds-multi { background: #c62c44; color: #fff; } .ds-ok { background: #00bba3; color: #032b26; }"
     },
     {
       "name": "Match row",
@@ -146,33 +667,91 @@
       "description": "Track with a teal good zone from the target, a target tick and a toned dot.",
       "html": "<div class=\"ds-meter\"><div class=\"ds-track\"><span class=\"ds-zone\"></span><span class=\"ds-target\"></span><span class=\"ds-dot\"></span></div><div class=\"ds-mlabels\"><span>-2</span><span class=\"ds-t\">target +10</span></div></div>",
       "css": ".ds-meter { width: 220px; font: 11px Roboto, system-ui, sans-serif; } .ds-track { position: relative; height: 6px; border-radius: 3px; background: #424254; } .ds-zone { position: absolute; top: 0; bottom: 0; left: 78%; right: 0; background: rgba(0,187,163,0.3); border-radius: 3px; } .ds-target { position: absolute; top: -4px; bottom: -4px; left: 78%; width: 2px; margin-left: -1px; background: #b7b7c9; border-radius: 1px; } .ds-dot { position: absolute; top: 50%; left: 45%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid #31313c; background: #e84057; transition: left 0.4s; } .ds-meter:hover .ds-dot { left: 50%; } .ds-mlabels { display: flex; justify-content: space-between; margin-top: 6px; color: #ff5f74; font-weight: 700; } .ds-t { color: #a7a7ba; font-weight: 400; }"
+    },
+    {
+      "name": "Stat tile",
+      "kind": "card",
+      "refersTo": "stat-tile",
+      "description": "Profile summary tile: caption label, 22px tabular value, muted sub-line.",
+      "html": "<div class=\"ds-tiles\"><div class=\"ds-tile\"><span>Win rate</span><b>56%</b><small>28W 22L</small></div><div class=\"ds-tile\"><span>KDA</span><b>3.41</b><small>6.2 / 4.1 / 7.8</small></div><div class=\"ds-tile\"><span>CS per min</span><b>7.4</b><small>target 7.8</small></div></div>",
+      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 420px; font: 13px/1.45 Roboto, system-ui, sans-serif; color: #fff; } .ds-tile { display: grid; gap: 2px; padding: 12px 14px; background: #31313c; border-radius: 6px; min-width: 0; } .ds-tile span { font-size: 12px; color: #b7b7c9; } .ds-tile b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-tile small { font-size: 12px; color: #a7a7ba; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }"
+    },
+    {
+      "name": "Skill grid",
+      "kind": "custom",
+      "refersTo": "skill-cell-on",
+      "description": "Skill order in a build column: levelled cells in Victory Blue, R in Elite Orange.",
+      "html": "<div class=\"ds-skill\"><div class=\"ds-k\">Q</div><div class=\"ds-on\">1</div><div></div><div></div><div class=\"ds-on\">4</div><div class=\"ds-k\">W</div><div></div><div class=\"ds-on\">2</div><div></div><div></div><div class=\"ds-k\">R</div><div></div><div></div><div class=\"ds-on ds-r\">6</div><div></div></div>",
+      "css": ".ds-skill { display: grid; grid-template-columns: repeat(5, 22px); gap: 2px; font: 10px Roboto, system-ui, sans-serif; } .ds-skill div { height: 22px; display: grid; place-items: center; border-radius: 3px; background: #282830; color: #9e9eb1; } .ds-skill .ds-on { background: #5383e8; color: #fff; font-weight: 700; } .ds-skill .ds-on.ds-r { background: #ff8200; } .ds-skill .ds-k { background: none; color: #b7b7c9; font-weight: 700; }"
+    },
+    {
+      "name": "Net wins chart",
+      "kind": "custom",
+      "refersTo": "chart-tooltip",
+      "description": "Hero number over a zero-split step area; tooltip on Tooltip Black.",
+      "html": "<div class=\"ds-nw\"><div class=\"ds-nw-head\"><span class=\"ds-nw-now\">+6</span><span class=\"ds-cap\">after 40 games · peak +8</span></div><svg viewBox=\"0 0 300 90\" width=\"300\" height=\"90\" aria-hidden=\"true\"><line x1=\"0\" x2=\"300\" y1=\"20\" y2=\"20\" stroke=\"#2c2c35\"/><path d=\"M0 55H40V47H80V55Z M120 55V39H160V31H200V39H240V23H300V55Z\" fill=\"rgba(83,131,232,0.25)\"/><path d=\"M80 55V63H120V55Z\" fill=\"rgba(232,64,87,0.25)\"/><line x1=\"0\" x2=\"300\" y1=\"55\" y2=\"55\" stroke=\"#6d6d80\"/><path d=\"M0 55H40V47H80V55\" fill=\"none\" stroke=\"#5383e8\" stroke-width=\"2\"/><path d=\"M80 55V63H120V55\" fill=\"none\" stroke=\"#e84057\" stroke-width=\"2\"/><path d=\"M120 55V39H160V31H200V39H240V23H300\" fill=\"none\" stroke=\"#5383e8\" stroke-width=\"2\"/></svg><div class=\"ds-tip\"><div class=\"ds-tip-h\">Game 31 · 9 Nov</div><b class=\"ds-w\">Victory</b> · Jinx + Thresh<div>Net +6</div></div></div>",
+      "css": ".ds-nw { font: 13px/1.45 Roboto, system-ui, sans-serif; color: #fff; background: #31313c; padding: 16px; border-radius: 6px; max-width: 332px; } .ds-nw-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; } .ds-nw-now { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; color: #81acff; } .ds-cap { font-size: 11px; color: #b7b7c9; } .ds-tip { display: inline-block; margin-top: 8px; background: #111116; border: 1px solid #515163; border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); } .ds-tip-h { color: #a7a7ba; margin-bottom: 4px; } .ds-w { color: #81acff; }"
+    },
+    {
+      "name": "Demo banner",
+      "kind": "custom",
+      "refersTo": "banner",
+      "description": "Dark-amber notice while sample data is active.",
+      "html": "<div class=\"ds-banner\">Showing sample data. <button class=\"ds-bbtn\">Back to real data</button></div>",
+      "css": ".ds-banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #2a2312; border: 1px solid #5a4a22; color: #f0d999; padding: 10px 14px; border-radius: 8px; font: 13px Roboto, system-ui, sans-serif; max-width: 420px; } .ds-bbtn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 600 13px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-bbtn:hover { background: #3e3e4b; } .ds-bbtn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
     }
   ],
   "narrative": {
     "northStar": "The Duo's Own op.gg",
-    "overview": "The system is the League stats-site standard played straight: op.gg's dark slate palette and match-row anatomy, dpm.lol's polish, and deeplol/mobalytics-style coaching panels, executed carefully rather than reinvented. League players should read every surface instantly because it looks like the sites they already use. The difference is the subject: two players, framed together, compared against their own past.\n\nDensity is high and glance-first. Flat slate panels sit 8px apart on a near-black page, each opened by a bold sentence-case title strip. Colour is a result channel before it is decoration: blue means won, red means lost, teal/blue/orange grade a KDA, and two fixed player hues tell the duo apart everywhere. Official League art (champions, items, runes, rank emblems) carries the imagery; there is no invented illustration.\n\nRejected: themed gimmicks (no \"gamer\" neon, no fantasy chrome) and the generic AI dashboard of uppercase-labelled rounded cards.",
+    "overview": "The system is the League stats-site standard played straight: op.gg's dark slate palette and match-row anatomy, dpm.lol's polish, and deeplol/mobalytics-style coaching panels, executed carefully rather than reinvented. League players should read every surface instantly because it looks like the sites they already use. The difference is the subject: two players, framed together, compared against their own past.\n\nDensity is high and glance-first. Flat slate panels sit 8px apart on a near-black page, each opened by a bold sentence-case title strip. Colour is a result channel before it is decoration: blue means won, red means lost, teal/blue/orange grade a KDA, and two fixed player hues tell the duo apart everywhere. Charts speak the same language: series are labelled directly at their ends, wins sit above a zero line in blue and losses below it in red, and rank is drawn over the League tier bands. Official League art (champions, items, runes, rank emblems) carries the imagery; there is no invented illustration.\n\nRejected: themed gimmicks (no \"gamer\" neon, no fantasy chrome) and the generic AI dashboard of uppercase-labelled rounded cards.",
     "keyCharacteristics": [
       "Dark slate tonal layering, no shadows on panels.",
       "Saturated brand-blue top navigation bar; everything below is neutral slate until a result colours it.",
       "Panels opened by 14px bold sentence-case title strips divided by a 1px line.",
       "Win/loss tinted match rows with a 6px result strip on the left edge.",
       "Roboto everywhere at a 13px base; numbers in tabular figures.",
+      "Charts labelled at the line end, never by a legend box; recessive grids, no axis lines.",
       "Spring motion that never hides content: entrances move, they do not fade in from nothing."
     ],
     "rules": [
-      { "name": "The Result Colour Rule", "body": "Blue and red mean won and lost, nothing else. Never use win or loss hues for brand, navigation or decoration (the nav bar uses its own Nav Blue).", "section": "colors" },
-      { "name": "The Two Players Rule", "body": "Lavender is always the ADC and ochre is always the support, on every surface. A third person colour is never introduced; \"both of you\" uses the neutral Raised Slate chip.", "section": "colors" },
-      { "name": "The Hollow Loss Rule", "body": "Win/loss marks must read without colour: wins are filled, losses are hollow outlines.", "section": "colors" },
-      { "name": "The Sentence Case Rule", "body": "Titles and labels are sentence case at normal tracking. No uppercase letter-spaced labels above content.", "section": "typography" },
-      { "name": "The Tabular Rule", "body": "Any numeric column or stat uses tabular figures and right alignment in tables.", "section": "typography" },
-      { "name": "The Flat Panel Rule", "body": "Panels never take a drop shadow. Only floating overlays (tooltips) may.", "section": "elevation" }
+      {
+        "name": "The Result Colour Rule",
+        "body": "Blue and red mean won and lost, nothing else. Never use win or loss hues for brand, navigation or decoration (the nav bar uses its own Nav Blue). In charts, blue is above zero and red below.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Players Rule",
+        "body": "Lavender is always the ADC and ochre is always the support, on every surface. A third person colour is never introduced; \"both of you\" uses the neutral Raised Slate chip, or Gold where a chart needs a shared series.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hollow Loss Rule",
+        "body": "Win/loss marks must read without colour: wins are filled, losses are hollow outlines.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Titles and labels are sentence case at normal tracking. No uppercase letter-spaced labels above content.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Any numeric column or stat uses tabular figures and right alignment in tables.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Panel Rule",
+        "body": "Panels never take a drop shadow. Only floating overlays (tooltips) may.",
+        "section": "elevation"
+      }
     ],
     "dos": [
       "Do open every panel with a 14px 700 sentence-case title strip and a 1px Divider Line, with an optional muted hint on the same baseline.",
       "Do keep 8px between panels and 16px inside them.",
       "Do colour results only with the win/loss pair, and keep losses hollow where a mark must read without colour.",
       "Do keep the ADC lavender and the support ochre on every new surface.",
-      "Do use official League art for champions, items, runes and ranks; round only runes and spells.",
+      "Do label chart series at their ends and split result charts at zero, blue above and red below.",
+      "Do use official League art for champions, items, runes and ranks; round only runes, spells and level badges.",
       "Do animate with the shared springs and leave content visible at frame one.",
       "Do let match rows adapt to their container with container queries."
     ],
