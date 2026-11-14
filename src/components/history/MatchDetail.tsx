@@ -12,62 +12,76 @@ type Tab = "overview" | "lane" | "gold" | "build";
 
 function Objectives({ m, team }: { m: Match; team: TeamId }) {
   const t = m.teams[team];
-  const items: [string, number][] = [["Kills", t.kills], ["Grubs", t.grubs], ["Herald", t.heralds], ["Dragons", t.dragons], ["Baron", t.barons], ["Towers", t.towers], ["Inhibs", t.inhibs]];
+  const items: [string, number][] = [["Grubs", t.grubs], ["Herald", t.heralds], ["Dragons", t.dragons], ["Baron", t.barons], ["Towers", t.towers], ["Inhibs", t.inhibs]];
   if (t.atakhan) items.push(["Atakhan", t.atakhan]);
   return <div className="objstrip">{items.map(([k, v]) => <span key={k}>{k} <b>{v}</b></span>)}</div>;
 }
+
+const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
 function Scoreboard({ m }: { m: Match }) {
   const maxDmg = Math.max(...m.parts.map((p) => p.dmg)), maxTaken = Math.max(...m.parts.map((p) => p.taken));
   const min = m.dur / 60;
   return (
-    <>
+    <div className="scoreboard">
       {([m.team, m.team === 100 ? 200 : 100] as TeamId[]).map((team) => {
         const won = team === m.team ? m.win : !m.win;
         const idxs = m.parts.map((_, i) => i).filter((i) => m.parts[i].team === team);
+        const ps = idxs.map((i) => m.parts[i]);
         const teamKills = m.teams[team].kills;
         return (
-          <div key={team} className={`sb-team ${won ? "w" : "l"}`}>
+          <section key={team} className={`sb-team ${won ? "w" : "l"}`}>
+            <header className="sb-head">
+              <div className="sb-result">
+                <b className={won ? "win-c" : "loss-c"}>{won ? "Victory" : "Defeat"}</b>
+                <span className="text-2">{team === 100 ? "Blue side" : "Red side"}{team === m.team ? " · your team" : ""}</span>
+                <span className="sb-kda">{sum(ps.map((p) => p.k))} / {sum(ps.map((p) => p.d))} / {sum(ps.map((p) => p.a))}</span>
+              </div>
+              <Objectives m={m} team={team} />
+            </header>
             <div className="scroll-x">
-              <table>
+              <table className="sb-table">
+                <colgroup><col className="c-champ" /><col className="c-kda" /><col className="c-dmg" /><col className="c-wards" /><col className="c-cs" /><col /></colgroup>
                 <thead><tr>
-                  <th><span className={won ? "win-c" : "loss-c"}>{won ? "Victory" : "Defeat"}</span> <span className="muted">({team === 100 ? "Blue" : "Red"} side{team === m.team ? ", your team" : ""})</span></th>
-                  <th>KDA</th><th>Damage dealt / taken</th><th className="num" title="Control wards bought / wards placed / enemy wards cleared">Wards</th><th className="num">CS</th><th>Items</th>
+                  <th>Player</th><th className="center">KDA</th><th>Damage dealt / taken</th>
+                  <th className="num" title="Control wards bought / wards placed / enemy wards cleared">Wards</th><th className="num">CS</th><th>Items</th>
                 </tr></thead>
                 <tbody>
                   {idxs.map((i) => {
-                    const p = m.parts[i];
+                    const p = m.parts[i], mine = m.duo.includes(i);
                     return (
-                      <tr key={i} className={m.duo.includes(i) ? "me" : ""}>
+                      <tr key={i} className={mine ? "me" : ""}>
                         <td>
-                          <div className="cell-champ">
-                            <Champ name={p.champ} size={32} level={p.lvl} />
-                            <div style={{ display: "grid", gap: 2 }}><Spell id={p.spells[0]} size={15} /><Spell id={p.spells[1]} size={15} /></div>
-                            <div style={{ display: "grid", gap: 2 }}><Rune id={p.runes[0]} size={15} /><Rune id={p.runes[2]} size={15} dim /></div>
-                            <span style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", fontWeight: m.duo.includes(i) ? 700 : 400 }}>{p.name.split("#")[0]}</span>
+                          <div className="sb-champ">
+                            <Champ name={p.champ} size={36} level={p.lvl} />
+                            <div className="sb-stack"><Spell id={p.spells[0]} size={17} /><Spell id={p.spells[1]} size={17} /></div>
+                            <div className="sb-stack"><Rune id={p.runes[0]} size={17} /><Rune id={p.runes[2]} size={17} dim /></div>
+                            <span className="sb-name">{p.name.split("#")[0]}</span>
                           </div>
                         </td>
-                        <td><div>{p.k}/<span className="loss-c">{p.d}</span>/{p.a} <span className="small muted">({teamKills ? Math.min(100, Math.round(((p.k + p.a) / teamKills) * 100)) : 0}%)</span></div><div className="small"><Kda k={p.k} d={p.d} a={p.a} /></div></td>
+                        <td className="center">
+                          <div className="sb-kda-line">{p.k} / <span className="bad-c">{p.d}</span> / {p.a}</div>
+                          <div className="sb-sub"><Kda k={p.k} d={p.d} a={p.a} /> · {teamKills ? Math.min(100, Math.round(((p.k + p.a) / teamKills) * 100)) : 0}%</div>
+                        </td>
                         <td>
                           <div className="dmg-bars" title={`Dealt ${p.dmg.toLocaleString()} · Taken ${p.taken.toLocaleString()}`}>
-                            <div className="row small" style={{ gap: 6 }}><span style={{ width: 40 }}>{(p.dmg / 1000).toFixed(1)}k</span><div style={{ flex: 1 }}><Bar value={p.dmg / maxDmg} color="var(--loss)" /></div></div>
-                            <div className="row small muted" style={{ gap: 6 }}><span style={{ width: 40 }}>{(p.taken / 1000).toFixed(1)}k</span><div style={{ flex: 1 }}><Bar value={p.taken / maxTaken} color="#8a899c" /></div></div>
+                            <span>{(p.dmg / 1000).toFixed(1)}k</span><Bar value={p.dmg / maxDmg} color="var(--loss)" />
+                            <span className="muted">{(p.taken / 1000).toFixed(1)}k</span><Bar value={p.taken / maxTaken} color="#8a899c" />
                           </div>
                         </td>
-                        <td className="num small">{p.pinks} / {p.wards} / {p.wardsKilled}</td>
-                        <td className="num">{p.cs} <div className="small muted">{(p.cs / min).toFixed(1)}/m</div></td>
-                        <td><div className="items">{p.items.map((it, j) => <Item key={j} id={it} size={22} empty="" />)}<RoleSlot id={p.roleItem} size={22} /></div></td>
+                        <td className="num sb-wards">{p.pinks} / {p.wards} / {p.wardsKilled}</td>
+                        <td className="num"><div className="sb-cs">{p.cs}</div><div className="sb-sub">{(p.cs / min).toFixed(1)}/min</div></td>
+                        <td><div className="items sb-items">{p.items.slice(0, 6).map((it, j) => <Item key={j} id={it} size={24} empty="" />)}<span className="sb-trinket"><Item id={p.items[6]} size={24} empty="" /></span><RoleSlot id={p.roleItem} size={24} /></div></td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-            <Objectives m={m} team={team} />
-          </div>
+          </section>
         );
       })}
-    </>
+    </div>
   );
 }
 

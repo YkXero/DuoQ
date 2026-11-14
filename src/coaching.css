@@ -2,12 +2,12 @@
    Tokens live in styles.css. Panels are flat (#31313c), 6px radius, 8px gaps, sentence-case titles. */
 
 /* ---------- profile layout (left summary column + main column) ---------- */
-.profile-layout { display: grid; grid-template-columns: 332px minmax(0, 1fr); gap: 8px; align-items: start; }
+.profile-layout { display: grid; grid-template-columns: 332px minmax(0, 1fr); gap: var(--s-4); align-items: start; }
 @media (max-width: 1000px) { .profile-layout { grid-template-columns: minmax(0, 1fr); } }
 
 /* recent summary */
 .recent { display: flex; gap: 18px; align-items: center; }
-.recent-kda { font-size: 22px; font-weight: 700; margin: 2px 0; }
+.recent-kda { font-size: var(--fs-stat); font-weight: 700; margin: 2px 0; }
 
 /* most-played duos */
 .duo-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
@@ -28,7 +28,7 @@
 /* challenge (road to goal) */
 .challenge { display: flex; flex-direction: column; gap: 10px; }
 .challenge-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: -16px -16px 0; padding: 12px 16px; border-bottom: 1px solid var(--line); }
-.challenge-title { font-size: 14px; font-weight: 700; margin: 0; }
+.challenge-title { font-size: var(--fs-title); font-weight: 700; margin: 0; }
 .goal-bars { display: grid; gap: 10px; }
 .gb-track { height: 6px; border-radius: 3px; background: var(--panel-3); overflow: hidden; margin-top: 4px; }
 .gb-fill { display: block; height: 100%; border-radius: 3px; }
@@ -45,7 +45,7 @@ code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-rad
 .grade-cell { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--radius); background: var(--panel-2); min-width: 0; }
 .grade-name { font-weight: 700; font-size: 13px; }
 .clamp1 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.sub-title { font-size: 14px; font-weight: 700; margin: 18px 0 8px; }
+.sub-title { font-size: var(--fs-title); font-weight: 700; margin: 18px 0 8px; }
 .fix-list { display: grid; }
 .fix-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 240px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .fix-row { grid-template-columns: 24px minmax(0, 1fr); } .fix-visual { grid-column: 2; } }
@@ -99,7 +99,7 @@ details.cat summary { cursor: pointer; list-style: none; padding: 4px 0; }
 details.cat summary::-webkit-details-marker { display: none; }
 details.cat[open] .cat-toggle { visibility: hidden; }
 .cat-toggle { margin-left: auto; }
-.cat-title { font-size: 14px; font-weight: 700; margin: 0; }
+.cat-title { font-size: var(--fs-title); font-weight: 700; margin: 0; }
 .meter-list { display: grid; gap: 2px; }
 .meter-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 1.1fr) 120px; gap: 18px; align-items: center; padding: 6px 10px; border-radius: var(--radius); }
 .meter-row:hover { background: var(--panel-2); }
@@ -125,7 +125,7 @@ details.more summary::-webkit-details-marker { display: none; }
 .story::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; background: var(--text-2); }
 .story.good::before { background: var(--good); }
 .story.bad::before { background: var(--loss-text); }
-.lane-headline { margin: 0; font-size: 15px; font-weight: 700; }
+.lane-headline { margin: 0; font-size: var(--fs-data); font-weight: 700; }
 .lane-headline.good { color: #5fe0cc; }
 .lane-headline.bad { color: var(--loss-text); }
 
@@ -167,15 +167,15 @@ a.player-card:hover { background: var(--panel-3); }
 
 /* ---------- net wins ---------- */
 .netwins-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-.netwins-now { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.netwins-now { font-size: var(--fs-stat); font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* ---------- profile tiles ---------- */
 .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
 @media (max-width: 1000px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.tile { display: grid; gap: 2px; padding: 12px 14px; background: var(--panel); border-radius: var(--radius); min-width: 0; }
+.tile { display: grid; gap: 2px; padding: var(--s-3) var(--s-4); background: var(--panel); border-radius: var(--radius); min-width: 0; }
 .tile span { font-size: 12px; color: var(--text-2); }
-.tile b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tile b { font-size: var(--fs-stat); font-weight: 700; font-variant-numeric: tabular-nums; }
 .tile small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .recent-table td { padding: 6px 8px; }
 .res-chip { font-size: 12px; font-weight: 700; }
@@ -230,7 +230,7 @@ a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }
 .goal-strip i.n { background: var(--loss); }
 .goal-strip span { margin-left: 8px; }
 .goal-num { display: grid; justify-items: end; }
-.goal-num b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.goal-num b { font-size: var(--fs-stat); font-variant-numeric: tabular-nums; }
 
 /* ---------- role quest slot ---------- */
 .role-slot { position: relative; margin-left: 4px; }
@@ -259,4 +259,4 @@ a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }
 
 /* skill order grid fits its column: fluid cells, no scrollbar */
 .build-col .skill-grid { grid-template-columns: 16px repeat(18, minmax(0, 1fr)); gap: 2px; }
-.build-col .skill-grid div { height: 20px; font-size: 10px; min-width: 0; }
+.build-col .skill-grid div { height: 20px; font-size: var(--fs-micro); min-width: 0; }

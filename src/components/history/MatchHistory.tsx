@@ -46,7 +46,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
 }
 
 export function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => void }) {
-  const q = QUEUES[m.queue]?.name ?? `Queue ${m.queue}`;
+  const q = QUEUES[m.queue]?.short ?? `Queue ${m.queue}`;
   const story = gameStory(m);
   return (
     <motion.div layout="position" className={`match ${m.win ? "w" : "l"}`} transition={spring.smooth}>
