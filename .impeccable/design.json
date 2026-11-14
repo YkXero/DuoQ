@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T00:57:21.994Z",
+  "generatedAt": "2026-11-14T01:24:31.000Z",
   "title": "Design System: Duo Q Tracker",
   "extensions": {
     "colorMeta": {
@@ -119,11 +119,6 @@
         "displayName": "Light Teal",
         "canonical": "#5fe0cc"
       },
-      "good-ink": {
-        "role": "tertiary",
-        "displayName": "Deep Teal Ink",
-        "canonical": "#032b26"
-      },
       "great": {
         "role": "tertiary",
         "displayName": "Great Blue",
@@ -152,41 +147,6 @@
           "#ecb983",
           "#eed7be",
           "#f8f2ec"
-        ]
-      },
-      "mvp": {
-        "role": "tertiary",
-        "displayName": "MVP Amber",
-        "canonical": "#eb9c00",
-        "tonalRamp": [
-          "#3c2e10",
-          "#6c4e13",
-          "#a27110",
-          "#f2a203",
-          "#f3b63f",
-          "#ecc983",
-          "#eedebe",
-          "#f8f4ec"
-        ]
-      },
-      "mvp-ink": {
-        "role": "tertiary",
-        "displayName": "Amber Ink",
-        "canonical": "#1b1300"
-      },
-      "ace": {
-        "role": "tertiary",
-        "displayName": "ACE Violet",
-        "canonical": "#6a45d9",
-        "tonalRamp": [
-          "#1c1436",
-          "#2b1c60",
-          "#3a228e",
-          "#4a26cc",
-          "#6a45d9",
-          "#9d88e0",
-          "#cbc2ea",
-          "#f0eef7"
         ]
       },
       "multi": {
@@ -461,48 +421,45 @@
       }
     },
     "typographyMeta": {
-      "hero-number": {
-        "displayName": "Hero number",
-        "purpose": "The headline number above a chart (current Net wins), coloured by result."
-      },
-      "display": {
-        "displayName": "Display",
-        "purpose": "Headline numbers: recent KDA ratio, stat tile values, big summary values."
-      },
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Player names in the profile band; brand wordmark."
-      },
       "stat": {
         "displayName": "Stat",
-        "purpose": "KDA lines in match rows, rank tier names, lane headlines; tabular figures."
+        "purpose": "24px big numbers: stat tile values, recent KDA, Net wins headline, goal values."
+      },
+      "page": {
+        "displayName": "Page",
+        "purpose": "20px player names in the profile band; brand wordmark."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Sentence-case panel title strips and section titles."
+        "purpose": "15px sentence-case panel title strips, section titles, scoreboard result word."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "14px emphasised data: scoreboard K/D/A, lane headlines, bullet values."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "13px base text, story lines, links."
-      },
-      "caption": {
-        "displayName": "Caption",
-        "purpose": "Table headers, controls, title hints, tile labels, trend words, legends, tooltips."
+        "purpose": "13px base text and table data (line-height 1.45; 1.3 in tables)."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Chips, pills, roster names, meter labels, chart ticks and end labels, footnotes."
+        "purpose": "12px 500: table headers in text-2, controls, hints, tile labels, objective strips, tooltips."
       },
       "micro": {
         "displayName": "Micro",
-        "purpose": "Tier-band and objective labels inside charts; skill-grid cells."
+        "purpose": "11px 500 +0.02em meta: ratios, per-minute lines, chips, pills, chart ticks, level badges."
       }
     },
     "shadows": [
       {
         "name": "tooltip",
         "value": "0 6px 20px rgba(0, 0, 0, 0.4)",
-        "purpose": "Chart tooltips, the only floating surface."
+        "purpose": "Chart tooltips on Tooltip Black."
+      },
+      {
+        "name": "picker-popover",
+        "value": "0 12px 32px rgba(0, 0, 0, 0.5)",
+        "purpose": "The champion picker popover, the other floating surface."
       },
       {
         "name": "icon-cutout",
@@ -518,6 +475,11 @@
         "name": "rune-chosen",
         "value": "0 0 0 2px var(--gold)",
         "purpose": "Rings the runes a player took on the rune page."
+      },
+      {
+        "name": "role-quest-ring",
+        "value": "0 0 0 1px var(--gold)",
+        "purpose": "Rings the role-quest item slot."
       }
     ],
     "motion": [
@@ -534,7 +496,7 @@
       {
         "name": "spring-gentle",
         "value": "spring(stiffness 180, damping 24)",
-        "purpose": "Panel entrances (14px rise, no opacity change), bar fills, donut and ring sweeps, meter dots."
+        "purpose": "Panel entrances (14px rise, no opacity change), bar and bullet fills, donut and ring sweeps."
       },
       {
         "name": "stagger",
@@ -567,7 +529,7 @@
         "value": "900px"
       },
       {
-        "name": "fix-row-stack",
+        "name": "fix-row-stack / profile-tabs-wrap",
         "value": "760px"
       },
       {
@@ -593,7 +555,13 @@
         "value": "border-left: 6px solid var(--win | --loss)",
         "purpose": "op.gg win/loss strip on match rows; detector side-tab rule ignored for src/styles.css in .impeccable/config.json. Scoped to match rows only."
       }
-    ]
+    ],
+    "spacingMeta": {
+      "base": "4px",
+      "between-panels": "16px (--s-4)",
+      "within-lists-and-tiles": "8px (--s-2)",
+      "panel-title-strip": "12px 16px, 16px below"
+    }
   },
   "components": [
     {
@@ -602,7 +570,7 @@
       "refersTo": "panel",
       "description": "Every content block: flat slate panel opened by a bold sentence-case title strip.",
       "html": "<section class=\"ds-panel\"><h2 class=\"ds-panel-title\">Duo report<span class=\"ds-hint\">graded against players at your rank</span></h2><p class=\"ds-body\">You're winning more than you lose. Best: <b class=\"ds-good\">You rarely both die</b>.</p></section>",
-      "css": ".ds-panel { background: #31313c; color: #fff; border-radius: 6px; padding: 16px; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 420px; } .ds-panel-title { display: flex; align-items: baseline; gap: 8px; margin: -16px -16px 14px; padding: 12px 16px; border-bottom: 1px solid #26262d; font-size: 14px; font-weight: 700; } .ds-hint { font-weight: 400; font-size: 12px; color: #a7a7ba; } .ds-body { margin: 0; font-size: 15px; } .ds-good { color: #00bba3; }"
+      "css": ".ds-panel { background: #31313c; color: #fff; border-radius: 6px; padding: 16px; font: 13px/1.45 Geist, Roboto, system-ui, sans-serif; font-variant-numeric: tabular-nums; max-width: 420px; } .ds-panel-title { display: flex; align-items: baseline; gap: 8px; margin: -16px -16px 16px; padding: 12px 16px; border-bottom: 1px solid #26262d; font-size: 15px; font-weight: 700; line-height: 1.3; } .ds-hint { font-weight: 400; font-size: 12px; color: #a7a7ba; } .ds-body { margin: 0; font-size: 15px; } .ds-good { color: #00bba3; }"
     },
     {
       "name": "Underline tabs",
@@ -610,7 +578,7 @@
       "refersTo": "tab",
       "description": "Page sub-navigation with a sliding 2px blue ink.",
       "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab ds-on\" role=\"tab\" aria-selected=\"true\">Overview<span class=\"ds-ink\"></span></button><button class=\"ds-tab\" role=\"tab\">Match history</button><button class=\"ds-tab\" role=\"tab\">Stats &amp; progress</button></div>",
-      "css": ".ds-tabs { display: flex; gap: 2px; border-bottom: 1px solid #424254; background: #282830; font: 13px Roboto, system-ui, sans-serif; } .ds-tab { position: relative; background: none; border: 0; padding: 12px 16px; color: #a7a7ba; font: inherit; font-weight: 600; cursor: pointer; } .ds-tab:hover { color: #b7b7c9; } .ds-tab.ds-on { color: #fff; } .ds-ink { position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px; background: #5383e8; } .ds-tab:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; border-radius: 4px; }"
+      "css": ".ds-tabs { display: flex; gap: 2px; border-bottom: 1px solid #424254; background: #282830; font: 13px Geist, Roboto, system-ui, sans-serif; } .ds-tab { position: relative; background: none; border: 0; padding: 12px 16px; color: #a7a7ba; font: inherit; font-weight: 700; cursor: pointer; } .ds-tab:hover { color: #b7b7c9; } .ds-tab.ds-on { color: #fff; } .ds-ink { position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px; background: #5383e8; } .ds-tab:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; border-radius: 4px; }"
     },
     {
       "name": "Segmented control",
@@ -618,7 +586,7 @@
       "refersTo": "segmented",
       "description": "Queue and period filters; raised thumb slides with the snappy spring.",
       "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button class=\"ds-on\" role=\"radio\" aria-checked=\"true\">All queues</button><button role=\"radio\">Ranked</button><button role=\"radio\">Flex</button></div>",
-      "css": ".ds-seg { display: inline-flex; padding: 3px; gap: 2px; background: #282830; border-radius: 6px; font: 12px Roboto, system-ui, sans-serif; } .ds-seg button { background: none; border: 0; padding: 5px 11px; border-radius: 4px; color: #a7a7ba; font: inherit; font-weight: 500; cursor: pointer; transition: background 0.15s, color 0.15s; } .ds-seg button:hover { color: #b7b7c9; } .ds-seg button.ds-on { background: #424254; color: #fff; } .ds-seg button:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+      "css": ".ds-seg { display: inline-flex; padding: 3px; gap: 2px; background: #282830; border-radius: 6px; font: 12px Geist, Roboto, system-ui, sans-serif; } .ds-seg button { background: none; border: 0; padding: 5px 11px; border-radius: 4px; color: #a7a7ba; font: inherit; font-weight: 500; cursor: pointer; transition: background 0.15s, color 0.15s; } .ds-seg button:hover { color: #b7b7c9; } .ds-seg button.ds-on { background: #424254; color: #fff; } .ds-seg button:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
     },
     {
       "name": "Buttons",
@@ -626,7 +594,7 @@
       "refersTo": "button",
       "description": "Neutral raised button and the blue primary.",
       "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-btn\">Back to real data</button><button class=\"ds-btn ds-primary\">Refresh</button></div>",
-      "css": ".ds-btn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 600 13px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-btn:hover { background: #3e3e4b; } .ds-btn.ds-primary { background: #5383e8; border-color: #5383e8; } .ds-btn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+      "css": ".ds-btn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 700 13px Geist, Roboto, system-ui, sans-serif; cursor: pointer; } .ds-btn:hover { background: #3e3e4b; } .ds-btn.ds-primary { background: #5383e8; border-color: #5383e8; } .ds-btn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
     },
     {
       "name": "Select",
@@ -634,15 +602,15 @@
       "refersTo": "select",
       "description": "Native select on inset slate with a drawn caret.",
       "html": "<select class=\"ds-select\" aria-label=\"Player\"><option>Both players</option><option>Imsomnia</option></select>",
-      "css": ".ds-select { appearance: none; background: #282830 url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a899c'/%3E%3C/svg%3E\") no-repeat right 10px center; border: 1px solid #424254; border-radius: 8px; padding: 6px 28px 6px 10px; color: #fff; font: 12px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-select:hover { border-color: #515163; } .ds-select:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+      "css": ".ds-select { appearance: none; background: #282830 url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a899c'/%3E%3C/svg%3E\") no-repeat right 10px center; border: 1px solid #424254; border-radius: 8px; padding: 6px 28px 6px 10px; color: #fff; font: 12px Geist, Roboto, system-ui, sans-serif; cursor: pointer; } .ds-select:hover { border-color: #515163; } .ds-select:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
     },
     {
       "name": "Chips and pills",
       "kind": "chip",
-      "refersTo": "who-chip-p0",
-      "description": "Player who-chips, neutral duo chip, MVP, ACE, multikill and On-track pills.",
-      "html": "<div style=\"display:flex;gap:6px;align-items:center;flex-wrap:wrap\"><span class=\"ds-who ds-p0\">Imsomnia</span><span class=\"ds-who ds-p1\">Sokai</span><span class=\"ds-who ds-duo\">Duo</span><span class=\"ds-pill ds-mvp\">MVP</span><span class=\"ds-pill ds-ace\">ACE</span><span class=\"ds-pill ds-multi\">Triple</span><span class=\"ds-pill ds-ok\">On track</span></div>",
-      "css": ".ds-who { font: 500 11px Roboto, system-ui, sans-serif; padding: 1px 6px; border-radius: 4px; } .ds-p0 { background: rgba(144, 133, 233, 0.18); color: #b9b2ff; } .ds-p1 { background: rgba(201, 133, 0, 0.18); color: #f2b544; } .ds-duo { background: #424254; color: #b7b7c9; } .ds-pill { display: inline-block; padding: 0 7px; border-radius: 99px; font: 700 11px/17px Roboto, system-ui, sans-serif; } .ds-mvp { background: #eb9c00; color: #1b1300; } .ds-ace { background: #6a45d9; color: #fff; } .ds-multi { background: #c62c44; color: #fff; } .ds-ok { background: #00bba3; color: #032b26; }"
+      "refersTo": "role-chip",
+      "description": "Role chip, multikill pill, and the goal-state chips (Not yet / On track).",
+      "html": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span class=\"ds-role\">ADC</span><span class=\"ds-pill ds-multi\">Triple kill</span><span class=\"ds-gs\">Not yet</span><span class=\"ds-gs ds-met\">On track</span></div>",
+      "css": ".ds-role { display: inline-flex; padding: 1px 6px; border-radius: 4px; background: #424254; color: #b7b7c9; font: 11px Geist, Roboto, system-ui, sans-serif; } .ds-pill { display: inline-block; padding: 0 7px; border-radius: 99px; font: 700 11px/17px Geist, Roboto, system-ui, sans-serif; } .ds-multi { background: #c62c44; color: #fff; } .ds-gs { padding: 1px 7px; border-radius: 4px; background: #424254; color: #b7b7c9; font: 700 11px Geist, Roboto, system-ui, sans-serif; } .ds-gs.ds-met { background: rgba(0, 187, 163, 0.2); color: #5fe0cc; }"
     },
     {
       "name": "Match row",
@@ -650,7 +618,15 @@
       "refersTo": "match-row-win",
       "description": "op.gg match-row anatomy: result-tinted block, 6px left result strip, meta column, player blocks, expand column.",
       "html": "<div class=\"ds-match ds-w\"><div class=\"ds-mrow\"><div class=\"ds-meta\"><div class=\"ds-q\">Ranked Solo/Duo</div><div class=\"ds-age\">6d ago</div><div class=\"ds-res\">Victory</div><div class=\"ds-age\">36:40</div></div><div class=\"ds-kda\">11 / <span class=\"ds-d\">1</span> / 4<div class=\"ds-ratio\">15.00:1</div></div><button class=\"ds-expand\" aria-label=\"Show game details\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\"><path d=\"M3 4.5l3 3 3-3\" fill=\"none\" stroke=\"#81acff\" stroke-width=\"1.6\"/></svg></button></div><p class=\"ds-story\">Won bot lane by 1,225 gold at 15 min.</p></div>",
-      "css": ".ds-match { border-radius: 8px; overflow: hidden; background: #59343b; border-left: 6px solid #e84057; color: #fff; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 520px; } .ds-match.ds-w { background: #28344e; border-left-color: #5383e8; } .ds-mrow { display: grid; grid-template-columns: 104px 1fr 36px; gap: 14px; align-items: center; padding: 10px 0 10px 12px; cursor: pointer; transition: background 0.15s; } .ds-mrow:hover { background: rgba(255,255,255,0.025); } .ds-q { font-weight: 700; font-size: 12px; color: #ff8a9a; } .ds-w .ds-q { color: #81acff; } .ds-age { font-size: 12px; color: #b7b7c9; } .ds-res { font-weight: 700; font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08); width: 48px; } .ds-kda { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; } .ds-d { color: #ff8a9a; } .ds-ratio { font-size: 11px; font-weight: 400; color: #ff8200; } .ds-expand { align-self: stretch; display: grid; place-items: end center; padding-bottom: 10px; background: #703c47; border: 0; cursor: pointer; } .ds-w .ds-expand { background: #2f436e; } .ds-expand:focus-visible { outline: 2px solid #7aa2ff; outline-offset: -2px; } .ds-story { margin: 0; padding: 0 14px 10px 12px; } .ds-story::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; background: #00bba3; }"
+      "css": ".ds-match { border-radius: 8px; overflow: hidden; background: #59343b; border-left: 6px solid #e84057; color: #fff; font: 13px/1.45 Geist, Roboto, system-ui, sans-serif; max-width: 520px; } .ds-match.ds-w { background: #28344e; border-left-color: #5383e8; } .ds-mrow { display: grid; grid-template-columns: 104px 1fr 36px; gap: 14px; align-items: center; padding: 10px 0 10px 12px; cursor: pointer; transition: background 0.15s; } .ds-mrow:hover { background: rgba(255,255,255,0.025); } .ds-q { font-weight: 700; font-size: 12px; color: #ff8a9a; } .ds-w .ds-q { color: #81acff; } .ds-age { font-size: 12px; color: #b7b7c9; } .ds-res { font-weight: 700; font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08); width: 48px; } .ds-kda { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; } .ds-d { color: #ff8a9a; } .ds-ratio { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: #ff8200; } .ds-expand { align-self: stretch; display: grid; place-items: end center; padding-bottom: 10px; background: #703c47; border: 0; cursor: pointer; } .ds-w .ds-expand { background: #2f436e; } .ds-expand:focus-visible { outline: 2px solid #7aa2ff; outline-offset: -2px; } .ds-story { margin: 0; padding: 0 14px 10px 12px; } .ds-story::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; background: #00bba3; }"
+    },
+    {
+      "name": "Scoreboard team",
+      "kind": "custom",
+      "refersTo": "scoreboard-team",
+      "description": "Match-detail scoreboard: team header bar with result, side, team K/D/A and objectives; fixed column grid; centred KDA; damage grid; duo rows tinted within the team colour.",
+      "html": "<section class=\"ds-sb\"><header class=\"ds-sbh\"><div class=\"ds-sbr\"><b>Victory</b><span class=\"ds-t2\">Blue side · your team</span><span class=\"ds-tk\">32 / 18 / 54</span></div><div class=\"ds-obj\"><span>Dragons <b>3</b></span><span>Baron <b>1</b></span><span>Towers <b>9</b></span></div></header><table class=\"ds-sbt\"><colgroup><col style=\"width:150px\"><col style=\"width:110px\"><col style=\"width:150px\"><col></colgroup><thead><tr><th>Player</th><th class=\"ds-c\">KDA</th><th>Damage dealt / taken</th><th class=\"ds-n\">CS</th></tr></thead><tbody><tr class=\"ds-me\"><td><span class=\"ds-ch\"></span><span class=\"ds-nm\">Imsomnia</span></td><td class=\"ds-c\"><div class=\"ds-k\">11 / <span class=\"ds-d\">1</span> / 4</div><div class=\"ds-sub\">15.00 · 47%</div></td><td><div class=\"ds-dmg\"><span>24.1k</span><i><s style=\"width:90%\"></s></i><span class=\"ds-mu\">12.3k</span><i><s class=\"ds-tk2\" style=\"width:50%\"></s></i></div></td><td class=\"ds-n\">241<div class=\"ds-sub\">6.6/min</div></td></tr><tr><td><span class=\"ds-ch\"></span><span class=\"ds-nm\">Teammate</span></td><td class=\"ds-c\"><div class=\"ds-k\">4 / <span class=\"ds-d\">5</span> / 9</div><div class=\"ds-sub\">2.60 · 41%</div></td><td><div class=\"ds-dmg\"><span>14.0k</span><i><s style=\"width:52%\"></s></i><span class=\"ds-mu\">21.8k</span><i><s class=\"ds-tk2\" style=\"width:88%\"></s></i></div></td><td class=\"ds-n\">198<div class=\"ds-sub\">5.4/min</div></td></tr></tbody></table></section>",
+      "css": ".ds-sb { max-width: 560px; border-radius: 6px; overflow: hidden; background: #31313c; color: #fff; font: 13px/1.3 Geist, Roboto, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-sbh { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid #26262d; } .ds-sbr { display: flex; align-items: baseline; gap: 12px; } .ds-sbr b { font-size: 15px; color: #81acff; } .ds-t2 { color: #b7b7c9; } .ds-tk { font-weight: 700; } .ds-obj { display: flex; gap: 12px; font-size: 12px; font-weight: 500; color: #a7a7ba; } .ds-obj b { color: #fff; margin-left: 2px; } .ds-sbt { width: 100%; border-collapse: collapse; table-layout: fixed; } .ds-sbt th { padding: 8px 12px; background: #282830; text-align: left; font-size: 12px; font-weight: 500; letter-spacing: 0.01em; color: #b7b7c9; border-bottom: 1px solid #424254; } .ds-sbt td { padding: 6px 12px; background: rgba(83, 131, 232, 0.07); border-bottom: 1px solid #424254; white-space: nowrap; } .ds-sbt tr:last-child td { border-bottom: 0; } .ds-sbt tr:hover td { background: rgba(83, 131, 232, 0.11); } .ds-sbt tr.ds-me td { background: rgba(83, 131, 232, 0.17); } .ds-me .ds-nm { color: #fff; font-weight: 700; } .ds-sbt .ds-c { text-align: center; } .ds-sbt .ds-n { text-align: right; } .ds-ch { display: inline-block; width: 36px; height: 36px; border-radius: 6px; background: #424254; vertical-align: middle; } .ds-nm { margin-left: 8px; color: #b7b7c9; } .ds-k { font-size: 14px; font-weight: 700; letter-spacing: 0.01em; } .ds-d { color: #ff8a9a; } .ds-sub { font-size: 11px; font-weight: 500; color: #a7a7ba; margin-top: 2px; } .ds-dmg { display: grid; grid-template-columns: 40px 1fr; gap: 4px 8px; align-items: center; font-size: 12px; } .ds-dmg > span { text-align: right; } .ds-mu { color: #a7a7ba; } .ds-dmg i { display: block; height: 6px; border-radius: 3px; background: #424254; overflow: hidden; } .ds-dmg s { display: block; height: 100%; border-radius: 3px; background: #b7b7c9; } .ds-dmg s.ds-tk2 { background: #8a899c; }"
     },
     {
       "name": "Grade cell",
@@ -658,23 +634,23 @@
       "refersTo": "grade-badge",
       "description": "Letter grade badge inside an inset cell with a one-line explanation.",
       "html": "<div class=\"ds-gcell\"><span class=\"ds-grade ds-gA\">A</span><div><div class=\"ds-gname\">Staying alive</div><div class=\"ds-gsub\">Imsomnia dies little</div></div></div>",
-      "css": ".ds-gcell { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 6px; background: #282830; color: #fff; font: 13px/1.45 Roboto, system-ui, sans-serif; max-width: 260px; } .ds-grade { display: inline-grid; place-items: center; width: 36px; height: 36px; font-size: 18px; border-radius: 6px; font-weight: 700; } .ds-gA { background: rgba(0,187,163,0.2); color: #4be0c8; } .ds-gname { font-weight: 700; } .ds-gsub { font-size: 12px; color: #b7b7c9; }"
+      "css": ".ds-gcell { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 6px; background: #282830; color: #fff; font: 13px/1.45 Geist, Roboto, system-ui, sans-serif; max-width: 260px; } .ds-grade { display: inline-grid; place-items: center; width: 36px; height: 36px; font-size: 18px; border-radius: 6px; font-weight: 700; } .ds-gA { background: rgba(0,187,163,0.2); color: #4be0c8; } .ds-gname { font-weight: 700; } .ds-gsub { font-size: 12px; color: #b7b7c9; }"
     },
     {
-      "name": "Meter (you vs target)",
+      "name": "Bullet bar (you vs target)",
       "kind": "custom",
-      "refersTo": "meter-track",
-      "description": "Track with a teal good zone from the target, a target tick and a toned dot.",
-      "html": "<div class=\"ds-meter\"><div class=\"ds-track\"><span class=\"ds-zone\"></span><span class=\"ds-target\"></span><span class=\"ds-dot\"></span></div><div class=\"ds-mlabels\"><span>-2</span><span class=\"ds-t\">target +10</span></div></div>",
-      "css": ".ds-meter { width: 220px; font: 11px Roboto, system-ui, sans-serif; } .ds-track { position: relative; height: 6px; border-radius: 3px; background: #424254; } .ds-zone { position: absolute; top: 0; bottom: 0; left: 78%; right: 0; background: rgba(0,187,163,0.3); border-radius: 3px; } .ds-target { position: absolute; top: -4px; bottom: -4px; left: 78%; width: 2px; margin-left: -1px; background: #b7b7c9; border-radius: 1px; } .ds-dot { position: absolute; top: 50%; left: 45%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid #31313c; background: #e84057; transition: left 0.4s; } .ds-meter:hover .ds-dot { left: 50%; } .ds-mlabels { display: flex; justify-content: space-between; margin-top: 6px; color: #ff5f74; font-weight: 700; } .ds-t { color: #a7a7ba; font-weight: 400; }"
+      "refersTo": "bullet-track",
+      "description": "Inset track with a tone-coloured fill to the player's value, a white target tick, the value and the target.",
+      "html": "<div class=\"ds-bullet\"><div class=\"ds-btrack\"><i class=\"ds-bfill\"></i><span class=\"ds-btick\"></span></div><b class=\"ds-bval\">7.4</b><span class=\"ds-bgoal\">7.8</span></div>",
+      "css": ".ds-bullet { display: grid; grid-template-columns: minmax(80px, 1fr) 52px 44px; gap: 10px; align-items: center; width: 300px; font: 13px Geist, Roboto, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-btrack { position: relative; height: 10px; border-radius: 3px; background: #282830; } .ds-bfill { position: absolute; top: 0; bottom: 0; left: 0; width: 62%; border-radius: 3px; background: #e84057; transition: width 0.4s; } .ds-bullet:hover .ds-bfill { width: 70%; } .ds-btick { position: absolute; top: -4px; bottom: -4px; left: 68%; width: 2px; margin-left: -1px; background: #fff; border-radius: 1px; } .ds-bval { font-size: 14px; font-weight: 400; text-align: right; color: #ff8a9a; } .ds-bgoal { font-size: 12px; color: #a7a7ba; } .ds-bgoal::before { content: '/ '; }"
     },
     {
       "name": "Stat tile",
       "kind": "card",
       "refersTo": "stat-tile",
-      "description": "Profile summary tile: caption label, 22px tabular value, muted sub-line.",
+      "description": "Profile summary tile: 12px label, 24px tabular value, muted sub-line.",
       "html": "<div class=\"ds-tiles\"><div class=\"ds-tile\"><span>Win rate</span><b>56%</b><small>28W 22L</small></div><div class=\"ds-tile\"><span>KDA</span><b>3.41</b><small>6.2 / 4.1 / 7.8</small></div><div class=\"ds-tile\"><span>CS per min</span><b>7.4</b><small>target 7.8</small></div></div>",
-      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 420px; font: 13px/1.45 Roboto, system-ui, sans-serif; color: #fff; } .ds-tile { display: grid; gap: 2px; padding: 12px 14px; background: #31313c; border-radius: 6px; min-width: 0; } .ds-tile span { font-size: 12px; color: #b7b7c9; } .ds-tile b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-tile small { font-size: 12px; color: #a7a7ba; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }"
+      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 420px; font: 13px/1.45 Geist, Roboto, system-ui, sans-serif; color: #fff; } .ds-tile { display: grid; gap: 2px; padding: 12px 16px; background: #31313c; border-radius: 6px; min-width: 0; } .ds-tile span { font-size: 12px; color: #b7b7c9; } .ds-tile b { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-tile small { font-size: 12px; color: #a7a7ba; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }"
     },
     {
       "name": "Skill grid",
@@ -682,7 +658,7 @@
       "refersTo": "skill-cell-on",
       "description": "Skill order in a build column: levelled cells in Victory Blue, R in Elite Orange.",
       "html": "<div class=\"ds-skill\"><div class=\"ds-k\">Q</div><div class=\"ds-on\">1</div><div></div><div></div><div class=\"ds-on\">4</div><div class=\"ds-k\">W</div><div></div><div class=\"ds-on\">2</div><div></div><div></div><div class=\"ds-k\">R</div><div></div><div></div><div class=\"ds-on ds-r\">6</div><div></div></div>",
-      "css": ".ds-skill { display: grid; grid-template-columns: repeat(5, 22px); gap: 2px; font: 10px Roboto, system-ui, sans-serif; } .ds-skill div { height: 22px; display: grid; place-items: center; border-radius: 3px; background: #282830; color: #9e9eb1; } .ds-skill .ds-on { background: #5383e8; color: #fff; font-weight: 700; } .ds-skill .ds-on.ds-r { background: #ff8200; } .ds-skill .ds-k { background: none; color: #b7b7c9; font-weight: 700; }"
+      "css": ".ds-skill { display: grid; grid-template-columns: repeat(5, 22px); gap: 2px; font: 11px Geist, Roboto, system-ui, sans-serif; } .ds-skill div { height: 22px; display: grid; place-items: center; border-radius: 3px; background: #282830; color: #9e9eb1; } .ds-skill .ds-on { background: #5383e8; color: #fff; font-weight: 700; } .ds-skill .ds-on.ds-r { background: #ff8200; } .ds-skill .ds-k { background: none; color: #b7b7c9; font-weight: 700; }"
     },
     {
       "name": "Net wins chart",
@@ -690,7 +666,7 @@
       "refersTo": "chart-tooltip",
       "description": "Hero number over a zero-split step area; tooltip on Tooltip Black.",
       "html": "<div class=\"ds-nw\"><div class=\"ds-nw-head\"><span class=\"ds-nw-now\">+6</span><span class=\"ds-cap\">after 40 games · peak +8</span></div><svg viewBox=\"0 0 300 90\" width=\"300\" height=\"90\" aria-hidden=\"true\"><line x1=\"0\" x2=\"300\" y1=\"20\" y2=\"20\" stroke=\"#2c2c35\"/><path d=\"M0 55H40V47H80V55Z M120 55V39H160V31H200V39H240V23H300V55Z\" fill=\"rgba(83,131,232,0.25)\"/><path d=\"M80 55V63H120V55Z\" fill=\"rgba(232,64,87,0.25)\"/><line x1=\"0\" x2=\"300\" y1=\"55\" y2=\"55\" stroke=\"#6d6d80\"/><path d=\"M0 55H40V47H80V55\" fill=\"none\" stroke=\"#5383e8\" stroke-width=\"2\"/><path d=\"M80 55V63H120V55\" fill=\"none\" stroke=\"#e84057\" stroke-width=\"2\"/><path d=\"M120 55V39H160V31H200V39H240V23H300\" fill=\"none\" stroke=\"#5383e8\" stroke-width=\"2\"/></svg><div class=\"ds-tip\"><div class=\"ds-tip-h\">Game 31 · 9 Nov</div><b class=\"ds-w\">Victory</b> · Jinx + Thresh<div>Net +6</div></div></div>",
-      "css": ".ds-nw { font: 13px/1.45 Roboto, system-ui, sans-serif; color: #fff; background: #31313c; padding: 16px; border-radius: 6px; max-width: 332px; } .ds-nw-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; } .ds-nw-now { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; color: #81acff; } .ds-cap { font-size: 11px; color: #b7b7c9; } .ds-tip { display: inline-block; margin-top: 8px; background: #111116; border: 1px solid #515163; border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); } .ds-tip-h { color: #a7a7ba; margin-bottom: 4px; } .ds-w { color: #81acff; }"
+      "css": ".ds-nw { font: 13px/1.45 Geist, Roboto, system-ui, sans-serif; color: #fff; background: #31313c; padding: 16px; border-radius: 6px; max-width: 332px; } .ds-nw-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; } .ds-nw-now { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; color: #81acff; } .ds-cap { font-size: 12px; color: #a7a7ba; } .ds-tip { display: inline-block; margin-top: 8px; background: #111116; border: 1px solid #515163; border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); } .ds-tip-h { color: #a7a7ba; margin-bottom: 4px; } .ds-w { color: #81acff; }"
     },
     {
       "name": "Demo banner",
@@ -698,18 +674,19 @@
       "refersTo": "banner",
       "description": "Dark-amber notice while sample data is active.",
       "html": "<div class=\"ds-banner\">Showing sample data. <button class=\"ds-bbtn\">Back to real data</button></div>",
-      "css": ".ds-banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #2a2312; border: 1px solid #5a4a22; color: #f0d999; padding: 10px 14px; border-radius: 8px; font: 13px Roboto, system-ui, sans-serif; max-width: 420px; } .ds-bbtn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 600 13px Roboto, system-ui, sans-serif; cursor: pointer; } .ds-bbtn:hover { background: #3e3e4b; } .ds-bbtn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
+      "css": ".ds-banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #2a2312; border: 1px solid #5a4a22; color: #f0d999; padding: 10px 14px; border-radius: 8px; font: 13px Geist, Roboto, system-ui, sans-serif; max-width: 420px; } .ds-bbtn { background: #424254; border: 1px solid #515163; border-radius: 8px; padding: 8px 14px; color: #fff; font: 700 13px Geist, Roboto, system-ui, sans-serif; cursor: pointer; } .ds-bbtn:hover { background: #3e3e4b; } .ds-bbtn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }"
     }
   ],
   "narrative": {
     "northStar": "The Duo's Own op.gg",
-    "overview": "The system is the League stats-site standard played straight: op.gg's dark slate palette and match-row anatomy, dpm.lol's polish, and deeplol/mobalytics-style coaching panels, executed carefully rather than reinvented. League players should read every surface instantly because it looks like the sites they already use. The difference is the subject: two players, framed together, compared against their own past.\n\nDensity is high and glance-first. Flat slate panels sit 8px apart on a near-black page, each opened by a bold sentence-case title strip. Colour is a result channel before it is decoration: blue means won, red means lost, teal/blue/orange grade a KDA, and two fixed player hues tell the duo apart everywhere. Charts speak the same language: series are labelled directly at their ends, wins sit above a zero line in blue and losses below it in red, and rank is drawn over the League tier bands. Official League art (champions, items, runes, rank emblems) carries the imagery; there is no invented illustration.\n\nRejected: themed gimmicks (no \"gamer\" neon, no fantasy chrome) and the generic AI dashboard of uppercase-labelled rounded cards.",
+    "overview": "The system is the League stats-site standard played straight: op.gg's dark slate palette and match-row anatomy, dpm.lol's polish, and deeplol/mobalytics-style coaching panels, executed carefully rather than reinvented. League players should read every surface instantly because it looks like the sites they already use. The difference is the subject: two players, framed together, compared against their own past.\n\nDensity is high and glance-first, set on a 4px spacing grid. Flat slate panels sit 16px apart on a near-black page, each opened by a bold sentence-case title strip; inside a panel, list items and tiles step at 8px. Colour is a result channel before it is decoration: blue means won, red means lost, teal/blue/orange grade a KDA, and two fixed player hues tell the duo apart in charts and progress. Charts speak the same language: series are labelled directly at their ends, wins sit above a zero line in blue and losses below it in red, and rank is drawn over the League tier bands. Official League art (champions, items, runes, rank emblems) carries the imagery; there is no invented illustration.\n\nRejected: themed gimmicks (no \"gamer\" neon, no fantasy chrome) and the generic AI dashboard of uppercase-labelled rounded cards.",
     "keyCharacteristics": [
       "Dark slate tonal layering, no shadows on panels.",
       "Saturated brand-blue top navigation bar; everything below is neutral slate until a result colours it.",
-      "Panels opened by 14px bold sentence-case title strips divided by a 1px line.",
+      "Panels opened by 15px bold sentence-case title strips divided by a 1px line.",
       "Win/loss tinted match rows with a 6px result strip on the left edge.",
-      "Roboto everywhere at a 13px base; numbers in tabular figures.",
+      "Geist everywhere at a 13px base, seven named type roles, tabular figures on every number.",
+      "A 4px spacing grid: 16px between panels and sections, 8px within lists and tiles.",
       "Charts labelled at the line end, never by a legend box; recessive grids, no axis lines.",
       "Spring motion that never hides content: entrances move, they do not fade in from nothing."
     ],
@@ -721,7 +698,7 @@
       },
       {
         "name": "The Two Players Rule",
-        "body": "Lavender is always the ADC and ochre is always the support, on every surface. A third person colour is never introduced; \"both of you\" uses the neutral Raised Slate chip, or Gold where a chart needs a shared series.",
+        "body": "Lavender is always the ADC and ochre is always the support, on every surface. A third person colour is never introduced; \"both of you\" uses neutral text-2, or Gold where a chart needs a shared series.",
         "section": "colors"
       },
       {
@@ -740,18 +717,24 @@
         "section": "typography"
       },
       {
+        "name": "The Sixteen-Eight Rule",
+        "body": "16px separates panels and sections; 8px separates items within a list or tile row. Every gap is a step of the 4px scale.",
+        "section": "layout"
+      },
+      {
         "name": "The Flat Panel Rule",
-        "body": "Panels never take a drop shadow. Only floating overlays (tooltips) may.",
+        "body": "Panels never take a drop shadow. Only floating overlays (tooltips, the picker popover) may.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do open every panel with a 14px 700 sentence-case title strip and a 1px Divider Line, with an optional muted hint on the same baseline.",
-      "Do keep 8px between panels and 16px inside them.",
+      "Do open every panel with a 15px 700 sentence-case title strip and a 1px Divider Line, with an optional muted hint on the same baseline.",
+      "Do keep 16px between panels and sections, 8px between items within lists and tiles, and 16px inside panels.",
+      "Do set type with the seven roles (11, 12, 13, 14, 15, 20, 24px) and keep numbers tabular.",
       "Do colour results only with the win/loss pair, and keep losses hollow where a mark must read without colour.",
       "Do keep the ADC lavender and the support ochre on every new surface.",
       "Do label chart series at their ends and split result charts at zero, blue above and red below.",
-      "Do use official League art for champions, items, runes and ranks; round only runes, spells and level badges.",
+      "Do use official League art for champions, items, runes and ranks; round only runes and spells.",
       "Do animate with the shared springs and leave content visible at frame one.",
       "Do let match rows adapt to their container with container queries."
     ],
@@ -760,7 +743,8 @@
       "Don't put uppercase letter-spaced labels or eyebrows above content.",
       "Don't use win blue for navigation or decoration; the nav bar has its own Nav Blue.",
       "Don't introduce themed \"gamer\" styling, neon glows or a second typeface.",
-      "Don't fade entrances in from zero opacity."
+      "Don't fade entrances in from zero opacity.",
+      "Don't set type off the role scale or space off the 4px grid."
     ]
   }
 }

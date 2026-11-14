@@ -45,7 +45,7 @@ export function LpChart({ only, height = 230 }: { only?: 0 | 1; height?: number 
       <ResponsiveContainer>
         <LineChart data={rows} margin={{ top: 24, right: 12, left: 0, bottom: 4 }}>
           {bands.map((b) => <ReferenceArea key={b.tier} y1={b.y1} y2={b.y2} fill={TIER_TINT[b.tier]} fillOpacity={0.07} stroke="none" ifOverflow="hidden" />)}
-          {bands.map((b) => (b.y2 - b.y1 >= 100 ? <ReferenceLine key={b.tier + "l"} y={b.y1} stroke={TIER_TINT[b.tier]} strokeOpacity={0.35} label={{ value: titleCase(b.tier), position: "insideBottomLeft", fill: TIER_TINT[b.tier], fontSize: 10, fontWeight: 700 }} /> : null))}
+          {bands.map((b) => (b.y2 - b.y1 >= 100 ? <ReferenceLine key={b.tier + "l"} y={b.y1} stroke={TIER_TINT[b.tier]} strokeOpacity={0.35} label={{ value: titleCase(b.tier), position: "insideBottomLeft", fill: TIER_TINT[b.tier], fontSize: 11, fontWeight: 700 }} /> : null))}
           <XAxis dataKey="ts" {...AXIS} type="number" domain={["dataMin", "dataMax"]} scale="time" tickFormatter={(t) => new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short" })} minTickGap={50} />
           <YAxis {...AXIS} domain={[lo, hi]} ticks={Array.from({ length: (hi - lo) / 100 + 1 }, (_, i) => lo + i * 100)} tickFormatter={ladderLabel} width={52} />
           <Tooltip cursor={{ stroke: "#515163" }} content={({ active, payload }) => {
