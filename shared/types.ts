@@ -59,6 +59,7 @@ export interface Participant {
   vision: number;
   wards: number; wardsKilled: number; pinks: number;
   items: number[]; // 7, last is trinket, 0 = empty
+  roleItem: number; // item in the role-quest slot (roleBoundItem), 0 = quest not completed
   spells: [number, number];
   runes: [number, number, number]; // keystone, primary style, sub style
   perks: number[]; // full rune page: 4 primary + 2 secondary rune ids

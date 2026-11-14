@@ -73,6 +73,7 @@ for (let g = 0; g < 80; g++) {
         taken: ri(9000, 32000), mitigated: ri(5000, 25000), healShield: pos === "UTILITY" ? ri(1000, 9000) : null,
         vision: Math.round(min * (pos === "UTILITY" ? (isOurs ? 1.6 + improving * 0.8 : 2) + rand() * 0.6 : 0.6 + rand() * 0.3)),
         wards: pos === "UTILITY" ? ri(22, 45) : ri(6, 14), wardsKilled: pos === "UTILITY" ? ri(4, 14) : ri(1, 6), pinks: pos === "UTILITY" ? ri(isOurs ? 1 : 3, 7) : ri(0, 2),
+        roleItem: min > 24 && rand() < 0.85 ? (pos === "UTILITY" ? 0 : pick(BOOTS)) : 0,
         items: pos === "UTILITY" ? [SUPPORT_ITEM, pick(BOOTS), ...Array.from({ length: 3 }, () => pick(SUP_ITEMS)), 0, 3364] : [pick(BOOTS), ...Array.from({ length: 4 }, () => pick(ADC_ITEMS)), rand() < 0.5 ? pick(ADC_ITEMS) : 0, 3363],
         spells: pos === "UTILITY" ? [4, pick([14, 3])] : pos === "JUNGLE" ? [4, 11] : pos === "BOTTOM" ? [4, 7] : [4, 12],
         runes: RUNES[pos] ?? RUNES.DEFAULT, perks: PERKS[pos] ?? PERKS.DEFAULT, shards: SHARDS[pos] ?? SHARDS.DEFAULT, timeDead: d * ri(18, 45), firstBlood: false, multi: Math.min(5, ri(1, k > 6 ? 3 : 1)), ccTime: ri(5, 50),

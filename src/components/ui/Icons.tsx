@@ -14,6 +14,16 @@ export function Item({ id, size = 22, empty = "slot-empty" }: { id: number; size
   return <img className="ic" src={itemIcon(id)} width={size} height={size} alt="" title={itemName(id)} loading="lazy" onError={hide} />;
 }
 
+/** The role-quest slot (e.g. the bot laner's boots slot). Shown only when the quest was completed. */
+export function RoleSlot({ id, size = 22 }: { id?: number; size?: number }) {
+  if (!id) return null;
+  return (
+    <span className="role-slot" title={`Role quest reward: ${itemName(id)}`}>
+      <img className="ic" src={itemIcon(id)} width={size} height={size} alt="" loading="lazy" onError={hide} />
+    </span>
+  );
+}
+
 export function Spell({ id, size = 22 }: { id: number; size?: number }) {
   const src = spellIcon(id);
   return src ? <img className="ic" src={src} width={size} height={size} alt="" loading="lazy" onError={hide} /> : <span className="ic ic-empty" style={{ width: size, height: size }} />;

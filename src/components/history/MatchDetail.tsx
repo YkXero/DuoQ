@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import type { Match, TeamId } from "../../../shared/types.ts";
 import { badge, gameScores } from "../../lib/analysis.ts";
-import { champName, itemName, runeTree, shardName } from "../../lib/ddragon.ts";
+import { champName, itemName, runeTree, SHARD_ROWS, shardIcon, shardName } from "../../lib/ddragon.ts";
 import { adcIdx, enemyIdx, snapVal, supIdx } from "../../lib/views.ts";
 import { gameStory } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
 import { GoldGraph } from "../overview/Charts.tsx";
 import { Bar, Tabs } from "../ui/Controls.tsx";
-import { Champ, Item, Kda, Rune, Spell } from "../ui/Icons.tsx";
+import { Champ, Item, Kda, RoleSlot, Rune, Spell } from "../ui/Icons.tsx";
 
 type Tab = "overview" | "lane" | "gold" | "build";
 
@@ -59,7 +59,7 @@ function Scoreboard({ m }: { m: Match }) {
                         </td>
                         <td className="num small">{p.pinks} / {p.wards} / {p.wardsKilled}</td>
                         <td className="num">{p.cs} <div className="small muted">{(p.cs / min).toFixed(1)}/m</div></td>
-                        <td><div className="items">{p.items.map((it, j) => <Item key={j} id={it} size={22} empty="" />)}</div></td>
+                        <td><div className="items">{p.items.map((it, j) => <Item key={j} id={it} size={22} empty="" />)}<RoleSlot id={p.roleItem} size={22} /></div></td>
                       </tr>
                     );
                   })}
@@ -142,7 +142,15 @@ function RunePage({ perks, primary, sub, shards }: { perks: number[]; primary: n
     <div className="rune-page">
       {tree(primary, false)}
       {tree(sub, true)}
-      {shards.length > 0 && <div className="rune-shards">{shards.map((id, i) => <span key={i}>{shardName(id)}</span>)}</div>}
+      {shards.length > 0 && (
+        <div className="rune-shards">
+          {SHARD_ROWS.map((row, r) => (
+            <div key={r} className="rune-slot">
+              {row.map((id) => <span key={id} className={shards[r] === id ? "rune on" : "rune"} title={shardName(id)}><img className="ic round shard" src={shardIcon(id)} width={22} height={22} alt={shardName(id)} /></span>)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -192,11 +200,11 @@ function Build({ m }: { m: Match }) {
 export function MatchDetail({ m }: { m: Match }) {
   const [tab, setTab] = useState<Tab>(() => {
     const v = typeof location === "undefined" ? null : new URLSearchParams(location.search).get("view");
-    return v === "builds" ? "build" : v === "scoreboard" ? "overview" : v === "gold" ? "gold" : "lane";
+    return v === "builds" ? "build" : v === "lane" ? "lane" : v === "gold" ? "gold" : "overview";
   });
   return (
     <div className="detail-inner">
-      <Tabs value={tab} onChange={setTab} options={[{ value: "lane", label: "Bot lane" }, { value: "overview", label: "Scoreboard" }, { value: "gold", label: "Gold graph" }, { value: "build", label: "Builds" }]} />
+      <Tabs value={tab} onChange={setTab} options={[{ value: "overview", label: "Scoreboard" }, { value: "build", label: "Builds" }, { value: "lane", label: "Bot lane" }, { value: "gold", label: "Gold graph" }]} />
       {tab === "overview" && <Scoreboard m={m} />}
       {tab === "lane" && <Lane m={m} />}
       {tab === "gold" && <GoldGraph m={m} />}

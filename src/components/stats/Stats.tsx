@@ -86,7 +86,7 @@ export function MeterList({ rows, name }: { rows: StatRow[]; name: string }) {
   return (
     <div className="stack" style={{ gap: 14 }}>
       <div className="meter-head small">
-        <span className="meter-head-cols"><span>vs your rank</span><span>vs your previous 10 games</span></span>
+        <span className="meter-head-cols"><span>You / target for your rank</span><span>Last 10 games</span></span>
       </div>
       {cells.map((c) => {
         const head = <><GradeBadge grade={c.grade} size={30} /><h3 className="cat-title">{CATEGORY_NAME[c.category]}</h3><span className="small text-2">{c.grade === "A" || c.grade === "B" ? "going well" : c.grade === "C" ? "about normal" : "needs work"}</span></>;

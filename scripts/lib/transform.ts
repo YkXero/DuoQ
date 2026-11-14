@@ -24,6 +24,7 @@ function participant(p: any): Participant {
     vision: p.visionScore,
     wards: p.wardsPlaced, wardsKilled: p.wardsKilled, pinks: p.visionWardsBoughtInGame,
     items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6],
+    roleItem: typeof p.roleBoundItem === "number" ? p.roleBoundItem : 0,
     spells: [p.summoner1Id, p.summoner2Id],
     runes: [primary?.selections?.[0]?.perk ?? 0, primary?.style ?? 0, sub?.style ?? 0],
     perks: [...(primary?.selections ?? []), ...(sub?.selections ?? [])].map((x: any) => x.perk),

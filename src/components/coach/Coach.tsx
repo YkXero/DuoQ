@@ -8,27 +8,31 @@ import { goalProgress, type GoalProgress } from "../../lib/goals.ts";
 import { metricById } from "../../lib/metrics.ts";
 import { stagger } from "../../lib/motion.ts";
 import { useApp } from "../../state.tsx";
-import { Card, Ring } from "../ui/Controls.tsx";
+import { Card } from "../ui/Controls.tsx";
 
 export function GoalCard({ p, i = 0 }: { p: GoalProgress; i?: number }) {
   const { names } = useApp();
   const m = metricById(p.goal.metric);
-  const g = p.goal;
-  const val = g.mode === "perGame" ? `${p.hits}/${p.n} games hit` : `now ${formatValue(m?.format ?? "dec1", p.value)}`;
+  const g = p.goal, f = m?.format ?? "dec1";
+  const games = p.recent.slice(-g.window);
+  const counted = games.filter((x) => x != null).length;
+  const cells = [...Array(Math.max(0, g.window - games.length)).fill(undefined), ...games];
   return (
     <motion.div className="goal" initial={{ y: 8 }} animate={{ y: 0 }} transition={stagger(i)}>
-      <Ring value={p.progress} color={p.met ? "var(--good)" : "var(--gold)"} />
-      <div>
-        <div className="row wrap-row">
-          <span className="t">{g.title}</span>
+      <div className="goal-main">
+        <div className="goal-title">
+          <b>{g.title}</b>
           {g.slot != null && <span className="small text-2">{names[g.slot]}</span>}
-          {g.status === "achieved" || p.met ? <span className="tagpill" style={{ background: "var(--good)", color: "#032b26" }}>On track</span> : null}
+          <span className={`goal-state ${p.met ? "met" : ""}`}>{p.met ? "On track" : "Not yet"}</span>
         </div>
-        <div className="why">{g.why}</div>
-        <div className="small muted" style={{ marginTop: 4 }}>
-          Target {g.mode === "perGame" ? `${m?.better === "lower" ? "≤" : "≥"} ${formatValue(m?.format ?? "dec1", g.target)} in ${Math.round((g.hitRate ?? 0.7) * 100)}% of games` : `average ${m?.better === "lower" ? "≤" : "≥"} ${formatValue(m?.format ?? "dec1", g.target)}`} · {val} · last {g.window} games since {g.createdAt}
+        <div className="goal-strip" aria-label={`${p.hits} of ${counted} recent games on target`}>
+          {cells.map((x, j) => <i key={j} className={x === true ? "y" : x === false ? "n" : ""} />)}
+          <span className="small text-2">{p.hits} of {counted} games on target</span>
         </div>
-        {p.recent.length > 0 && <div className="dots">{p.recent.map((x, j) => <i key={j} className={x === true ? "y" : x === false ? "n" : ""} />)}</div>}
+      </div>
+      <div className="goal-num">
+        <b className={p.met ? "good-c" : ""}>{g.mode === "perGame" ? `${p.hits}/${counted}` : formatValue(f, p.value)}</b>
+        <span className="small text-2">target {m?.better === "lower" ? "≤" : "≥"} {formatValue(f, g.target)}</span>
       </div>
     </motion.div>
   );

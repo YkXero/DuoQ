@@ -13,9 +13,10 @@ export interface Filters {
   adcChamp: string | null;
   supChamp: string | null;
   enemy: string | null; // enemy bot laner champion
+  champ: string | null; // played by either of you
   patch: string | null;
 }
-export const DEFAULT_FILTERS: Filters = { queue: "all", range: "all", result: "all", adcChamp: null, supChamp: null, enemy: null, patch: null };
+export const DEFAULT_FILTERS: Filters = { queue: "all", range: "all", result: "all", adcChamp: null, supChamp: null, enemy: null, champ: null, patch: null };
 
 export function applyFilters(matches: Match[], f: Filters, now = Date.now()): Match[] {
   let out = matches.filter((m) => {
@@ -28,6 +29,7 @@ export function applyFilters(matches: Match[], f: Filters, now = Date.now()): Ma
     if (f.supChamp && m.parts[supIdx(m)].champ !== f.supChamp) return false;
     if (f.enemy && ![enemyIdx(m, "BOTTOM"), enemyIdx(m, "UTILITY")].some((i) => i >= 0 && m.parts[i].champ === f.enemy)) return false;
     if (f.patch && m.patch !== f.patch) return false;
+    if (f.champ && !m.duo.some((i) => m.parts[i].champ === f.champ)) return false;
     if (f.range === "7d" && m.ts < now - 7 * 86400000) return false;
     if (f.range === "30d" && m.ts < now - 30 * 86400000) return false;
     return true;

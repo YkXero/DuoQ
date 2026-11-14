@@ -1,16 +1,16 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { QUEUES, type Match } from "../../../shared/types.ts";
-import { applyFilters, badge, champsPlayed, gameScores, patches, record, type Filters } from "../../lib/analysis.ts";
-import { champName } from "../../lib/ddragon.ts";
+import { applyFilters, badge, DEFAULT_FILTERS, gameScores, record, type Filters } from "../../lib/analysis.ts";
 import { duration, timeAgo } from "../../lib/format.ts";
 import { spring } from "../../lib/motion.ts";
 import { mean } from "../../lib/stats.ts";
-import { adcIdx, enemyIdx, supIdx } from "../../lib/views.ts";
+import { adcIdx, supIdx } from "../../lib/views.ts";
 import { gameStory } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
-import { Card, Segmented, Select } from "../ui/Controls.tsx";
-import { Champ, Item, Kda, Rune, Spell } from "../ui/Icons.tsx";
+import { Card, Segmented } from "../ui/Controls.tsx";
+import { ChampionPicker } from "../ui/ChampionPicker.tsx";
+import { Champ, Item, Kda, RoleSlot, Rune, Spell } from "../ui/Icons.tsx";
 import { MatchDetail } from "./MatchDetail.tsx";
 
 const PAGE = 20;
@@ -44,7 +44,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           <span className="muted" title="Our 0–10 game rating vs the other 9 players">Score {scores.score[idx].toFixed(1)} · {ordinal(scores.rank[idx])}</span>
         </div>
       </div>
-      <div className="items">{p.items.map((it, i) => <Item key={i} id={it} />)}</div>
+      <div className="items">{p.items.map((it, i) => <Item key={i} id={it} />)}<RoleSlot id={p.roleItem} /></div>
     </div>
   );
 }
@@ -85,22 +85,23 @@ export function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle:
   );
 }
 
-type Local = Pick<Filters, "result" | "adcChamp" | "supChamp" | "enemy" | "patch">;
-const NONE: Local = { result: "all", adcChamp: null, supChamp: null, enemy: null, patch: null };
+type Local = Pick<Filters, "result" | "champ">;
+const NONE: Local = { result: "all", champ: null };
 
 export function MatchHistory() {
-  const { games, data } = useApp();
+  const { games } = useApp();
   const [f, setF] = useState<Local>(NONE);
   const [shown, setShown] = useState(PAGE);
   // ?game=<match id> opens that game (shareable link)
   const [open, setOpen] = useState<string | null>(() => (typeof location === "undefined" ? null : new URLSearchParams(location.search).get("game")));
-  const list = useMemo(() => applyFilters(games, { ...f, queue: "all", range: "all" }), [games, f]);
+  const list = useMemo(() => applyFilters(games, { ...DEFAULT_FILTERS, ...f }), [games, f]);
   const rec = record(list);
-  const adcs = champsPlayed(games, adcIdx), sups = champsPlayed(games, supIdx);
-  const enemies = [...new Set(games.flatMap((m) => [enemyIdx(m, "BOTTOM"), enemyIdx(m, "UTILITY")].filter((i) => i >= 0).map((i) => m.parts[i].champ)))].sort();
-  const opt = (xs: string[], all: string) => [{ value: "", label: all }, ...xs.map((x) => ({ value: x, label: champName(x) }))];
+  const counts = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const m of games) for (const i of m.duo) c.set(m.parts[i].champ, (c.get(m.parts[i].champ) ?? 0) + 1);
+    return c;
+  }, [games]);
   const set = <K extends keyof Local>(k: K, v: Local[K]) => { setF({ ...f, [k]: v }); setShown(PAGE); };
-  const dirty = JSON.stringify(f) !== JSON.stringify(NONE);
   const avg = (fn: (m: Match) => number) => mean(list.map(fn));
 
   return (
@@ -108,11 +109,7 @@ export function MatchHistory() {
       <Card>
         <div className="filterbar">
           <Segmented value={f.result} onChange={(v) => set("result", v)} options={[{ value: "all", label: "All" }, { value: "win", label: "Wins" }, { value: "loss", label: "Losses" }]} />
-          <Select label="Our ADC" value={f.adcChamp ?? ""} onChange={(v) => set("adcChamp", v || null)} options={opt(adcs, "Any ADC")} />
-          <Select label="Our support" value={f.supChamp ?? ""} onChange={(v) => set("supChamp", v || null)} options={opt(sups, "Any support")} />
-          <Select label="Enemy bot laner" value={f.enemy ?? ""} onChange={(v) => set("enemy", v || null)} options={opt(enemies, "Any enemy bot")} />
-          <Select label="Patch" value={f.patch ?? ""} onChange={(v) => set("patch", v || null)} options={[{ value: "", label: "Any patch" }, ...patches(data).map((p) => ({ value: p, label: `Patch ${p}` }))]} />
-          {dirty && <button className="chip-btn" onClick={() => setF(NONE)}>Clear filters</button>}
+          <ChampionPicker value={f.champ} onChange={(c) => set("champ", c)} counts={counts} />
         </div>
         <div className="row wrap-row small text-2" style={{ marginTop: 12, gap: 18 }}>
           <span><b>{rec.n}</b> games · <b className="win-c">{rec.w}W</b> <b className="loss-c">{rec.l}L</b> · {rec.wr != null ? Math.round(rec.wr * 100) : 0}%</span>

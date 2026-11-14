@@ -1,35 +1,38 @@
-// "You vs target" meter: one track, a shaded good zone starting at the target, and a marker for you.
+// Bullet bar: a filled bar up to your value (coloured by how it compares), a tick at the rank target,
+// and the number beside it. Signed stats (leads/deficits) grow left or right from a zero line.
 import { motion } from "motion/react";
 import type { StatRow } from "../../lib/analysis.ts";
 import { formatValue } from "../../lib/formatValue.ts";
 import { toneOf, type Grade } from "../../lib/insights.ts";
 import { spring } from "../../lib/motion.ts";
 
-export function Meter({ row, compact }: { row: StatRow; compact?: boolean }) {
+export function Meter({ row }: { row: StatRow; compact?: boolean }) {
   const { avg, bench, metric } = row;
   if (avg == null || bench == null) return null;
-  const centered = metric.format === "signed";
-  const span = centered ? Math.max(Math.abs(avg), Math.abs(bench), metric.scale ?? 1) * 1.5 : Math.max(avg, bench) * 1.45 || 1;
-  const lo = centered ? -span : 0, hi = centered ? span : span;
-  const pos = (v: number) => Math.max(0, Math.min(100, ((v - lo) / (hi - lo)) * 100));
   const tone = toneOf(row);
-  const t = pos(bench), y = pos(avg);
-  const zone = metric.better === "higher" ? { left: `${t}%`, right: 0 } : { left: 0, right: `${100 - t}%` };
+  const signed = metric.format === "signed";
+  const pct = (v: number, lo: number, hi: number) => Math.max(0, Math.min(100, ((v - lo) / (hi - lo)) * 100));
+  let fill: { left: string; width: string }, tick: string, zero: string | null = null;
+  if (signed) {
+    const span = Math.max(Math.abs(avg), Math.abs(bench), metric.scale ?? 1) * 1.15;
+    const z = 50, v = pct(avg, -span, span);
+    fill = { left: `${Math.min(z, v)}%`, width: `${Math.abs(v - z)}%` };
+    tick = `${pct(bench, -span, span)}%`;
+    zero = `${z}%`;
+  } else {
+    const hi = Math.max(avg, bench) * 1.2 || 1;
+    fill = { left: "0%", width: `${pct(avg, 0, hi)}%` };
+    tick = `${pct(bench, 0, hi)}%`;
+  }
   return (
-    <div className={`meter${compact ? " compact" : ""}`} role="img" aria-label={`${metric.label}: ${formatValue(metric.format, avg)}, target ${formatValue(metric.format, bench)}`}>
-      <div className="meter-track">
-        <span className="meter-zone" style={zone} />
-        <span className="meter-target" style={{ left: `${t}%` }} />
-        <motion.span className={`meter-dot ${tone}`} initial={{ left: `${t}%` }} animate={{ left: `${y}%` }} transition={spring.gentle} />
+    <div className="bullet" role="img" aria-label={`${metric.label}: ${formatValue(metric.format, avg)}, target ${formatValue(metric.format, bench)}`}>
+      <div className="bullet-track">
+        {zero && <span className="bullet-zero" style={{ left: zero }} />}
+        <motion.i className={`bullet-fill ${tone}`} initial={{ width: 0, left: fill.left }} animate={fill} transition={spring.gentle} />
+        <span className="bullet-target" style={{ left: tick }} title={`Target ${formatValue(metric.format, bench)}`} />
       </div>
-      {!compact && (
-        <div className="meter-labels">
-          <motion.span className={`meter-you ${tone === "good" ? "good-c" : tone === "bad" ? "bad-c" : "text-2"}`} initial={{ left: `${t}%` }} animate={{ left: `${y}%` }} transition={spring.gentle}>
-            {formatValue(metric.format, avg)}
-          </motion.span>
-          <span className="meter-tlabel" style={{ left: `${t}%` }}>target {formatValue(metric.format, bench)}</span>
-        </div>
-      )}
+      <b className={`bullet-val ${tone}`}>{formatValue(metric.format, avg)}</b>
+      <span className="bullet-goal">{formatValue(metric.format, bench)}</span>
     </div>
   );
 }

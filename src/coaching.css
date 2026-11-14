@@ -47,7 +47,7 @@ code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-rad
 .clamp1 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .sub-title { font-size: 14px; font-weight: 700; margin: 18px 0 8px; }
 .fix-list { display: grid; }
-.fix-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 220px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.fix-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 240px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .fix-row { grid-template-columns: 24px minmax(0, 1fr); } .fix-visual { grid-column: 2; } }
 .fix-rank { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 12px; background: var(--loss-bg); color: var(--loss-text); align-self: start; }
 .fix-tip { margin-top: 4px; color: var(--text-2); }
@@ -66,19 +66,6 @@ code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-rad
 .g-F { background: rgba(232, 64, 87, 0.22); color: var(--loss-text); }
 .g-na { background: var(--panel-3); color: var(--muted); }
 
-/* meter: you vs target */
-.meter { position: relative; padding: 18px 0 16px; min-width: 140px; }
-.meter.compact { padding: 0; }
-.meter-track { position: relative; height: 6px; border-radius: 3px; background: var(--panel-3); }
-.meter-zone { position: absolute; top: 0; bottom: 0; background: rgba(0, 187, 163, 0.3); border-radius: 3px; }
-.meter-target { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--text-2); border-radius: 1px; }
-.meter-dot { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid var(--panel); }
-.meter-dot.good { background: var(--good); }
-.meter-dot.bad { background: var(--loss); }
-.meter-dot.neutral { background: var(--text-2); }
-.meter-labels { position: absolute; inset: 0; pointer-events: none; font-size: 11px; }
-.meter-you { position: absolute; top: 0; transform: translateX(-50%); font-weight: 700; white-space: nowrap; }
-.meter-tlabel { position: absolute; bottom: -2px; transform: translateX(-50%); color: var(--muted); white-space: nowrap; }
 
 /* trend words */
 .trend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; white-space: nowrap; }
@@ -114,7 +101,7 @@ details.cat[open] .cat-toggle { visibility: hidden; }
 .cat-toggle { margin-left: auto; }
 .cat-title { font-size: 14px; font-weight: 700; margin: 0; }
 .meter-list { display: grid; gap: 2px; }
-.meter-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(140px, 1fr) 120px; gap: 18px; align-items: center; padding: 6px 10px; border-radius: var(--radius); }
+.meter-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 1.1fr) 120px; gap: 18px; align-items: center; padding: 6px 10px; border-radius: var(--radius); }
 .meter-row:hover { background: var(--panel-2); }
 .meter-name { font-weight: 500; }
 @media (max-width: 700px) { .meter-row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
@@ -209,10 +196,62 @@ a.player-card:hover { background: var(--panel-3); }
 .rune.on { opacity: 1; filter: none; }
 .rune.on .ic { box-shadow: 0 0 0 2px var(--gold); }
 .keystones .rune.on .ic { box-shadow: 0 0 0 2px var(--gold); }
-.rune-shards { display: grid; gap: 4px; font-size: 12px; color: var(--text-2); align-self: center; }
-.rune-shards span { padding: 3px 8px; border-radius: var(--radius-sm); background: var(--panel-3); }
 
 .profile-link { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; font-size: 12px; color: var(--accent-text); opacity: 0.85; }
 .profile-link svg { width: 6px; height: 10px; }
 .profile-link path { fill: none; stroke: currentColor; stroke-width: 1.6; }
 a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }
+
+/* ---------- bullet bar (you vs target) ---------- */
+.bullet { display: grid; grid-template-columns: minmax(80px, 1fr) 52px 44px; gap: 10px; align-items: center; min-width: 0; }
+.bullet-track { position: relative; height: 10px; border-radius: 3px; background: var(--panel-2); }
+.bullet-fill { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--text-2); }
+.bullet-fill.good { background: var(--good); }
+.bullet-fill.bad { background: var(--loss); }
+.bullet-fill.neutral { background: #8a899c; }
+.bullet-target { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: #fff; border-radius: 1px; }
+.bullet-zero { position: absolute; top: -2px; bottom: -2px; width: 1px; background: #6d6d80; }
+.bullet-val { font-size: 14px; font-variant-numeric: tabular-nums; text-align: right; }
+.bullet-val.good { color: #5fe0cc; }
+.bullet-val.bad { color: var(--loss-text); }
+.bullet-goal { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bullet-goal::before { content: "/ "; }
+
+/* ---------- objectives ---------- */
+.goal { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 12px 14px; border-radius: var(--radius); background: var(--panel-2); }
+.goal + .goal { margin-top: 6px; }
+.goal-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.goal-state { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: var(--radius-sm); background: var(--panel-3); color: var(--text-2); }
+.goal-state.met { background: rgba(0, 187, 163, 0.2); color: #5fe0cc; }
+.goal-strip { display: flex; align-items: center; gap: 3px; margin-top: 10px; }
+.goal-strip i { width: 18px; height: 8px; border-radius: 2px; background: var(--panel-3); }
+.goal-strip i.y { background: var(--good); }
+.goal-strip i.n { background: var(--loss); }
+.goal-strip span { margin-left: 8px; }
+.goal-num { display: grid; justify-items: end; }
+.goal-num b { font-size: 22px; font-variant-numeric: tabular-nums; }
+
+/* ---------- role quest slot ---------- */
+.role-slot { position: relative; margin-left: 4px; }
+.role-slot .ic { box-shadow: 0 0 0 1px var(--gold); border-radius: 4px; }
+
+/* ---------- stat shards ---------- */
+.rune-shards { display: grid; gap: 6px; align-self: flex-start; padding-top: 28px; }
+.shard { background: #000; }
+
+/* ---------- champion picker ---------- */
+.champ-picker { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+.picker-btn { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border: 0; border-radius: var(--radius); background: var(--panel-2); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.picker-btn:hover { background: var(--panel-3); }
+.picker-btn.set { background: var(--panel-3); }
+.picker-btn svg { width: 10px; height: 6px; }
+.picker-btn path { fill: none; stroke: currentColor; stroke-width: 1.6; }
+.picker-clear { background: none; border: 0; color: var(--accent-text); font: inherit; font-size: 12px; cursor: pointer; }
+.picker-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 40; width: min(560px, calc(100vw - 32px)); padding: 10px; border-radius: 8px; background: var(--panel); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5); }
+.picker-search { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--text); font: inherit; }
+.picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 4px; max-height: 320px; overflow-y: auto; margin-top: 8px; }
+.picker-item { position: relative; display: grid; justify-items: center; gap: 3px; padding: 6px 2px; border: 0; border-radius: var(--radius); background: none; color: var(--text-2); font: inherit; cursor: pointer; }
+.picker-item:hover, .picker-item.on { background: var(--panel-3); color: #fff; }
+.picker-item.unplayed .ic { opacity: 0.55; }
+.picker-name { font-size: 11px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picker-count { position: absolute; top: 3px; right: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--brand); border-radius: 99px; padding: 0 5px; line-height: 16px; }

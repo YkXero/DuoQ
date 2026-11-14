@@ -39,6 +39,9 @@ export async function loadDDragon(): Promise<void> {
   }
 }
 
+/** Every champion in the current patch, as { id, name }. */
+export const allChampions = () => [...state.champNames].map(([id, name]) => ({ id, name }));
+
 export const champId = (name: string) => state.champIds.get(name.toLowerCase()) ?? name;
 export const champName = (name: string) => state.champNames.get(champId(name)) ?? name;
 export const itemName = (id: number) => state.items.get(id) ?? "";
@@ -53,6 +56,14 @@ const SHARD_NAMES: Record<number, string> = {
   5010: "Move speed", 5011: "Health", 5013: "Tenacity and slow resist",
 };
 export const shardName = (id: number) => SHARD_NAMES[id] ?? `Shard ${id}`;
+const SHARD_ICONS: Record<number, string> = {
+  5008: "StatModsAdaptiveForceIcon.png", 5005: "StatModsAttackSpeedIcon.png", 5007: "StatModsCDRScalingIcon.png",
+  5010: "StatModsMovementSpeedIcon.png", 5001: "StatModsHealthScalingIcon.png", 5011: "StatModsHealthPlusIcon.png",
+  5013: "StatModsTenacityIcon.png", 5002: "StatModsArmorIcon.png", 5003: "StatModsMagicResIcon.MagicResist_Fix.png",
+};
+export const shardIcon = (id: number) => (SHARD_ICONS[id] ? `${DD}/cdn/img/perk-images/StatMods/${SHARD_ICONS[id]}` : "");
+/** The three shard rows as the client shows them: offense, flex, defense. */
+export const SHARD_ROWS = [[5008, 5005, 5007], [5008, 5010, 5001], [5011, 5013, 5001]];
 
 export const champIcon = (name: string) => `${DD}/cdn/${state.version}/img/champion/${champId(name)}.png`;
 export const itemIcon = (id: number) => `${DD}/cdn/${state.version}/img/item/${id}.png`;
