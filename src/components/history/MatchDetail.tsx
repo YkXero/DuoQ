@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Match, TeamId } from "../../../shared/types.ts";
 import { badge, gameScores } from "../../lib/analysis.ts";
-import { itemName } from "../../lib/ddragon.ts";
+import { champName, itemName, runeTree, shardName } from "../../lib/ddragon.ts";
 import { adcIdx, enemyIdx, snapVal, supIdx } from "../../lib/views.ts";
 import { gameStory } from "../../lib/tags.ts";
 import { useApp } from "../../state.tsx";
@@ -120,35 +120,69 @@ function Lane({ m }: { m: Match }) {
   );
 }
 
-function Build({ m }: { m: Match }) {
-  const { names } = useApp();
-  if (!m.tl) return <p className="muted small">No minute-by-minute data for this game.</p>;
+/** op.gg-style rune page: each tree drawn in full, chosen runes lit, the rest dimmed. */
+function RunePage({ perks, primary, sub, shards }: { perks: number[]; primary: number; sub: number; shards: number[] }) {
+  const chosen = new Set(perks);
+  const tree = (styleId: number, skipKeystones: boolean) => {
+    const t = runeTree(styleId);
+    if (!t) return null;
+    return (
+      <div className="rune-tree">
+        <div className="rune-tree-head"><Rune id={styleId} size={20} /><b>{t.name}</b></div>
+        {t.slots.slice(skipKeystones ? 1 : 0).map((slot, i) => (
+          <div key={i} className={`rune-slot${!skipKeystones && i === 0 ? " keystones" : ""}`}>
+            {slot.runes.map((r) => <span key={r.id} className={chosen.has(r.id) ? "rune on" : "rune"} title={r.name}><Rune id={r.id} size={!skipKeystones && i === 0 ? 34 : 26} /></span>)}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  if (!perks.length) return <p className="small muted">Rune page not recorded for this game.</p>;
   return (
-    <div className="stack" style={{ gap: 16 }}>
+    <div className="rune-page">
+      {tree(primary, false)}
+      {tree(sub, true)}
+      {shards.length > 0 && <div className="rune-shards">{shards.map((id, i) => <span key={i}>{shardName(id)}</span>)}</div>}
+    </div>
+  );
+}
+
+function Build({ m }: { m: Match }) {
+  return (
+    <div className="build-grid">
       {([0, 1] as const).map((slot) => {
-        const buys = m.tl!.builds[slot].filter(([, id]) => id !== 2003 && id !== 2055 && id !== 3340 && id !== 3364 && id !== 3363);
+        const p = m.parts[m.duo[slot]];
+        const buys = (m.tl?.builds[slot] ?? []).filter(([, id]) => id !== 2003 && id !== 2055 && id !== 3340 && id !== 3364 && id !== 3363);
         const groups: { t: number; items: number[] }[] = [];
         for (const [t, id] of buys) { const g = groups.at(-1); if (g && t - g.t < 45) g.items.push(id); else groups.push({ t, items: [id] }); }
-        const skills = m.tl!.skills[slot];
+        const skills = m.tl?.skills[slot] ?? "";
         return (
-          <div key={slot}>
-            <div className={`small p${slot}`} style={{ fontWeight: 700, marginBottom: 8 }}>{names[slot]} · {m.parts[m.duo[slot]].champ}</div>
-            <div className="build-row">
-              {groups.map((g, i) => (
-                <div key={i} className="build-step"><div className="items">{g.items.map((id, j) => <span key={j} title={itemName(id)}><Item id={id} size={26} /></span>)}</div>{Math.floor(g.t / 60)}m</div>
-              ))}
-            </div>
-            {skills && (
-              <div className="scroll-x" style={{ marginTop: 10 }}>
-                <div className="skill-grid">
-                  {(["Q", "W", "E", "R"] as const).map((k) => [
-                    <div key={k} className="k">{k}</div>,
-                    ...Array.from({ length: 18 }, (_, lvl) => <div key={k + lvl} className={`${skills[lvl] === k ? "on" : ""} ${k === "R" ? "r" : ""}`}>{skills[lvl] === k ? lvl + 1 : ""}</div>),
-                  ])}
-                </div>
+          <section key={slot} className="build-col">
+            <div className="build-head"><Champ name={p.champ} size={32} /><b>{p.name.split("#")[0]}</b><span className="small text-2">{champName(p.champ)}</span></div>
+            <h4 className="build-label">Items</h4>
+            {groups.length ? (
+              <div className="build-row">
+                {groups.map((g, i) => (
+                  <div key={i} className="build-step"><div className="items">{g.items.map((id, j) => <span key={j} title={itemName(id)}><Item id={id} size={28} /></span>)}</div>{Math.floor(g.t / 60)} min</div>
+                ))}
               </div>
+            ) : <div className="items">{p.items.map((id, i) => <Item key={i} id={id} size={28} empty="" />)}</div>}
+            {skills && (
+              <>
+                <h4 className="build-label">Skill order</h4>
+                <div className="scroll-x">
+                  <div className="skill-grid">
+                    {(["Q", "W", "E", "R"] as const).map((k) => [
+                      <div key={k} className="k">{k}</div>,
+                      ...Array.from({ length: 18 }, (_, lvl) => <div key={k + lvl} className={`${skills[lvl] === k ? "on" : ""} ${k === "R" ? "r" : ""}`}>{skills[lvl] === k ? lvl + 1 : ""}</div>),
+                    ])}
+                  </div>
+                </div>
+              </>
             )}
-          </div>
+            <h4 className="build-label">Runes</h4>
+            <RunePage perks={p.perks ?? []} primary={p.runes[1]} sub={p.runes[2]} shards={p.shards ?? []} />
+          </section>
         );
       })}
     </div>
@@ -156,7 +190,10 @@ function Build({ m }: { m: Match }) {
 }
 
 export function MatchDetail({ m }: { m: Match }) {
-  const [tab, setTab] = useState<Tab>("lane");
+  const [tab, setTab] = useState<Tab>(() => {
+    const v = typeof location === "undefined" ? null : new URLSearchParams(location.search).get("view");
+    return v === "builds" ? "build" : v === "scoreboard" ? "overview" : v === "gold" ? "gold" : "lane";
+  });
   return (
     <div className="detail-inner">
       <Tabs value={tab} onChange={setTab} options={[{ value: "lane", label: "Bot lane" }, { value: "overview", label: "Scoreboard" }, { value: "gold", label: "Gold graph" }, { value: "build", label: "Builds" }]} />

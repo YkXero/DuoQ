@@ -60,7 +60,7 @@ function Shortlists() {
         <Card title="Duos to avoid">{avoid.length ? avoid.map((p, n) => <PairItem key={p.adc + p.sup} p={p} n={n} />) : none("clear losers")}</Card>
       </div>
       <div className="grid g2">
-        <Card title="Tough matchups" hint="consider banning these">{tough.length ? tough.map(({ x, pos }, n) => <MatchupItem key={pos + x.champ} x={x} pos={pos} n={n} />) : none("problem matchups")}</Card>
+        <Card title="Tough matchups">{tough.length ? tough.map(({ x, pos }, n) => <MatchupItem key={pos + x.champ} x={x} pos={pos} n={n} />) : none("problem matchups")}</Card>
         <Card title="Easy matchups">{easy.length ? easy.map(({ x, pos }, n) => <MatchupItem key={pos + x.champ} x={x} pos={pos} n={n} />) : none("easy matchups")}</Card>
       </div>
     </>
@@ -116,7 +116,7 @@ function AllDuos() {
   }, [games, sort]);
   const enough = all.filter((p) => p.rec.n >= MIN_GAMES), few = all.filter((p) => p.rec.n < MIN_GAMES);
   return (
-    <Card title="Every duo you've played" hint="click a column to sort">
+    <Card title="Every duo you've played">
       <PairTable rows={enough} sort={sort} setSort={setSort} />
       {few.length > 0 && (
         <details className="more">

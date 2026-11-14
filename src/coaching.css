@@ -18,11 +18,6 @@
 .duo-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .duo-wr { text-align: right; }
 
-/* who chips */
-.who-chip { font-size: 11px; font-weight: 500; padding: 1px 6px; border-radius: var(--radius-sm); white-space: nowrap; }
-.who-chip.w0 { background: color-mix(in srgb, var(--p0) 18%, transparent); color: var(--p0-text); }
-.who-chip.w1 { background: color-mix(in srgb, var(--p1) 18%, transparent); color: var(--p1-text); }
-.who-chip.duo { background: var(--panel-3); color: var(--text-2); }
 
 /* strengths */
 .strength { display: flex; gap: 10px; align-items: flex-start; }
@@ -83,7 +78,7 @@ code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-rad
 .meter-dot.neutral { background: var(--text-2); }
 .meter-labels { position: absolute; inset: 0; pointer-events: none; font-size: 11px; }
 .meter-you { position: absolute; top: 0; transform: translateX(-50%); font-weight: 700; white-space: nowrap; }
-.meter-tlabel { position: absolute; bottom: 0; transform: translateX(-50%); color: var(--muted); white-space: nowrap; }
+.meter-tlabel { position: absolute; bottom: -2px; transform: translateX(-50%); color: var(--muted); white-space: nowrap; }
 
 /* trend words */
 .trend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; white-space: nowrap; }
@@ -110,7 +105,7 @@ code { font-size: 12px; background: var(--panel-3); padding: 1px 5px; border-rad
 
 /* ---------- stats tab ---------- */
 .meter-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--text-2); padding: 0 10px 8px; border-bottom: 1px solid var(--line); }
-.meter-head-cols { display: inline-flex; gap: 18px; color: var(--muted); }
+.meter-head-cols { display: inline-flex; gap: 18px; color: var(--muted); margin-left: auto; }
 @media (max-width: 700px) { .meter-head-cols { display: none; } }
 .cat { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
 details.cat summary { cursor: pointer; list-style: none; padding: 4px 0; }
@@ -158,7 +153,7 @@ details.more summary::-webkit-details-marker { display: none; }
   .match-row .side-stats { display: none; }
   .rosters { grid-template-columns: 1fr 1fr; gap: 2px 4px; }
   .rosters .r span { display: none; }
-  .rosters .r.duo .ic { box-shadow: 0 0 0 2px var(--accent-text); border-radius: 3px; }
+  .rosters .r.duo .ic { box-shadow: 0 0 0 1px var(--text-2); border-radius: 3px; }
 }
 @container (max-width: 640px) {
   .match-row { grid-template-columns: 76px minmax(0, 1fr) 30px; }
@@ -177,3 +172,47 @@ details.more summary::-webkit-details-marker { display: none; }
   .profile-layout aside > :not(:first-child) { order: 3; }
 }
 @media (max-width: 760px) { .profile-band .tabs { flex-wrap: wrap; mask-image: none; } }
+
+/* ---------- player cards are links to profiles ---------- */
+a.player-card { color: inherit; text-decoration: none; transition: background 0.15s; }
+a.player-card:hover { background: var(--panel-3); }
+.pname { font-size: 12px; color: var(--text-2); max-width: 112px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle; }
+
+/* ---------- net wins ---------- */
+.netwins-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.netwins-now { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- profile tiles ---------- */
+.tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1000px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tile { display: grid; gap: 2px; padding: 12px 14px; background: var(--panel); border-radius: var(--radius); min-width: 0; }
+.tile span { font-size: 12px; color: var(--text-2); }
+.tile b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tile small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-table td { padding: 6px 8px; }
+.res-chip { font-size: 12px; font-weight: 700; }
+.res-chip.w { color: var(--win-text); }
+.res-chip.l { color: var(--loss-text); }
+
+/* ---------- builds: items, skills, runes ---------- */
+.build-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .build-grid { grid-template-columns: minmax(0, 1fr); } }
+.build-col { min-width: 0; background: var(--panel); border-radius: var(--radius); padding: 12px 14px; }
+.build-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.build-label { font-size: 12px; font-weight: 500; color: var(--text-2); margin: 14px 0 6px; }
+.rune-page { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; }
+.rune-tree { display: grid; gap: 8px; justify-items: center; }
+.rune-tree-head { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.rune-slot { display: flex; gap: 6px; justify-content: center; }
+.rune { opacity: 0.28; filter: grayscale(1); }
+.rune.on { opacity: 1; filter: none; }
+.rune.on .ic { box-shadow: 0 0 0 2px var(--gold); }
+.keystones .rune.on .ic { box-shadow: 0 0 0 2px var(--gold); }
+.rune-shards { display: grid; gap: 4px; font-size: 12px; color: var(--text-2); align-self: center; }
+.rune-shards span { padding: 3px 8px; border-radius: var(--radius-sm); background: var(--panel-3); }
+
+.profile-link { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; font-size: 12px; color: var(--accent-text); opacity: 0.85; }
+.profile-link svg { width: 6px; height: 10px; }
+.profile-link path { fill: none; stroke: currentColor; stroke-width: 1.6; }
+a.player-card:hover .profile-link { opacity: 1; text-decoration: underline; }

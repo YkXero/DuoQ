@@ -43,6 +43,16 @@ export const champId = (name: string) => state.champIds.get(name.toLowerCase()) 
 export const champName = (name: string) => state.champNames.get(champId(name)) ?? name;
 export const itemName = (id: number) => state.items.get(id) ?? "";
 export const runeName = (id: number) => state.runes.get(id)?.name ?? "";
+/** A rune tree with its slots (keystones first), for drawing a full rune page. */
+export const runeTree = (styleId: number): RuneStyle | null => {
+  const s = state.runes.get(styleId) as RuneStyle | undefined;
+  return s && "slots" in s ? s : null;
+};
+const SHARD_NAMES: Record<number, string> = {
+  5001: "Health scaling", 5002: "Armor", 5003: "Magic resist", 5005: "Attack speed", 5007: "Ability haste", 5008: "Adaptive force",
+  5010: "Move speed", 5011: "Health", 5013: "Tenacity and slow resist",
+};
+export const shardName = (id: number) => SHARD_NAMES[id] ?? `Shard ${id}`;
 
 export const champIcon = (name: string) => `${DD}/cdn/${state.version}/img/champion/${champId(name)}.png`;
 export const itemIcon = (id: number) => `${DD}/cdn/${state.version}/img/item/${id}.png`;

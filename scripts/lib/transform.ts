@@ -26,6 +26,8 @@ function participant(p: any): Participant {
     items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6],
     spells: [p.summoner1Id, p.summoner2Id],
     runes: [primary?.selections?.[0]?.perk ?? 0, primary?.style ?? 0, sub?.style ?? 0],
+    perks: [...(primary?.selections ?? []), ...(sub?.selections ?? [])].map((x: any) => x.perk),
+    shards: p.perks?.statPerks ? [p.perks.statPerks.offense, p.perks.statPerks.flex, p.perks.statPerks.defense] : [],
     timeDead: p.totalTimeSpentDead,
     firstBlood: !!(p.firstBloodKill || p.firstBloodAssist),
     multi: p.largestMultiKill,

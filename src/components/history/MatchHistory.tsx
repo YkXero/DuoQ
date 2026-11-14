@@ -18,7 +18,6 @@ const ordinal = (n: number) => `${n}${n === 1 ? "st" : n === 2 ? "nd" : n === 3 
 const MULTI = ["", "", "Double", "Triple", "Quadra", "Penta"];
 
 function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
-  const { names } = useApp();
   const p = m.parts[idx];
   const scores = useMemo(() => gameScores(m), [m]);
   const b = badge(m, idx, scores);
@@ -33,7 +32,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           <div className="kda">{p.k} / <span className="d">{p.d}</span> / {p.a}</div>
           <div className="ratio"><Kda k={p.k} d={p.d} a={p.a} /></div>
           <div className="row" style={{ gap: 4, marginTop: 2 }}>
-            <span className={`tagpill who${slot}`}>{names[slot]}</span>
+            <span className="pname">{p.name.split("#")[0]}</span>
             {b && <span className={`tagpill ${b === "MVP" ? "mvp" : "ace"}`}>{b}</span>}
             {p.multi >= 2 && <span className="tagpill multi">{MULTI[p.multi]}</span>}
           </div>
@@ -93,7 +92,8 @@ export function MatchHistory() {
   const { games, data } = useApp();
   const [f, setF] = useState<Local>(NONE);
   const [shown, setShown] = useState(PAGE);
-  const [open, setOpen] = useState<string | null>(null);
+  // ?game=<match id> opens that game (shareable link)
+  const [open, setOpen] = useState<string | null>(() => (typeof location === "undefined" ? null : new URLSearchParams(location.search).get("game")));
   const list = useMemo(() => applyFilters(games, { ...f, queue: "all", range: "all" }), [games, f]);
   const rec = record(list);
   const adcs = champsPlayed(games, adcIdx), sups = champsPlayed(games, supIdx);

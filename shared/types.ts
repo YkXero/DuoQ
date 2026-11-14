@@ -1,6 +1,6 @@
 // Data schema shared by the fetcher (scripts/) and the site (src/).
 // Bump DATA_VERSION when the shape changes; the fetcher re-downloads everything on a mismatch.
-export const DATA_VERSION = 2;
+export const DATA_VERSION = 3;
 
 export type Position = "TOP" | "JUNGLE" | "MIDDLE" | "BOTTOM" | "UTILITY" | "";
 export type TeamId = 100 | 200;
@@ -61,6 +61,8 @@ export interface Participant {
   items: number[]; // 7, last is trinket, 0 = empty
   spells: [number, number];
   runes: [number, number, number]; // keystone, primary style, sub style
+  perks: number[]; // full rune page: 4 primary + 2 secondary rune ids
+  shards: number[]; // stat shards: offense, flex, defense
   timeDead: number;
   firstBlood: boolean;
   multi: number; // largest multikill

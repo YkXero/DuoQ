@@ -28,6 +28,8 @@ const ADC_ITEMS = [6672, 3031, 3094, 3036, 3046, 3072, 3085, 6675, 3033], SUP_IT
 const BOOTS = [3006, 3009, 3047, 3158], SUPPORT_ITEM = 3869;
 const ORDER: Exclude<Position, "">[] = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
 const RUNES: Record<string, [number, number, number]> = { BOTTOM: [8008, 8000, 8300], UTILITY: [8439, 8400, 8300], DEFAULT: [8010, 8000, 8400] };
+const PERKS: Record<string, number[]> = { BOTTOM: [8008, 9111, 9104, 8017, 8304, 8345], UTILITY: [8439, 8463, 8473, 8242, 8306, 8347], DEFAULT: [8010, 9111, 9105, 8299, 8444, 8451] };
+const SHARDS: Record<string, number[]> = { BOTTOM: [5005, 5008, 5011], UTILITY: [5007, 5008, 5011], DEFAULT: [5008, 5008, 5011] };
 const tierLadder = ["IRON", "BRONZE", "SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND"], DIVS = ["IV", "III", "II", "I"];
 
 const matches: Match[] = [];
@@ -73,7 +75,7 @@ for (let g = 0; g < 80; g++) {
         wards: pos === "UTILITY" ? ri(22, 45) : ri(6, 14), wardsKilled: pos === "UTILITY" ? ri(4, 14) : ri(1, 6), pinks: pos === "UTILITY" ? ri(isOurs ? 1 : 3, 7) : ri(0, 2),
         items: pos === "UTILITY" ? [SUPPORT_ITEM, pick(BOOTS), ...Array.from({ length: 3 }, () => pick(SUP_ITEMS)), 0, 3364] : [pick(BOOTS), ...Array.from({ length: 4 }, () => pick(ADC_ITEMS)), rand() < 0.5 ? pick(ADC_ITEMS) : 0, 3363],
         spells: pos === "UTILITY" ? [4, pick([14, 3])] : pos === "JUNGLE" ? [4, 11] : pos === "BOTTOM" ? [4, 7] : [4, 12],
-        runes: RUNES[pos] ?? RUNES.DEFAULT, timeDead: d * ri(18, 45), firstBlood: false, multi: Math.min(5, ri(1, k > 6 ? 3 : 1)), ccTime: ri(5, 50),
+        runes: RUNES[pos] ?? RUNES.DEFAULT, perks: PERKS[pos] ?? PERKS.DEFAULT, shards: SHARDS[pos] ?? SHARDS.DEFAULT, timeDead: d * ri(18, 45), firstBlood: false, multi: Math.min(5, ri(1, k > 6 ? 3 : 1)), ccTime: ri(5, 50),
         kp: Math.min(1, Math.round(((k + a) / kills[team]) * 100) / 100), dmgShare: null, takenShare: null,
         cs10: pos === "BOTTOM" ? ri(isOurs ? 50 + Math.round(improving * 15) : 60, 85) : null, maxCsAdv: ri(-10, 30), maxLvlLead: ri(0, 2), visionAdv: null,
         soloKills: ri(0, 2), plates: ri(0, 3), dragonTk: ri(0, 3), pinksPlaced: null, picks: ri(0, 4), immobilize: pos === "UTILITY" ? ri(8, 35) : ri(2, 12),

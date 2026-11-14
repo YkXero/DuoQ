@@ -1,7 +1,5 @@
 import { motion } from "motion/react";
 import type { RankEntry } from "../../shared/types.ts";
-import { useMemo } from "react";
-import { coaching } from "../lib/insights.ts";
 import { ladder, rankName } from "../lib/rank.ts";
 import { profileIcon } from "../lib/ddragon.ts";
 import { titleCase } from "../lib/format.ts";
@@ -26,7 +24,7 @@ export function PlayerCards() {
     const delta = ladder(solo) != null && ladder(first?.solo[i] ?? null) != null ? ladder(solo)! - ladder(first!.solo[i])! : null;
     const wr = solo && solo.wins + solo.losses > 0 ? Math.round((solo.wins / (solo.wins + solo.losses)) * 100) : null;
     return (
-      <div key={p.riotId} className="player-card">
+      <a key={p.riotId} className="player-card" href={`#player-${i + 1}`} aria-label={`Open ${name}'s profile`}>
         <div className="avatar">
           {p.profileIcon != null ? <img src={profileIcon(p.profileIcon)} alt="" /> : <div className="avatar-empty" />}
           {p.level != null && <span className="lvl">{p.level}</span>}
@@ -44,7 +42,8 @@ export function PlayerCards() {
           <div className="small text-2">{solo ? `${solo.lp} LP` : "Solo/Duo"}{wr != null ? ` · ${wr}% WR` : ""}</div>
         </div>
         {solo && <Emblem tier={solo.tier} size={52} />}
-      </div>
+        <span className="profile-link">Profile<svg viewBox="0 0 6 10" aria-hidden="true"><path d="M1 1l4 4-4 4" /></svg></span>
+      </a>
     );
   });
   return (
@@ -58,9 +57,8 @@ export function PlayerCards() {
 
 /** The duo's shared goal: progress toward the target rank, day count, and this week's one focus. */
 export function ChallengeCard() {
-  const { data, games, goals, names, bracket } = useApp();
-  const top = useMemo(() => coaching(games, names, bracket).improve[0], [games, names, bracket]);
-  const focus = goals.goals.find((g) => g.status === "active")?.title ?? top?.title;
+  const { data, goals, names } = useApp();
+  const focus = goals.goals.find((g) => g.status === "active")?.title; // the fix list already shows the top problem
   const start = new Date(data.startDate + "T00:00:00").getTime();
   const day = Math.max(1, Math.ceil((Date.now() - start) / 86400000));
   const goalV = data.goal ? ladder({ tier: data.goal.tier, div: data.goal.div, lp: 0 }) : null;

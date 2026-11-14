@@ -1,6 +1,6 @@
 // Overview: the duo's op.gg-style profile page. Left column = summary panels, right = coaching + recent games.
 import { useMemo, useState } from "react";
-import { duoStats, playerStats, record, synergies } from "../../lib/analysis.ts";
+import { chrono, duoStats, playerStats, record, synergies } from "../../lib/analysis.ts";
 import { champName } from "../../lib/ddragon.ts";
 import { formatValue } from "../../lib/formatValue.ts";
 import { goalProgress } from "../../lib/goals.ts";
@@ -14,11 +14,11 @@ import { ChallengeCard } from "../PlayerCards.tsx";
 import { Card, Donut, Segmented } from "../ui/Controls.tsx";
 import { Champ, Kda } from "../ui/Icons.tsx";
 import { GradeBadge, Meter, TrendWord } from "../ui/Meter.tsx";
-import { LpChart } from "./Charts.tsx";
+import { LpChart, NetWins } from "./Charts.tsx";
 
 export const WhoChip = ({ who }: { who: Who }) => {
   const { names } = useApp();
-  return who === "duo" ? <span className="who-chip duo">Duo</span> : <span className={`who-chip w${who}`}>{names[who]}</span>;
+  return <span className="small text-2">{who === "duo" ? "bot lane" : names[who]}</span>;
 };
 
 // ---------------------------------------------------------------- left column
@@ -74,7 +74,7 @@ function Strength({ i }: { i: Insight }) {
     <div className="strength">
       <svg className="check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" /><path d="M5.5 10.5l3 3 6-6.5" /></svg>
       <div style={{ minWidth: 0 }}>
-        <div className="row wrap-row" style={{ gap: 6 }}><b>{i.title}</b><WhoChip who={i.who} /></div>
+        <b>{i.title}</b>
         <div className="small text-2">{i.detail}</div>
       </div>
     </div>
@@ -90,19 +90,11 @@ function DuoReport() {
   const rows = useMemo(() => (who === "duo" ? duoStats(games, bracket) : playerStats(games, Number(who) as 0 | 1, bracket)), [games, who, bracket]);
   const cells = reportCard(rows).filter((x) => x.grade);
   const name = who === "duo" ? "You" : names[Number(who)];
-  const wr = Math.round((record(games).wr ?? 0) * 100);
-  const top = c.improve[0], best = c.strengths[0];
   return (
-    <Card title="Duo report" hint="graded against players at your rank">
-      <p className="report-verdict">
-        {wr >= 52 ? "You're winning more than you lose." : wr >= 48 ? "You're winning about half your games." : "You're losing more than you win."}
-        {best && <> Best: <b className="good-c">{best.title}</b>.</>}
-        {top && <> Fix first: <b className="bad-c">{top.title}</b>.</>}
-      </p>
+    <Card title="Duo report">
 
       <div className="report-head">
         <Segmented value={who} onChange={setWho} options={[{ value: "0", label: names[0] }, { value: "1", label: names[1] }, { value: "duo", label: "Bot lane" }]} />
-        <span className="small muted">A = well above your rank · C = normal · F = well below</span>
       </div>
       <div className="grades">
         {cells.map((g) => {
@@ -125,7 +117,7 @@ function DuoReport() {
           <div key={i.title} className="fix-row">
             <span className="fix-rank">{n + 1}</span>
             <div style={{ minWidth: 0 }}>
-              <div className="row wrap-row" style={{ gap: 6 }}><b>{i.title}</b><WhoChip who={i.who} /><TrendWord v={i.trend} /></div>
+              <div className="row wrap-row" style={{ gap: 8 }}><b>{i.title}</b><TrendWord v={i.trend} /></div>
               <div className="small text-2">{i.detail}</div>
               {i.tip && <div className="small fix-tip"><b>Try this:</b> {i.tip}</div>}
             </div>
@@ -146,7 +138,7 @@ export function WinsVsLosses() {
   const swings = useMemo(() => winLossSwings(games, names, bracket, 4), [games, names, bracket]);
   if (!swings.length) return null;
   return (
-    <Card title="What changes when you lose" hint="biggest differences between your wins and losses">
+    <Card title="What changes when you lose">
       <div className="swings">
         {swings.map((s) => {
           const { metric, inWins, inLosses } = s.row;
@@ -190,17 +182,18 @@ export function Overview() {
       <aside className="stack">
         <RecentSummary />
         <ChallengeCard />
+        <Card title="Net wins"><NetWins games={chrono(games)} /></Card>
         <MostPlayedDuos />
         {c.strengths.length > 0 && (
           <Card title="What's working">
             <div className="stack" style={{ gap: 12 }}>{c.strengths.slice(0, 4).map((i) => <Strength key={i.title} i={i} />)}</div>
           </Card>
         )}
-        <Card title="Rank graph"><LpChart /></Card>
+        <Card title="Rank"><LpChart /></Card>
       </aside>
       <div className="stack main-col">
         {active.length > 0 && (
-          <Card title="Your objectives" hint={`set in the review on ${goals.reviews.at(-1)?.date ?? ""}`}>
+          <Card title="Your objectives">
             {active.map((p, i) => <GoalCard key={p.goal.id} p={p} i={i} />)}
           </Card>
         )}

@@ -6,21 +6,25 @@ import { GlobalFilters } from "./components/GlobalFilters.tsx";
 import { MatchHistory } from "./components/history/MatchHistory.tsx";
 import { Overview } from "./components/overview/Overview.tsx";
 import { PlayerCards } from "./components/PlayerCards.tsx";
+import { PlayerProfile } from "./components/profile/PlayerProfile.tsx";
 import { Stats } from "./components/stats/Stats.tsx";
 import { Tabs } from "./components/ui/Controls.tsx";
 import { spring } from "./lib/motion.ts";
 import { AppProvider, useApp, useLoader } from "./state.tsx";
 
-type Tab = "overview" | "history" | "stats" | "champions" | "coach";
-const TABS: { value: Tab; label: string }[] = [
-  { value: "overview", label: "Overview" }, { value: "history", label: "Match history" }, { value: "stats", label: "Stats & progress" },
-  { value: "champions", label: "Champions & synergy" }, { value: "coach", label: "Coach" },
-];
-const initialTab = (): Tab => (TABS.find((t) => t.value === location.hash.slice(1))?.value ?? "overview");
+type Tab = "overview" | "player-1" | "player-2" | "history" | "champions" | "stats" | "coach";
+const TAB_IDS: Tab[] = ["overview", "player-1", "player-2", "history", "champions", "stats", "coach"];
+const tabLabels = (names: [string, string]): Record<Tab, string> => ({
+  overview: "Overview", "player-1": names[0], "player-2": names[1], history: "Matches", champions: "Champions", stats: "Progress", coach: "Coach",
+});
+// Hash names stay stable: #history and #stats keep working for old links.
+const initialTab = (): Tab => (TAB_IDS.find((t) => t === location.hash.slice(1)) ?? "overview");
 
 function Shell({ demo, setDemo }: { demo: boolean; setDemo: (v: boolean) => void }) {
-  const { games, data } = useApp();
+  const { games, data, names } = useApp();
   const [tab, setTab] = useState<Tab>(initialTab);
+  const labels = tabLabels(names);
+  const TABS = TAB_IDS.map((value) => ({ value, label: labels[value] }));
   useEffect(() => { history.replaceState(null, "", `#${tab}`); }, [tab]);
   useEffect(() => {
     const onHash = () => { const t = initialTab(); setTab(t); window.scrollTo({ top: 0 }); };
@@ -50,6 +54,8 @@ function Shell({ demo, setDemo }: { demo: boolean; setDemo: (v: boolean) => void
           <AnimatePresence mode="wait">
             <motion.div key={tab} initial={{ y: 8 }} animate={{ y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring.smooth}>
               {tab === "overview" && <Overview />}
+              {tab === "player-1" && <PlayerProfile slot={0} />}
+              {tab === "player-2" && <PlayerProfile slot={1} />}
               {tab === "history" && <MatchHistory />}
               {tab === "stats" && <Stats />}
               {tab === "champions" && <Champions />}

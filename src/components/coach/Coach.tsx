@@ -21,7 +21,7 @@ export function GoalCard({ p, i = 0 }: { p: GoalProgress; i?: number }) {
       <div>
         <div className="row wrap-row">
           <span className="t">{g.title}</span>
-          {g.slot != null && <span className={`tagpill who${g.slot}`}>{names[g.slot]}</span>}
+          {g.slot != null && <span className="small text-2">{names[g.slot]}</span>}
           {g.status === "achieved" || p.met ? <span className="tagpill" style={{ background: "var(--good)", color: "#032b26" }}>On track</span> : null}
         </div>
         <div className="why">{g.why}</div>
@@ -66,10 +66,10 @@ export function Coach() {
   const reviews = [...goals.reviews].reverse();
   return (
     <div className="stack">
-      <Card title="Objectives" hint="progress updates after every game">
+      <Card title="Objectives">
         {active.length ? active.map((g, i) => <GoalCard key={g.id} p={goalProgress(g, data.matches)} i={i} />) : (
           <>
-            <p className="text-2" style={{ marginTop: 0 }}>Your coach reviews your games every few days and sets objectives here. Until the first review, these starter objectives come from your two biggest problems.</p>
+            <p className="small text-2" style={{ marginTop: 0 }}>Starter objectives until your first review.</p>
             {starters.map((g, i) => <GoalCard key={g.id} p={goalProgress(g, data.matches)} i={i} />)}
             {!starters.length && <p className="muted">Play a few more games together to get your first objectives.</p>}
           </>

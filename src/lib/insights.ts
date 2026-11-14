@@ -29,8 +29,8 @@ const whoName = (names: string[], who: Who) => (who === "duo" ? "You" : names[wh
 function describe(r: StatRow): string {
   const v = formatValue(r.metric.format, r.avg), b = formatValue(r.metric.format, r.bench);
   const dir = r.metric.better === "higher" ? "or more" : "or less";
-  const unit = r.metric.rate ? "of games" : r.metric.format === "pct" ? "on average" : "per game";
-  return `${plain(r.metric.id).name}: ${v} ${unit}. Players at your rank aim for ${b} ${dir}.`;
+  const unit = r.metric.rate ? " of games" : r.metric.format === "pct" ? "" : " per game";
+  return `${plain(r.metric.id).name}: ${v}${unit} · target ${b} ${dir}`;
 }
 
 /** How much a stat matters for winning. Low-impact stats never crowd out the important ones. */
