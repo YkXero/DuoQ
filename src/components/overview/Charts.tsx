@@ -11,7 +11,7 @@ const GRID = <CartesianGrid stroke="#2e2e38" vertical={false} />;
 
 const tierTick = (v: number) => ladderLabel(v);
 
-export function Legend({ items }: { items: { label: string; color: string }[] }) {
+export function Legend({ items }: { items: { label: string; color: string; has?: boolean }[] }) {
   return <div className="legend">{items.map((i) => <span key={i.label}><i style={{ background: i.color }} />{i.label}</span>)}</div>;
 }
 

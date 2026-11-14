@@ -44,6 +44,6 @@ export function GradeBadge({ grade, size = 44 }: { grade: Grade | null; size?: n
 
 export function TrendWord({ v }: { v: "better" | "worse" | "stable" | "na" | undefined }) {
   if (!v || v === "na") return null;
-  const text = v === "better" ? "↗ getting better" : v === "worse" ? "↘ getting worse" : "→ steady";
+  const text = v === "better" ? "Getting better" : v === "worse" ? "Getting worse" : "Steady";
   return <span className={`trend ${v}`}>{text}</span>;
 }

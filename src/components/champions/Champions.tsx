@@ -9,6 +9,9 @@ import { Bar, Card } from "../ui/Controls.tsx";
 import { Champ, WinRate } from "../ui/Icons.tsx";
 
 const MIN_GAMES = 3;
+const SHORTLIST_MIN = 4; // a 3-0 run is not a verdict
+const SMALL = 6;
+const Sample = ({ n }: { n: number }) => (n < SMALL ? <span className="small-sample">small sample</span> : null);
 const wl = (w: number, l: number) => `${w} ${w === 1 ? "win" : "wins"}, ${l} ${l === 1 ? "loss" : "losses"}`;
 const laneWords = (gd: number | null) => (gd == null ? null : gd > 150 ? "usually ahead in lane" : gd < -150 ? "usually behind in lane" : "lane is usually even");
 
@@ -20,7 +23,7 @@ function PairItem({ p, n }: { p: PairRow; n: number }) {
       <div className="short-champs"><Champ name={p.adc} size={40} /><Champ name={p.sup} size={40} /></div>
       <div style={{ minWidth: 0 }}>
         <div className="short-name">{champName(p.adc)} + {champName(p.sup)}</div>
-        <div className="small text-2">{wl(p.rec.w, p.rec.l)}{lane ? ` · ${lane}` : ""}</div>
+        <div className="small text-2">{wl(p.rec.w, p.rec.l)}{lane ? ` · ${lane}` : ""} <Sample n={p.rec.n} /></div>
       </div>
       <WinRate wr={p.rec.wr} n={p.rec.n} />
     </motion.div>
@@ -34,7 +37,7 @@ function MatchupItem({ x, n, pos }: { x: MatchupRow; n: number; pos: "BOTTOM" | 
       <div className="short-champs"><Champ name={x.champ} size={40} /></div>
       <div style={{ minWidth: 0 }}>
         <div className="short-name">{champName(x.champ)} <span className="small muted">{pos === "BOTTOM" ? "ADC" : "support"}</span></div>
-        <div className="small text-2">{wl(x.rec.w, x.rec.l)}{lane ? ` · ${lane}` : ""}</div>
+        <div className="small text-2">{wl(x.rec.w, x.rec.l)}{lane ? ` · ${lane}` : ""} <Sample n={x.rec.n} /></div>
       </div>
       <WinRate wr={x.rec.wr} n={x.rec.n} />
     </motion.div>
@@ -43,13 +46,13 @@ function MatchupItem({ x, n, pos }: { x: MatchupRow; n: number; pos: "BOTTOM" | 
 
 function Shortlists() {
   const { games } = useApp();
-  const pairs = useMemo(() => synergies(games).filter((p) => p.rec.n >= MIN_GAMES), [games]);
+  const pairs = useMemo(() => synergies(games).filter((p) => p.rec.n >= SHORTLIST_MIN), [games]);
   const play = [...pairs].filter((p) => p.rec.shrunk >= 0.53).sort((a, b) => b.rec.shrunk - a.rec.shrunk).slice(0, 3);
   const avoid = [...pairs].filter((p) => p.rec.shrunk <= 0.47).sort((a, b) => a.rec.shrunk - b.rec.shrunk).slice(0, 3);
-  const enemies = useMemo(() => (["BOTTOM", "UTILITY"] as const).flatMap((pos) => matchups(games, pos).filter((x) => x.rec.n >= MIN_GAMES).map((x) => ({ x, pos }))), [games]);
+  const enemies = useMemo(() => (["BOTTOM", "UTILITY"] as const).flatMap((pos) => matchups(games, pos).filter((x) => x.rec.n >= SHORTLIST_MIN).map((x) => ({ x, pos }))), [games]);
   const tough = [...enemies].filter((e) => e.x.rec.shrunk <= 0.47).sort((a, b) => a.x.rec.shrunk - b.x.rec.shrunk).slice(0, 4);
   const easy = [...enemies].filter((e) => e.x.rec.shrunk >= 0.53).sort((a, b) => b.x.rec.shrunk - a.x.rec.shrunk).slice(0, 4);
-  const none = (what: string) => <p className="small muted">No {what} yet. A verdict appears after {MIN_GAMES} games.</p>;
+  const none = (what: string) => <p className="small muted">No {what} yet. A verdict appears after {SHORTLIST_MIN} games.</p>;
   return (
     <>
       <div className="grid g2">
@@ -70,7 +73,7 @@ type SortKey = "games" | "wr" | "kda" | "gd15";
 function SortTh({ k, sort, setSort, children }: { k: SortKey; sort: SortKey; setSort: (k: SortKey) => void; children: React.ReactNode }) {
   return (
     <th className="num" aria-sort={sort === k ? "descending" : "none"}>
-      <button className={`th-sort${sort === k ? " on" : ""}`} onClick={() => setSort(k)}>{children}{sort === k ? " ▾" : ""}</button>
+      <button className={`th-sort${sort === k ? " on" : ""}`} onClick={() => setSort(k)}>{children}{sort === k && <svg className="sort-ic" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" /></svg>}</button>
     </th>
   );
 }

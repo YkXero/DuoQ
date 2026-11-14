@@ -1,143 +1,168 @@
-import { motion } from "motion/react";
+// Overview: the duo's op.gg-style profile page. Left column = summary panels, right = coaching + recent games.
 import { useMemo, useState } from "react";
-import { chrono, duoStats, playerStats, record, synergies } from "../../lib/analysis.ts";
+import { duoStats, playerStats, record, synergies } from "../../lib/analysis.ts";
 import { champName } from "../../lib/ddragon.ts";
 import { formatValue } from "../../lib/formatValue.ts";
 import { goalProgress } from "../../lib/goals.ts";
 import { CATEGORY_NAME, coaching, reportCard, verdict, winLossSwings, type Insight, type Who } from "../../lib/insights.ts";
-import { stagger } from "../../lib/motion.ts";
+import { mean } from "../../lib/stats.ts";
 import { plain } from "../../lib/plain.ts";
 import { useApp } from "../../state.tsx";
 import { GoalCard } from "../coach/Coach.tsx";
+import { MatchRow } from "../history/MatchHistory.tsx";
+import { ChallengeCard } from "../PlayerCards.tsx";
 import { Card, Donut, Segmented } from "../ui/Controls.tsx";
-import { Champ, WinRate } from "../ui/Icons.tsx";
+import { Champ, Kda } from "../ui/Icons.tsx";
 import { GradeBadge, Meter, TrendWord } from "../ui/Meter.tsx";
-import { LpChart, RollingWinRate } from "./Charts.tsx";
+import { LpChart } from "./Charts.tsx";
 
-const WhoChip = ({ who }: { who: Who }) => {
+export const WhoChip = ({ who }: { who: Who }) => {
   const { names } = useApp();
   return who === "duo" ? <span className="who-chip duo">Duo</span> : <span className={`who-chip w${who}`}>{names[who]}</span>;
 };
 
-/** One sentence that sums up the selection. */
-function Verdict() {
-  const { games, names, bracket } = useApp();
-  const c = useMemo(() => coaching(games, names, bracket), [games, names, bracket]);
-  const rec = record(games);
-  const top = c.improve[0], best = c.strengths[0];
-  const wr = Math.round((rec.wr ?? 0) * 100);
-  const last10 = games.slice(0, 10), w10 = last10.filter((m) => m.win).length;
+// ---------------------------------------------------------------- left column
+function RecentSummary() {
+  const { games } = useApp();
+  const last = games.slice(0, 20), rec = record(last);
+  const sum = (f: (m: (typeof games)[number]) => number) => mean(last.map(f)) ?? 0;
+  const k = sum((m) => m.parts[m.duo[0]].k + m.parts[m.duo[1]].k), d = sum((m) => m.parts[m.duo[0]].d + m.parts[m.duo[1]].d), a = sum((m) => m.parts[m.duo[0]].a + m.parts[m.duo[1]].a);
   let streak = 0;
-  for (const m of games) { if (m.win) streak++; else break; }
-  const cheer = streak >= 3 ? `${streak} wins in a row` : last10.length === 10 && w10 >= 7 ? `${w10} of your last 10 games won` : null;
-  const mood = wr >= 55 ? "You're winning more than you lose" : wr >= 48 ? "You're winning about half your games" : "You're losing more than you win";
+  for (const m of games) { if (m.win === games[0]?.win) streak++; else break; }
   return (
-    <div className="verdict">
-      <Donut value={rec.wr ?? 0} size={76} stroke={9} label="win rate" />
-      <div style={{ minWidth: 0 }}>
-        {cheer && <span className="cheer">{cheer}</span>}
-        <h2 className="verdict-title">{mood}: {rec.w} wins, {rec.l} losses.</h2>
-        <p className="verdict-sub">
-          {best && <>Best thing: <b className="good-c">{best.title}</b>. </>}
-          {top && <>Biggest problem: <b className="bad-c">{top.title}</b>.</>}
-          {!top && !best && "Play a few more games to get coaching."}
-        </p>
-        <div className="form-strip" title="Last 20 games, newest first" style={{ marginTop: 8 }}>
-          {games.slice(0, 20).map((m) => <i key={m.id} className={m.win ? "w" : ""} />)}
-          <span className="small muted" style={{ marginLeft: 6 }}>last 20 games, newest first</span>
+    <Card title={`Last ${last.length} games together`}>
+      <div className="recent">
+        <Donut value={rec.wr ?? 0} size={92} stroke={11} label="win rate" />
+        <div>
+          <div className="small text-2">{rec.n} games · {rec.w}W {rec.l}L</div>
+          <div className="recent-kda"><Kda k={k} d={d} a={a} /></div>
+          <div className="small text-2">{k.toFixed(1)} / <span className="bad-c">{d.toFixed(1)}</span> / {a.toFixed(1)} as a duo</div>
+          {games.length > 0 && <div className={`small ${games[0].win ? "win-c" : "loss-c"}`} style={{ marginTop: 4, fontWeight: 500 }}>{streak} {games[0].win ? (streak === 1 ? "win" : "wins") : (streak === 1 ? "loss" : "losses")} in a row</div>}
         </div>
       </div>
-    </div>
-  );
-}
-
-function ReportCard() {
-  const { games, names, bracket } = useApp();
-  const [who, setWho] = useState<"0" | "1" | "duo">("0");
-  const rows = useMemo(() => (who === "duo" ? duoStats(games, bracket) : playerStats(games, Number(who) as 0 | 1, bracket)), [games, who, bracket]);
-  const cells = reportCard(rows).filter((c) => c.grade);
-  const name = who === "duo" ? "You" : names[Number(who)];
-  return (
-    <Card title="Report card" hint="graded against players at your rank">
-      <div style={{ marginBottom: 14 }}>
-        <Segmented value={who} onChange={setWho} options={[{ value: "0", label: names[0] }, { value: "1", label: names[1] }, { value: "duo", label: "Bot lane together" }]} />
+      <div className="form-strip" title="Last 20 games, newest first" style={{ marginTop: 12 }}>
+        {last.map((m) => <i key={m.id} className={m.win ? "w" : ""} />)}
       </div>
-      <div className="report">
-        {cells.map((c, i) => {
-          const v = verdict(c.worst!, name);
-          return (
-            <motion.div key={c.category} className="report-cell" initial={{ y: 8 }} animate={{ y: 0 }} transition={stagger(i, 0.04)}>
-              <GradeBadge grade={c.grade} />
-              <div style={{ minWidth: 0 }}>
-                <div className="report-name">{CATEGORY_NAME[c.category]}</div>
-                <div className="small text-2">{v.text}</div>
-              </div>
-            </motion.div>
-          );
-        })}
-        {!cells.length && <p className="muted">Not enough games to grade yet.</p>}
-      </div>
-      <div className="grade-key small muted">A = well above your rank · C = normal for your rank · F = well below</div>
     </Card>
   );
 }
 
-function FixCard({ i, n }: { i: Insight; n: number }) {
+function MostPlayedDuos() {
+  const { games } = useApp();
+  const pairs = synergies(games).slice(0, 5);
   return (
-    <motion.article className="fix" initial={{ y: 10 }} animate={{ y: 0 }} transition={stagger(n, 0.06)}>
-      <div className="fix-head">
-        <span className="fix-rank" aria-label={`Priority ${n + 1}`}>{n + 1}</span>
-        <WhoChip who={i.who} />
-        <TrendWord v={i.trend} />
-      </div>
-      <h3 className="fix-title">{i.title}</h3>
-      {i.row && <Meter row={i.row} />}
-      {i.champs && (
-        <div className="fix-champs">
-          {i.champs.map((c, k) => <span key={c} className="row" style={{ gap: 6 }}>{k > 0 && <span className="plus">+</span>}<Champ name={c} size={44} /></span>)}
+    <Card title="Most-played duos">
+      {pairs.map((p) => (
+        <div key={p.adc + p.sup} className="duo-row">
+          <div className="duo-icons"><Champ name={p.adc} size={32} round /><Champ name={p.sup} size={32} round /></div>
+          <div style={{ minWidth: 0 }}>
+            <div className="duo-name">{champName(p.adc)} + {champName(p.sup)}</div>
+            <div className="small text-2">{p.rec.n} games · {formatValue("dec1", p.kda)} KDA</div>
+          </div>
+          <div className="duo-wr">
+            <div className={(p.rec.wr ?? 0) >= 0.6 && p.rec.n >= 3 ? "good-c" : (p.rec.wr ?? 1) < 0.45 && p.rec.n >= 3 ? "bad-c" : ""} style={{ fontWeight: 700 }}>{Math.round((p.rec.wr ?? 0) * 100)}%</div>
+            <div className="small text-2">{p.rec.w}W {p.rec.l}L</div>
+          </div>
         </div>
-      )}
-      <p className="fix-detail">{i.detail}</p>
-      {i.why && <p className="fix-why">{i.why}</p>}
-      {i.tip && <p className="fix-tip"><b>Try this:</b> {i.tip}</p>}
-    </motion.article>
+      ))}
+    </Card>
   );
 }
 
-function Strength({ i, n }: { i: Insight; n: number }) {
+function Strength({ i }: { i: Insight }) {
   return (
-    <motion.div className="strength" initial={{ x: -6 }} animate={{ x: 0 }} transition={stagger(n)}>
-      <span className="check" aria-hidden>✓</span>
+    <div className="strength">
+      <svg className="check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" /><path d="M5.5 10.5l3 3 6-6.5" /></svg>
       <div style={{ minWidth: 0 }}>
         <div className="row wrap-row" style={{ gap: 6 }}><b>{i.title}</b><WhoChip who={i.who} /></div>
         <div className="small text-2">{i.detail}</div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-function WinsVsLosses() {
+// ---------------------------------------------------------------- right column
+function DuoReport() {
+  const { games, names, bracket } = useApp();
+  const c = useMemo(() => coaching(games, names, bracket), [games, names, bracket]);
+  const [who, setWho] = useState<"0" | "1" | "duo">("0");
+  const [showAll, setShowAll] = useState(false);
+  const rows = useMemo(() => (who === "duo" ? duoStats(games, bracket) : playerStats(games, Number(who) as 0 | 1, bracket)), [games, who, bracket]);
+  const cells = reportCard(rows).filter((x) => x.grade);
+  const name = who === "duo" ? "You" : names[Number(who)];
+  const wr = Math.round((record(games).wr ?? 0) * 100);
+  const top = c.improve[0], best = c.strengths[0];
+  return (
+    <Card title="Duo report" hint="graded against players at your rank">
+      <p className="report-verdict">
+        {wr >= 52 ? "You're winning more than you lose." : wr >= 48 ? "You're winning about half your games." : "You're losing more than you win."}
+        {best && <> Best: <b className="good-c">{best.title}</b>.</>}
+        {top && <> Fix first: <b className="bad-c">{top.title}</b>.</>}
+      </p>
+
+      <div className="report-head">
+        <Segmented value={who} onChange={setWho} options={[{ value: "0", label: names[0] }, { value: "1", label: names[1] }, { value: "duo", label: "Bot lane" }]} />
+        <span className="small muted">A = well above your rank · C = normal · F = well below</span>
+      </div>
+      <div className="grades">
+        {cells.map((g) => {
+          const v = verdict(g.worst!, name);
+          return (
+            <div key={g.category} className="grade-cell" title={v.text}>
+              <GradeBadge grade={g.grade} size={36} />
+              <div style={{ minWidth: 0 }}>
+                <div className="grade-name">{CATEGORY_NAME[g.category]}</div>
+                <div className="small text-2 clamp1">{v.text}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <h3 className="sub-title">Fix next game</h3>
+      <div className="fix-list">
+        {(showAll ? c.improve.slice(0, 8) : c.improve.slice(0, 3)).map((i, n) => (
+          <div key={i.title} className="fix-row">
+            <span className="fix-rank">{n + 1}</span>
+            <div style={{ minWidth: 0 }}>
+              <div className="row wrap-row" style={{ gap: 6 }}><b>{i.title}</b><WhoChip who={i.who} /><TrendWord v={i.trend} /></div>
+              <div className="small text-2">{i.detail}</div>
+              {i.tip && <div className="small fix-tip"><b>Try this:</b> {i.tip}</div>}
+            </div>
+            <div className="fix-visual">
+              {i.row ? <Meter row={i.row} /> : i.champs ? <div className="row" style={{ gap: 4, justifyContent: "flex-end" }}>{i.champs.map((ch) => <Champ key={ch} name={ch} size={32} />)}</div> : null}
+            </div>
+          </div>
+        ))}
+        {!c.improve.length && <p className="small muted">Nothing is clearly below target right now.</p>}
+      </div>
+      {c.improve.length > 3 && <button className="link-btn" onClick={() => setShowAll(!showAll)}>{showAll ? "Show fewer" : `Show ${Math.min(8, c.improve.length) - 3} more`}</button>}
+    </Card>
+  );
+}
+
+export function WinsVsLosses() {
   const { games, names, bracket } = useApp();
   const swings = useMemo(() => winLossSwings(games, names, bracket, 4), [games, names, bracket]);
   if (!swings.length) return null;
   return (
-    <Card title="What changes when you lose" hint="the biggest differences between your wins and losses">
+    <Card title="What changes when you lose" hint="biggest differences between your wins and losses">
       <div className="swings">
-        {swings.map((s, n) => {
+        {swings.map((s) => {
           const { metric, inWins, inLosses } = s.row;
           const max = Math.max(Math.abs(inWins!), Math.abs(inLosses!)) || 1;
           return (
-            <motion.div key={metric.id + String(s.who)} className="swing" transition={stagger(n)}>
+            <div key={metric.id + String(s.who)} className="swing">
               <div className="row wrap-row" style={{ gap: 6 }}><b>{plain(metric.id).name}</b><WhoChip who={s.who} />{metric.better === "lower" && <span className="small muted">lower is better</span>}</div>
               <div className="swing-bars">
-                <span className="small muted">Wins</span>
-                <div className="swing-track"><motion.i className="w" initial={{ width: 0 }} animate={{ width: `${(Math.abs(inWins!) / max) * 100}%` }} /></div>
+                <span className="small text-2">Wins</span>
+                <div className="swing-track"><i className="w" style={{ width: `${(Math.abs(inWins!) / max) * 100}%` }} /></div>
                 <span className="small num">{formatValue(metric.format, inWins)}</span>
-                <span className="small muted">Losses</span>
-                <div className="swing-track"><motion.i className="l" initial={{ width: 0 }} animate={{ width: `${(Math.abs(inLosses!) / max) * 100}%` }} /></div>
+                <span className="small text-2">Losses</span>
+                <div className="swing-track"><i className="l" style={{ width: `${(Math.abs(inLosses!) / max) * 100}%` }} /></div>
                 <span className="small num">{formatValue(metric.format, inLosses)}</span>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
@@ -145,24 +170,14 @@ function WinsVsLosses() {
   );
 }
 
-function TopPairs() {
+function RecentGames() {
   const { games } = useApp();
-  const pairs = synergies(games).filter((p) => p.rec.n >= 2).sort((a, b) => b.rec.shrunk - a.rec.shrunk);
-  if (!pairs.length) return null;
-  const best = pairs.slice(0, 3), worst = pairs.length > 4 ? pairs.slice(-2).reverse() : [];
-  const Row = ({ p }: { p: (typeof pairs)[number] }) => (
-    <div className="pair-row">
-      <div className="cell-champ"><Champ name={p.adc} size={30} /><Champ name={p.sup} size={30} /><span>{champName(p.adc)} + {champName(p.sup)}</span></div>
-      <span className="small muted">{p.rec.w}W {p.rec.l}L</span>
-      <WinRate wr={p.rec.wr} n={p.rec.n} />
-    </div>
-  );
+  const [open, setOpen] = useState<string | null>(null);
   return (
-    <Card title="Your duos">
-      <div className="small muted" style={{ marginBottom: 6 }}>Best together</div>
-      {best.map((p) => <Row key={p.adc + p.sup} p={p} />)}
-      {worst.length > 0 && <><div className="small muted" style={{ margin: "12px 0 6px" }}>Worst together</div>{worst.map((p) => <Row key={p.adc + p.sup} p={p} />)}</>}
-    </Card>
+    <section>
+      {games.slice(0, 10).map((m) => <MatchRow key={m.id} m={m} open={open === m.id} toggle={() => setOpen(open === m.id ? null : m.id)} />)}
+      {games.length > 10 && <a className="more-games" href="#history">See all {games.length} games in Match history</a>}
+    </section>
   );
 }
 
@@ -171,39 +186,27 @@ export function Overview() {
   const c = useMemo(() => coaching(games, names, bracket), [games, names, bracket]);
   const active = goals.goals.filter((g) => g.status === "active").map((g) => goalProgress(g, data.matches));
   return (
-    <div className="stack">
-      <Verdict />
-      {active.length > 0 && (
-        <Card title="Your objectives" hint={`set in the review on ${goals.reviews.at(-1)?.date ?? ""}`}>
-          {active.map((p, i) => <GoalCard key={p.goal.id} p={p} i={i} />)}
-        </Card>
-      )}
-      {c.strengths.length > 0 && (
-        <Card title="What's working">
-          <div className="strengths">{c.strengths.slice(0, 3).map((i, n) => <Strength key={i.title} i={i} n={n} />)}</div>
-        </Card>
-      )}
-      <section>
-        <h2 className="section-title">Fix these first</h2>
-        <p className="section-sub">The things costing you the most games, worst first.</p>
-        <div className="fixes">
-          {c.improve.slice(0, 3).map((i, n) => <FixCard key={i.title} i={i} n={n} />)}
-          {!c.improve.length && <div className="card muted">Nothing is clearly below target. Keep it up.</div>}
-        </div>
-        {c.improve.length > 3 && (
-          <details className="more">
-            <summary>{c.improve.length - 3} more things to work on</summary>
-            <div className="fixes" style={{ marginTop: 12 }}>{c.improve.slice(3, 9).map((i, n) => <FixCard key={i.title} i={i} n={n + 3} />)}</div>
-          </details>
+    <div className="profile-layout">
+      <aside className="stack">
+        <RecentSummary />
+        <ChallengeCard />
+        <MostPlayedDuos />
+        {c.strengths.length > 0 && (
+          <Card title="What's working">
+            <div className="stack" style={{ gap: 12 }}>{c.strengths.slice(0, 4).map((i) => <Strength key={i.title} i={i} />)}</div>
+          </Card>
         )}
-      </section>
-      <ReportCard />
-      <WinsVsLosses />
-      <div className="grid g2">
-        <Card title="Are you climbing?"><LpChart /></Card>
-        <Card title="Are you winning more lately?"><RollingWinRate games={chrono(games)} /></Card>
+        <Card title="Rank graph"><LpChart /></Card>
+      </aside>
+      <div className="stack main-col">
+        {active.length > 0 && (
+          <Card title="Your objectives" hint={`set in the review on ${goals.reviews.at(-1)?.date ?? ""}`}>
+            {active.map((p, i) => <GoalCard key={p.goal.id} p={p} i={i} />)}
+          </Card>
+        )}
+        <DuoReport />
+        <RecentGames />
       </div>
-      <TopPairs />
     </div>
   );
 }

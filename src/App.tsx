@@ -22,32 +22,43 @@ function Shell({ demo, setDemo }: { demo: boolean; setDemo: (v: boolean) => void
   const { games, data } = useApp();
   const [tab, setTab] = useState<Tab>(initialTab);
   useEffect(() => { history.replaceState(null, "", `#${tab}`); }, [tab]);
+  useEffect(() => {
+    const onHash = () => { const t = initialTab(); setTab(t); window.scrollTo({ top: 0 }); };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
   return (
-    <main className="wrap">
-      {demo && (
-        <div className="banner" style={{ marginTop: 16 }}>
-          <span>You're viewing <b>demo data</b>. Real games appear once you've played together.</span>
-          <button className="btn" onClick={() => setDemo(false)}>Back to real data</button>
+    <>
+      <section className="profile-band">
+        <div className="wrap">
+          {demo && (
+            <div className="banner">
+              <span>You're viewing <b>demo data</b>. Real games appear once you've played together.</span>
+              <button className="btn" onClick={() => setDemo(false)}>Back to real data</button>
+            </div>
+          )}
+          <PlayerCards />
+          <Tabs value={tab} onChange={setTab} options={TABS} />
         </div>
-      )}
-      <PlayerCards />
-      <div className="row wrap-row" style={{ justifyContent: "space-between", marginBottom: 4 }}>
-        <GlobalFilters />
-        <span className="small muted">{games.length} of {data.matches.length} games</span>
-      </div>
-      <div style={{ marginTop: 12 }}><Tabs value={tab} onChange={setTab} options={TABS} /></div>
-      {games.length === 0 ? <div className="card empty muted">No games for these filters.</div> : (
-        <AnimatePresence mode="wait">
-          <motion.div key={tab} initial={{ y: 8 }} animate={{ y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring.smooth}>
-            {tab === "overview" && <Overview />}
-            {tab === "history" && <MatchHistory />}
-            {tab === "stats" && <Stats />}
-            {tab === "champions" && <Champions />}
-            {tab === "coach" && <Coach />}
-          </motion.div>
-        </AnimatePresence>
-      )}
-    </main>
+      </section>
+      <main className="wrap page">
+        <div className="filter-panel">
+          <GlobalFilters />
+          <span className="small muted">{games.length} of {data.matches.length} games</span>
+        </div>
+        {games.length === 0 ? <div className="card empty muted">No games for these filters.</div> : (
+          <AnimatePresence mode="wait">
+            <motion.div key={tab} initial={{ y: 8 }} animate={{ y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring.smooth}>
+              {tab === "overview" && <Overview />}
+              {tab === "history" && <MatchHistory />}
+              {tab === "stats" && <Stats />}
+              {tab === "champions" && <Champions />}
+              {tab === "coach" && <Coach />}
+            </motion.div>
+          </AnimatePresence>
+        )}
+      </main>
+    </>
   );
 }
 
@@ -64,12 +75,13 @@ export function App() {
     <>
       <header className="topbar">
         <div className="wrap topbar-inner">
-          <div className="brand"><img src={`${import.meta.env.BASE_URL}assets/lol-icon.png`} alt="" onError={(e) => (e.currentTarget.style.display = "none")} />Duo Q Tracker <span className="sub">ADC + Support</span></div>
+          <div className="brand"><img src={`${import.meta.env.BASE_URL}assets/lol-icon.png`} alt="" onError={(e) => (e.currentTarget.style.display = "none")} />Duo Q Tracker</div>
+          <nav className="topnav" aria-label="Site"><span className="on">Duo profile</span></nav>
         </div>
       </header>
       {state.status === "loading" && (
         <main className="wrap" style={{ paddingTop: 20 }}>
-          <div className="hero">{[0, 1, 2].map((i) => <div key={i} className="skeleton" style={{ height: 104 }} />)}</div>
+          <div className="profile-row">{[0, 1].map((i) => <div key={i} className="skeleton" style={{ height: 100 }} />)}</div>
           {[0, 1, 2, 3].map((i) => <div key={i} className="skeleton" style={{ height: 96, marginBottom: 8 }} />)}
         </main>
       )}

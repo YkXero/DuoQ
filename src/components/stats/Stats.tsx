@@ -13,6 +13,7 @@ import { Legend } from "../overview/Charts.tsx";
 import { Card, Segmented, Select } from "../ui/Controls.tsx";
 import { WinRate } from "../ui/Icons.tsx";
 import { GradeBadge, Meter, TrendWord } from "../ui/Meter.tsx";
+import { WinsVsLosses } from "../overview/Overview.tsx";
 import { CATEGORY_NAME, reportCard, verdict } from "../../lib/insights.ts";
 import { plain } from "../../lib/plain.ts";
 
@@ -30,15 +31,7 @@ function BenchBar({ r }: { r: StatRow }) {
 }
 
 function TrendPill({ r }: { r: StatRow }) {
-  const v = trendVerdict(r);
-  if (v === "na") return <span className="muted small">–</span>;
-  const d = r.trend.delta ?? 0, f = r.metric.format;
-  const amount = (d > 0 ? "+" : "−") + (f === "pct" ? `${Math.abs(Math.round(d * 100))}pp` : f === "int" || f === "signed" ? Math.abs(Math.round(d)) : Math.abs(d).toFixed(f === "dec2" ? 2 : 1));
-  return (
-    <span className={`trend ${v}`} title={`Last ${r.trend.nRecent}: ${formatValue(f, r.trend.recent)} · previous ${r.trend.nPrevious}: ${formatValue(f, r.trend.previous)}`}>
-      {v === "stable" ? "≈ stable" : `${r.trend.dir === "up" ? "▲" : "▼"} ${amount}`}
-    </span>
-  );
+  return <TrendWord v={trendVerdict(r)} />;
 }
 
 function StatTable({ rows }: { rows: StatRow[] }) {
@@ -128,13 +121,17 @@ function TrendExplorer() {
     const s0 = ewma(series(metric, c, 0)), s1 = ewma(series(metric, c, 1));
     return c.map((m, i) => ({ i: i + 1, ts: m.ts, a: s0[i], b: s1[i] }));
   }, [metric, c]);
+  const hasA = rows.some((r) => r.a != null), hasB = rows.some((r) => r.b != null);
   const bench0 = benchFor(metric, metric.scope === "player" ? (metric.roles?.[0] ?? "BOTTOM") : "BOTTOM", bracket);
   const fmt = (v: number) => formatValue(metric.format, v);
   return (
     <Card title="Are you improving?" hint="pick a stat; the line is smoothed so one bad game doesn't hide the trend">
       <div className="row wrap-row" style={{ marginBottom: 10 }}>
         <Select label="Metric" value={id} onChange={setId} options={ALL_METRICS.filter((m) => m.id !== "winrate").map((m) => ({ value: m.id, label: `${m.category} · ${m.label}` }))} />
-        {metric.scope === "player" ? <Legend items={[{ label: names[0], color: "var(--p0)" }, { label: names[1], color: "var(--p1)" }]} /> : <Legend items={[{ label: "Duo", color: "var(--gold)" }]} />}
+        {metric.scope === "player"
+          ? <Legend items={[{ label: names[0], color: "var(--p0)", has: hasA }, { label: names[1], color: "var(--p1)", has: hasB }].filter((x) => x.has)} />
+          : <Legend items={[{ label: "Duo", color: "var(--gold)" }]} />}
+        {metric.scope === "player" && (!hasA || !hasB) && <span className="small muted">Only {hasA ? names[0] : names[1]} plays the role this stat is for.</span>}
         {bench0 != null && <span className="small muted">Dashed line: {BRACKETS[bracket]} target ({fmt(bench0)})</span>}
       </div>
       <div className="small muted" style={{ marginBottom: 6 }}>{metric.info} <b className="text-2">{metric.better === "higher" ? "Higher is better." : "Lower is better."}</b></div>
@@ -153,7 +150,7 @@ function TrendExplorer() {
                 {r.b != null && <div><b className="p1">{names[1]}</b> {fmt(r.b)}</div>}</div>;
             }} />
             <Line dataKey="a" stroke={metric.scope === "duo" ? "var(--gold)" : "var(--p0)"} strokeWidth={2} dot={false} connectNulls type="monotone" isAnimationActive={false} />
-            {metric.scope === "player" && <Line dataKey="b" stroke="var(--p1)" strokeWidth={2} dot={false} connectNulls type="monotone" isAnimationActive={false} />}
+            {metric.scope === "player" && hasB && <Line dataKey="b" stroke="var(--p1)" strokeWidth={2} dot={false} connectNulls type="monotone" isAnimationActive={false} />}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -214,6 +211,7 @@ export function Stats() {
           Targets come from coaching benchmarks and are a rough guide.
         </p>
       </Card>
+      <WinsVsLosses />
       <TrendExplorer />
       <Breakdown />
     </div>

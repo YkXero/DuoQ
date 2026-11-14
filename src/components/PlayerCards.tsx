@@ -12,50 +12,52 @@ import { Emblem, PosIcon } from "./ui/Icons.tsx";
 
 export const rankText = (r: RankEntry | null) => (!r ? "Unranked" : TIERS.indexOf(r.tier) >= 7 ? `${titleCase(r.tier)} ${r.lp} LP` : `${titleCase(r.tier)} ${r.div}`);
 
+const TIER_COLOR: Record<string, string> = {
+  IRON: "#a7a097", BRONZE: "#c0aa9b", SILVER: "#b7bbcb", GOLD: "#dbc798", PLATINUM: "#97cbc4",
+  EMERALD: "#7fd6a7", DIAMOND: "#a7cdf2", MASTER: "#d3b3ea", GRANDMASTER: "#ebb4c4", CHALLENGER: "#fdc06b",
+};
+
 export function PlayerCards() {
   const { data } = useApp();
   const rh = data.rankHistory, last = rh.at(-1), first = rh[0];
+  const cards = data.players.map((p, i) => {
+    const [name, tag] = p.riotId.split("#");
+    const solo = last?.solo[i] ?? null;
+    const delta = ladder(solo) != null && ladder(first?.solo[i] ?? null) != null ? ladder(solo)! - ladder(first!.solo[i])! : null;
+    const wr = solo && solo.wins + solo.losses > 0 ? Math.round((solo.wins / (solo.wins + solo.losses)) * 100) : null;
+    return (
+      <div key={p.riotId} className="player-card">
+        <div className="avatar">
+          {p.profileIcon != null ? <img src={profileIcon(p.profileIcon)} alt="" /> : <div className="avatar-empty" />}
+          {p.level != null && <span className="lvl">{p.level}</span>}
+        </div>
+        <div className="player-id">
+          <div className="player-name">{name}<span className="tag"> #{tag}</span></div>
+          <div className="row" style={{ gap: 4, marginTop: 4 }}>
+            <span className="role-chip"><PosIcon pos={p.role} />{p.role === "BOTTOM" ? "ADC" : "Support"}</span>
+            <span className="role-chip">EUW</span>
+          </div>
+          {delta ? <div className="small text-2" style={{ marginTop: 6 }}><span className={delta > 0 ? "win-c" : "loss-c"}>{delta > 0 ? "+" : ""}{delta} LP</span> since the challenge started</div> : null}
+        </div>
+        <div className="player-rank">
+          <div className="tier" style={solo ? { color: TIER_COLOR[solo.tier] } : undefined}>{rankText(solo)}</div>
+          <div className="small text-2">{solo ? `${solo.lp} LP` : "Solo/Duo"}{wr != null ? ` · ${wr}% WR` : ""}</div>
+        </div>
+        {solo && <Emblem tier={solo.tier} size={52} />}
+      </div>
+    );
+  });
   return (
-    <div className="hero">
-      {data.players.map((p, i) => {
-        const [name, tag] = p.riotId.split("#");
-        const solo = last?.solo[i] ?? null;
-        const delta = ladder(solo) != null && ladder(first?.solo[i] ?? null) != null ? ladder(solo)! - ladder(first!.solo[i])! : null;
-        return (
-          <motion.div key={p.riotId} className="card player-card" style={{ ["--accent" as string]: `var(--p${i})` }}
-            initial={{ y: 16 }} animate={{ y: 0 }} transition={{ ...spring.gentle, delay: i * 0.06 }} whileHover={{ y: -2 }}>
-            <div className="avatar">
-              {p.profileIcon != null ? <img src={profileIcon(p.profileIcon)} alt="" /> : <div style={{ width: 64, height: 64, borderRadius: 16, background: "var(--panel-3)" }} />}
-              {p.level != null && <span className="lvl">{p.level}</span>}
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div className="row">
-                <span className="player-name">{name}<span className="tag"> #{tag}</span></span>
-              </div>
-              <div className="row" style={{ marginTop: 2 }}>
-                <span className="role-chip"><PosIcon pos={p.role} />{p.role === "BOTTOM" ? "ADC" : "Support"}</span>
-              </div>
-              <div className="rank-line">
-                {solo && <Emblem tier={solo.tier} size={48} />}
-                <div>
-                  <div className="tier">{rankText(solo)}{solo && <span className="muted"> · {solo.lp} LP</span>}</div>
-                  <div className="small muted">
-                    {solo && solo.wins + solo.losses > 0 ? `${solo.wins}W ${solo.losses}L this season · ${Math.round((solo.wins / (solo.wins + solo.losses)) * 100)}%` : "Solo/Duo"}
-                    {delta ? <span className={delta > 0 ? "win-c" : "loss-c"}> · {delta > 0 ? "+" : ""}{delta} LP in challenge</span> : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        );
-      })}
-      <ChallengeCard />
+    <div className="profile-row">
+      {cards[0]}
+      <span className="plus" aria-hidden="true">+</span>
+      {cards[1]}
     </div>
   );
 }
 
 /** The duo's shared goal: progress toward the target rank, day count, and this week's one focus. */
-function ChallengeCard() {
+export function ChallengeCard() {
   const { data, games, goals, names, bracket } = useApp();
   const top = useMemo(() => coaching(games, names, bracket).improve[0], [games, names, bracket]);
   const focus = goals.goals.find((g) => g.status === "active")?.title ?? top?.title;
@@ -64,7 +66,7 @@ function ChallengeCard() {
   const goalV = data.goal ? ladder({ tier: data.goal.tier, div: data.goal.div, lp: 0 }) : null;
   const first = data.rankHistory[0], last = data.rankHistory.at(-1);
   return (
-    <motion.div className="card challenge" initial={{ y: 16 }} animate={{ y: 0 }} transition={{ ...spring.gentle, delay: 0.12 }}>
+    <section className="card challenge">
       <div className="challenge-head">
         <h2 className="challenge-title">{data.goal ? `Road to ${rankName(data.goal.tier, data.goal.div)}` : data.challengeName}</h2>
         <span className="small text-2">Day {day} · {data.matches.length} games</span>
@@ -91,6 +93,6 @@ function ChallengeCard() {
         <p className="small text-2" style={{ margin: "8px 0 0" }}>No goal rank yet. Add one as <code>goal</code> in config.json to track your progress here.</p>
       )}
       {focus && <p className="focus"><span className="focus-label">This week's focus</span>{focus}</p>}
-    </motion.div>
+    </section>
   );
 }

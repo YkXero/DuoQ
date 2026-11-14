@@ -14,6 +14,7 @@ import { Champ, Item, Kda, Rune, Spell } from "../ui/Icons.tsx";
 import { MatchDetail } from "./MatchDetail.tsx";
 
 const PAGE = 20;
+const ordinal = (n: number) => `${n}${n === 1 ? "st" : n === 2 ? "nd" : n === 3 ? "rd" : "th"}`;
 const MULTI = ["", "", "Double", "Triple", "Quadra", "Penta"];
 
 function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
@@ -41,7 +42,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
           <span>P/Kill {tk ? Math.min(100, Math.round(((p.k + p.a) / tk) * 100)) : 0}%</span>
           <span>CS {p.cs} ({(p.cs / (m.dur / 60)).toFixed(1)})</span>
           <span>Vision {p.vision}</span>
-          <span className="muted">Score {scores.score[idx].toFixed(1)}</span>
+          <span className="muted" title="Our 0–10 game rating vs the other 9 players">Score {scores.score[idx].toFixed(1)} · {ordinal(scores.rank[idx])}</span>
         </div>
       </div>
       <div className="items">{p.items.map((it, i) => <Item key={i} id={it} />)}</div>
@@ -49,18 +50,7 @@ function PlayerBlock({ m, idx, slot }: { m: Match; idx: number; slot: 0 | 1 }) {
   );
 }
 
-function BotLane({ m }: { m: Match }) {
-  const ours = [adcIdx(m), supIdx(m)], theirs = [enemyIdx(m, "BOTTOM"), enemyIdx(m, "UTILITY")];
-  return (
-    <div className="botlane" aria-label="Bot lane matchup">
-      <div className="bl-side">{ours.map((i) => <Champ key={i} name={m.parts[i].champ} size={28} />)}</div>
-      <span className="bl-vs">vs</span>
-      <div className="bl-side">{theirs.map((i, k) => (i >= 0 ? <Champ key={k} name={m.parts[i].champ} size={28} /> : null))}</div>
-    </div>
-  );
-}
-
-function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => void }) {
+export function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => void }) {
   const q = QUEUES[m.queue]?.name ?? `Queue ${m.queue}`;
   const story = gameStory(m);
   return (
@@ -74,7 +64,12 @@ function MatchRow({ m, open, toggle }: { m: Match; open: boolean; toggle: () => 
         </div>
         <PlayerBlock m={m} idx={m.duo[0]} slot={0} />
         <PlayerBlock m={m} idx={m.duo[1]} slot={1} />
-        <BotLane m={m} />
+        <div className="rosters">
+          {[0, 1, 2, 3, 4].flatMap((i) => [i, i + 5]).map((i) => {
+            const p = m.parts[i];
+            return <div key={i} className={`r${m.duo.includes(i) ? " duo" : ""}`} title={p.name}><Champ name={p.champ} size={16} /><span>{p.name.split("#")[0]}</span></div>;
+          })}
+        </div>
         <button className="expand" aria-expanded={open} aria-label={open ? "Hide game details" : "Show game details"} onClick={(e) => { e.stopPropagation(); toggle(); }}>
           <motion.svg width="12" height="12" viewBox="0 0 12 12" animate={{ rotate: open ? 180 : 0 }} transition={spring.snappy} aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.8" fill="none" /></motion.svg>
         </button>

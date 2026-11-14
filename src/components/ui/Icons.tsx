@@ -37,7 +37,7 @@ export const PosIcon = ({ pos, size = 14 }: { pos: string; size?: number }) => {
 export function Kda({ k, d, a }: { k: number; d: number; a: number }) {
   const r = (k + a) / Math.max(1, d);
   const cls = d === 0 || r >= 5 ? "kda-5" : r >= 4 ? "kda-4" : r >= 3 ? "kda-3" : "kda-0";
-  return <span className={cls}>{d === 0 ? "Perfect" : r.toFixed(2)}:1</span>;
+  return <span className={cls}>{d === 0 ? "Perfect KDA" : `${r.toFixed(2)}:1`}</span>;
 }
 
 export function WinRate({ wr, n }: { wr: number | null; n?: number }) {
